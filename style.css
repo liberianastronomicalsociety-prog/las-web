@@ -70,14 +70,16 @@ nav a:hover {
   animation: fadeInDown 1.2s ease forwards;
 }
 
-.hero p {
-  font-size: 1.2rem;
+/* Subtitle typing animation */
+.hero-subtitle {
+  font-size: 1.3rem;
   max-width: 700px;
   margin: 0 auto;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 1.6s ease forwards;
-  animation-delay: 0.5s; /* starts after the title */
+  color: #6db4ff;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #6db4ff; /* cursor */
+  animation: typing 4s steps(38, end), blink 0.75s step-end infinite;
 }
 
 /* Keyframe animations */
@@ -86,9 +88,14 @@ nav a:hover {
   100% { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+@keyframes typing {
+  0% { width: 0; }
+  100% { width: 38ch; } /* adjust for subtitle length */
+}
+
+@keyframes blink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: #6db4ff; }
 }
 
 /* ======================
