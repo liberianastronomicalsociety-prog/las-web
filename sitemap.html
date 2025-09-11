@@ -1,41 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sitemap</title>
-</head>
-<body>
-<script>
-const sections = [
-  '#home',
-  '#about',
-  '#activities',
-  '#membership',
-  '#team',
-  '#author',
-  '#partners',
-  '#contact'
-];
-
-const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-
-let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-
-sections.forEach(section => {
-  sitemap += `
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/${section}</loc>
-    <lastmod>${today}</lastmod>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#about</loc>
+    <lastmod>2025-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>`;
-});
-
-sitemap += `\n</urlset>`;
-
-// Display sitemap
-document.write('<pre>' + sitemap + '</pre>');
-console.log(sitemap); // Optional: see it in browser console
-</script>
-</body>
-</html>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#activities</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#portfolio</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#team</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#author</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#blog</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#membership</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#get-involved</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#partners</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://liberianastronomicalsociety-prog.github.io/las-web/#contact</loc>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
