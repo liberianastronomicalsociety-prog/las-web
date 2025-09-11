@@ -560,41 +560,20 @@
             messageBox.classList.add('hidden');
             messageBox.classList.remove('flex');
         });
-   <!-- Dynamic Sitemap Generator -->
 <script>
-  // Generate a sitemap dynamically based on your sections
-  (function() {
-    const sections = document.querySelectorAll('section[id]');
-    let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-    sections.forEach(section => {
-      sitemapContent += `  <url>\n`;
-      sitemapContent += `    <loc>${window.location.origin}${window.location.pathname}#${section.id}</loc>\n`;
-      sitemapContent += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-      sitemapContent += `    <changefreq>monthly</changefreq>\n`;
-      sitemapContent += `    <priority>0.7</priority>\n`;
-      sitemapContent += `  </url>\n`;
-    });
-
-    sitemapContent += `</urlset>`;
-
-    // Save the sitemap to GitHub Pages (manual step)
-    console.log("Generated Sitemap:\n", sitemapContent);
-
-    // Optional: Create a downloadable sitemap file
-    const blob = new Blob([sitemapContent], { type: "text/xml" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "sitemap.xml";
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  })();
-</script>
+            mobileMenuButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+        });
+    </script>
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
