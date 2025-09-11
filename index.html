@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,47 +8,25 @@
     <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Define a subtle animation for the hero section background */
-        @keyframes subtlePan {
-            0% { background-position: 50% 50%; }
-            50% { background-position: 70% 30%; }
-            100% { background-position: 50% 50%; }
-        }
-
-        /* Apply the custom animation and image background to the hero section */
-        .hero-bg {
+        /* Define a class for the hero section background using the custom image */
+        .hero-bg-image {
             background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-            background-size: 110%; /* Slightly larger than 'cover' to allow for pan animation */
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            position: relative;
-            animation: subtlePan 30s linear infinite; /* Apply the pan animation */
+            position: relative; /* Needed for the overlay */
         }
-        
+
         /* Add a semi-transparent overlay to ensure text is readable on top of the image */
-        .hero-bg::before {
+        .hero-bg-image::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1;
-        }
-
-        /* Card Hover Effect */
-        .card-hover:hover {
-            transform: translateY(-8px);
-        }
-
-        /* Nav Link Hover Effect */
-        .nav-link {
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: #a5b4fc; /* Tailwind's indigo-300 */
         }
 
         /* Ensure smooth scroll for the whole body */
@@ -60,25 +38,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-950 text-gray-200 font-sans"
-
-    <!-- Hero Section -->
-    <header id="home" class="relative overflow-hidden pt-10 sm:pt-16 lg:pt-8 bg-gray-950">
+<body class="bg-gray-950 text-gray-200">
+     <!-- Hero Section -->
+    <header id="home" class="relative overflow-hidden pt-10 sm:pt-16 lg:pt-8 hero-bg-image">
         <div class="container mx-auto px-4 py-12 text-center relative z-10">
-            <!-- Updated Hero Section with Logo (using raw link) -->
             <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Official Logo" class="mx-auto h-40 md:h-52 mb-6 drop-shadow-lg">
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-4 leading-tight">
                 Liberian Astronomical Society
             </h1>
-            <p class="hero-subtitle">
-             "Unlocking the cosmos from Liberia."
+            <p class="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 font-medium">
+                "Unlocking the cosmos from Liberia."
             </p>
             <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto mb-12">
                 The Liberian Astronomical Society (LAS) is a non-governmental organization (NGO) founded on April 2025,
                 with the aim of spreading astronomy education across the country. We are proud to be the first astronomical
                 sector ever recorded in Liberia's history.
             </p>
-            <a href="#about" class="inline-block px-8 py-4 bg-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-300 btn-primary">
+            <a href="#about" class="inline-block px-8 py-4 bg-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500">
                 Learn More
             </a>
         </div>
@@ -612,6 +588,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
