@@ -49,9 +49,10 @@
         <p class="mt-6 text-center text-gray-400 text-sm">
             Already have an account? <a href="login.html" class="text-indigo-400 hover:underline font-medium">Log In</a>
         </p>
+
+        <p id="message" class="text-center mt-4 text-sm hidden"></p>
     </div>
 
-    <!-- Firebase and JavaScript Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
@@ -71,11 +72,24 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const messageElement = document.getElementById('message');
+
+        function showMessage(msg, type) {
+            messageElement.textContent = msg;
+            messageElement.classList.remove('hidden', 'text-green-500', 'text-red-500');
+            if (type === 'success') {
+                messageElement.classList.add('text-green-500');
+            } else if (type === 'error') {
+                messageElement.classList.add('text-red-500');
+            }
+        }
 
         document.getElementById('signupForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = e.target.email.value;
             const password = e.target.password.value;
+            
+            showMessage('Creating account...', 'info');
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
@@ -87,13 +101,14 @@
                         membership_status: "Pending", // Default status for new users
                         join_date: new Date().toISOString()
                     }).then(() => {
-                        // Only show the alert and redirect after the document is created
-                        alert("Account created successfully! Please log in.");
-                        window.location.href = 'login.html';
+                        showMessage("Account created successfully! Redirecting to login...", 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000); // Redirect after 2 seconds
                     });
                 })
                 .catch((error) => {
-                    alert(error.message);
+                    showMessage("Error: " + error.message, 'error');
                 });
         });
     </script>
