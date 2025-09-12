@@ -25,23 +25,58 @@
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="dashboard-card p-8 rounded-2xl shadow-2xl w-full max-w-lg mx-auto transform transition-all hover:scale-105 duration-300 text-center">
-        <div class="flex flex-col items-center mb-6">
+    <div class="dashboard-card p-8 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto transform transition-all duration-300">
+        <div class="flex flex-col items-center mb-6 text-center">
             <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-16 w-auto mb-4">
             <h1 class="text-4xl font-bold text-white mb-2">Welcome Back!</h1>
             <p class="text-gray-400 text-lg">Your journey through the cosmos awaits.</p>
         </div>
 
-        <div class="space-y-4">
-            <p class="text-gray-300">This is your member dashboard. Here, you'll be able to access exclusive content and resources for members only.</p>
-            <p class="text-gray-400 text-sm italic" id="userEmailDisplay"></p>
+        <!-- Membership Status Section -->
+        <div class="mt-8 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
+            <h2 class="text-2xl font-semibold text-white mb-4">Membership Status</h2>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-400 text-sm">Email:</span>
+                <span id="userEmailDisplay" class="font-medium text-white"></span>
+            </div>
+            <div class="flex items-center space-x-4 mt-2">
+                <span class="text-gray-400 text-sm">Status:</span>
+                <span id="membershipStatus" class="font-bold text-yellow-400">Loading...</span>
+            </div>
+            <p id="pendingMessage" class="mt-4 text-sm text-gray-400 hidden">
+                Your membership is pending approval. Please complete your application:
+            </p>
+            <a id="applicationLink" href="https://forms.gle/f4w35ocU4KYKwCac7" target="_blank" class="mt-4 inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 transition-all duration-300">
+                Complete Membership Application
+            </a>
         </div>
-        
-        <!-- New link for the membership application form -->
-        <a href="https://forms.gle/f4w35ocU4KYKwCac7" target="_blank" class="mt-8 mb-4 inline-block w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
-            Complete Membership Application
-        </a>
 
+        <!-- Member-Only Resources Section -->
+        <div class="mt-6 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
+            <h2 class="text-2xl font-semibold text-white mb-4">Member-Only Resources</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Celestial Object Finder -->
+                <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
+                    <h3 class="text-lg font-semibold text-white mb-2">Celestial Object Finder</h3>
+                    <p class="text-gray-400 text-sm mb-4">Search for planets, stars, and constellations.</p>
+                    <div class="flex space-x-2">
+                        <input type="text" id="objectSearchInput" placeholder="e.g. Jupiter" class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button id="searchButton" class="bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300">
+                            Search
+                        </button>
+                    </div>
+                    <div id="searchResults" class="mt-4 text-gray-300 text-sm italic"></div>
+                </div>
+
+                <!-- Future Resources Placeholder -->
+                <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
+                    <h3 class="text-lg font-semibold text-white mb-2">Upcoming Events</h3>
+                    <p class="text-gray-400 text-sm">Check back soon for details on our next star-gazing events and workshops!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log out button -->
         <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
             Log Out
         </button>
@@ -51,6 +86,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
@@ -64,15 +100,66 @@
     
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         
         const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const membershipStatus = document.getElementById('membershipStatus');
+        const pendingMessage = document.getElementById('pendingMessage');
+        const applicationLink = document.getElementById('applicationLink');
+        const searchInput = document.getElementById('objectSearchInput');
+        const searchResults = document.getElementById('searchResults');
 
-        // Check for user login status and display email
-        onAuthStateChanged(auth, (user) => {
+        // Check for user login status and fetch profile data
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                userEmailDisplay.textContent = 'Logged in as: ' + user.email;
+                userEmailDisplay.textContent = user.email;
+
+                // Fetch user data from Firestore
+                const userDocRef = doc(db, "members", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    const status = userData.membership_status || 'Pending';
+                    membershipStatus.textContent = status;
+                    
+                    if (status === 'Pending') {
+                        membershipStatus.classList.remove('text-green-400');
+                        membershipStatus.classList.add('text-yellow-400');
+                        pendingMessage.classList.remove('hidden');
+                        applicationLink.classList.remove('hidden');
+                    } else if (status === 'Active') {
+                        membershipStatus.classList.remove('text-yellow-400');
+                        membershipStatus.classList.add('text-green-400');
+                        pendingMessage.classList.add('hidden');
+                        applicationLink.classList.add('hidden');
+                    }
+                } else {
+                    // This is a new user account, but no profile document exists.
+                    // This can happen if the signup process didn't complete fully.
+                    membershipStatus.textContent = "Profile missing. Please contact support.";
+                    membershipStatus.classList.add('text-red-400');
+                }
             } else {
                 window.location.href = 'login.html';
+            }
+        });
+
+        // Search functionality
+        document.getElementById('searchButton').addEventListener('click', () => {
+            const query = searchInput.value.toLowerCase();
+            const objects = {
+                "jupiter": "Jupiter is the largest planet in our solar system, with a diameter of about 140,000 km. It's a gas giant with a famous Great Red Spot, a storm that has been raging for centuries.",
+                "mars": "Mars is known as the Red Planet due to its iron oxide-rich surface. It has a thin atmosphere and is home to the largest volcano in the solar system, Olympus Mons.",
+                "moon": "The Moon is Earth's only natural satellite. It has a cratered, rocky surface and is the fifth-largest moon in the solar system.",
+                "sirius": "Sirius is the brightest star in the night sky. It is a binary star system located in the constellation Canis Major.",
+                "orion": "Orion is one of the most recognizable constellations. It's named after the hunter in Greek mythology and is home to prominent stars like Betelgeuse and Rigel."
+            };
+            
+            if (objects[query]) {
+                searchResults.textContent = objects[query];
+            } else {
+                searchResults.textContent = "No information found. Please try a different object (e.g., Jupiter, Mars, Moon, Sirius, Orion).";
             }
         });
 
