@@ -5,51 +5,42 @@
     <title>Dashboard - Liberian Astronomical Society</title>
 </head>
 <body>
-
     <h1>Welcome to your Dashboard!</h1>
     <p>You can only see this page if you are logged in.</p>
     <button id="logoutButton">Log Out</button>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-    <script>
-        // PASTE YOUR FIREBASE CONFIGURATION CODE HERE
         const firebaseConfig = {
-            apiKey: "YOAIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
             authDomain: "liberian-astro-society.firebaseapp.com",
             projectId: "liberian-astro-society",
             storageBucket: "liberian-astro-society.firebasestorage.app",
             messagingSenderId: "914979035379",
-            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
+            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
+            measurementId: "G-RBC64CGK4J"
         };
-        firebase.initializeApp(firebaseConfig);
-    </script>
-
-    <script>
-        const auth = firebase.auth();
-        const logoutButton = document.getElementById('logoutButton');
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
         // Check for user login status
-        auth.onAuthStateChanged(user => {
+        onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // No user is logged in, redirect them
                 window.location.href = 'login.html';
             }
         });
 
         // Log out functionality
-        logoutButton.addEventListener('click', () => {
-            auth.signOut().then(() => {
-                console.log("User signed out");
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            signOut(auth).then(() => {
                 window.location.href = 'login.html';
             }).catch((error) => {
                 console.error("Logout failed:", error.message);
             });
         });
-        </script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
+    </script>
 </body>
 </html>
