@@ -55,6 +55,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
 
         const firebaseConfig = {
             apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
@@ -68,6 +70,7 @@
     
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         document.getElementById('signupForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -75,11 +78,18 @@
             const password = e.target.password.value;
 
             createUserWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    // This message tells the user the account has been created,
-                    // but the Cloud Function will now verify it.
-                    alert("Account created! Please check your email for a verification link to activate your account.");
-                    window.location.href = 'login.html';
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // Create a new document in the "members" collection
+                    setDoc(doc(db, "members", user.uid), {
+                        email: user.email,
+                        membership_status: "Pending", // Default status for new users
+                        join_date: new Date().toISOString()
+                    }).then(() => {
+                        alert("Account created successfully! Please log in.");
+                        window.location.href = 'login.html';
+                    });
                 })
                 .catch((error) => {
                     alert(error.message);
