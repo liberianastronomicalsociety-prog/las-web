@@ -2,13 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Liberian Astronomical Society</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            background-image: radial-gradient(circle at 10% 20%, #1e3a8a, #0c4a6e);
+            background-attachment: fixed;
+            color: #d1d5db;
+        }
+        .dashboard-card {
+            background-color: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
-<body>
-    <h1>Welcome to your Dashboard!</h1>
-    <p>You can only see this page if you are logged in.</p>
-    <button id="logoutButton">Log Out</button>
+<body class="flex items-center justify-center min-h-screen p-4">
 
+    <div class="dashboard-card p-8 rounded-2xl shadow-2xl w-full max-w-lg mx-auto transform transition-all hover:scale-105 duration-300 text-center">
+        <div class="flex flex-col items-center mb-6">
+            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-16 w-auto mb-4">
+            <h1 class="text-4xl font-bold text-white mb-2">Welcome Back!</h1>
+            <p class="text-gray-400 text-lg">Your journey through the cosmos awaits.</p>
+        </div>
+
+        <div class="space-y-4">
+            <p class="text-gray-300">This is your member dashboard. Here, you'll be able to access exclusive content and resources for members only.</p>
+            <p class="text-gray-400 text-sm italic" id="userEmailDisplay"></p>
+        </div>
+        
+        <!-- New link for the membership application form -->
+        <a href="https://forms.gle/f4w35ocU4KYKwCac7" target="_blank" class="mt-8 mb-4 inline-block w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
+            Complete Membership Application
+        </a>
+
+        <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
+            Log Out
+        </button>
+    </div>
+
+    <!-- Firebase and JavaScript Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
@@ -25,10 +64,14 @@
     
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
 
-        // Check for user login status
+        // Check for user login status and display email
         onAuthStateChanged(auth, (user) => {
-            if (!user) {
+            if (user) {
+                userEmailDisplay.textContent = 'Logged in as: ' + user.email;
+            } else {
                 window.location.href = 'login.html';
             }
         });
@@ -39,6 +82,7 @@
                 window.location.href = 'login.html';
             }).catch((error) => {
                 console.error("Logout failed:", error.message);
+                alert("Logout failed: " + error.message);
             });
         });
     </script>
