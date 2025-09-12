@@ -47,7 +47,7 @@
         </form>
 
         <p class="mt-6 text-center text-gray-400 text-sm">
-            Don't have an account? <a href="https://forms.gle/f4w35ocU4KYKwCac7" class="text-indigo-400 hover:underline font-medium">Register Now</a>
+            Don't have an account? <a href="signup.html" class="text-indigo-400 hover:underline font-medium">Sign Up</a>
         </p>
     </div>
 
@@ -55,6 +55,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -70,6 +71,7 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         // Login Logic
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -88,5 +90,3 @@
     </script>
 </body>
 </html>
-
-
