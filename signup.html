@@ -76,7 +76,9 @@
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then(() => {
-                    alert("Account created successfully! Please log in.");
+                    // This message tells the user the account has been created,
+                    // but the Cloud Function will now verify it.
+                    alert("Account created! Please check your email for a verification link to activate your account.");
                     window.location.href = 'login.html';
                 })
                 .catch((error) => {
