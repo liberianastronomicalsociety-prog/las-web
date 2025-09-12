@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Liberian Astronomical Society</title>
+</head>
+<body>
+
+    <form id="signupForm">
+        <h2>Create an Account</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <a href="login.html">Already have an account? Log In</a>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // PASTE YOUR FIREBASE CONFIGURATION CODE HERE
+        const firebaseConfig = {
+            apiKey: "YOAIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+            authDomain: "liberian-astro-society.firebaseapp.com",
+            projectId: "liberian-astro-society",
+            storageBucket: "liberian-astro-society.firebasestorage.app",
+            messagingSenderId: "914979035379",
+            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script>
+        const auth = firebase.auth();
+        const signupForm = document.getElementById('signupForm');
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = signupForm.email.value;
+            const password = signupForm.password.value;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log("User created:", userCredential.user);
+                    // Redirect back to the login page
+                    window.location.href = 'login.html';
+                    alert("Account created successfully! Please log in.");
+                })
+                .catch((error) => {
+                    console.error("Sign up failed:", error.message);
+                    alert(error.message);
+                });
+        });
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+</body>
+</html>
