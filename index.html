@@ -78,47 +78,46 @@
 
     <!-- Navigation Bar -->
     <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <a href="#home" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
-                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-10 w-auto">
-                <span>LAS</span>
-            </a>
-            <!-- Mobile Menu Button -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-            <!-- Desktop Navigation -->
-            <ul class="hidden md:flex space-x-8 text-gray-400">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About Us</a></li>
-                <li><a href="#activities" class="nav-link">Activities</a></li>
-                <li><a href="#team" class="nav-link">Our Team</a></li>
-                <li><a href="#blog" class="nav-link">Blog</a></li>
-                <li><a href="#author" class="nav-link">About the President</a></li>
-                <li><a href="#get-involved" class="nav-link">Get Involved</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="#membership" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Join Us</a></li>
-            </ul>
+    <div class="container mx-auto flex justify-between items-center px-4">
+        <a href="#home" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
+            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-10 w-auto">
+            <span>LAS</span>
+        </a>
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
         </div>
-        <!-- Mobile Menu (hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
-            <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About Us</a></li>
-                <li><a href="#activities" class="nav-link">Activities</a></li>
-                <li><a href="#team" class="nav-link">Our Team</a></li>
-                <li><a href="#blog" class="nav-link">Blog</a></li>
-                <li><a href="#author" class="nav-link">About the President</a></li>
-                <li><a href="#get-involved" class="nav-link">Get Involved</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="#membership" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Join Us</a></li>
-            </ul>
-        </div>
-    </nav>
+        <ul class="hidden md:flex space-x-8 text-gray-400">
+            <li><a href="#home" class="nav-link">Home</a></li>
+            <li><a href="#about" class="nav-link">About Us</a></li>
+            <li><a href="#activities" class="nav-link">Activities</a></li>
+            <li><a href="#team" class="nav-link">Our Team</a></li>
+            <li><a href="#blog" class="nav-link">Blog</a></li>
+            <li><a href="#author" class="nav-link">About the President</a></li>
+            <li><a href="#get-involved" class="nav-link">Get Involved</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+            <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+        </ul>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
+        <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
+            <li><a href="#home" class="nav-link">Home</a></li>
+            <li><a href="#about" class="nav-link">About Us</a></li>
+            <li><a href="#activities" class="nav-link">Activities</a></li>
+            <li><a href="#team" class="nav-link">Our Team</a></li>
+            <li><a href="#blog" class="nav-link">Blog</a></li>
+            <li><a href="#author" class="nav-link">About the President</a></li>
+            <li><a href="#get-involved" class="nav-link">Get Involved</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+            <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+        </ul>
+    </div>
+</nav>
 
     <!-- About Section -->
    <section id="about" class="bg-gray-800 section-padding">
@@ -573,6 +572,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
