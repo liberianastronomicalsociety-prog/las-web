@@ -79,17 +79,18 @@
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
+             const user = userCredential.user;
 
-                    // Create a new document in the "members" collection
-                    setDoc(doc(db, "members", user.uid), {
-                        email: user.email,
-                        membership_status: "Pending", // Default status for new users
-                        join_date: new Date().toISOString()
-                    }).then(() => {
-                        alert("Account created successfully! Please log in.");
-                        window.location.href = 'login.html';
-                    });
+             // Create a new document in the "members" collection
+             setDoc(doc(db, "members", user.uid), {
+               email: user.email,
+               membership_status: "Pending", // Default status for new users
+               join_date: new Date().toISOString()
+              }).then(() => {
+            // Only show the alert and redirect after the document is created
+              alert("Account created successfully! Please log in.");
+              window.location.href = 'login.html';
+ });
                 })
                 .catch((error) => {
                     alert(error.message);
@@ -98,3 +99,4 @@
     </script>
 </body>
 </html>
+
