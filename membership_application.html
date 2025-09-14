@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+   <style>
         @keyframes starry-glow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -265,7 +265,8 @@
             function getWordCount(text) {
                 return text.split(/\s+/).filter(word => word.length > 0).length;
             }
-        
+
+            // Moved word count logic here to ensure it runs immediately when the DOM is ready.
             whyJoinTextarea.addEventListener('input', () => {
                 const count = getWordCount(whyJoinTextarea.value);
                 whyJoinWordCount.textContent = count;
@@ -306,6 +307,10 @@
                         document.getElementById('priorExperience').value = data.priorExperience || '';
                         document.getElementById('terms').checked = data.agreedToTerms || false;
         
+                        // Manually trigger word count update after loading data
+                        whyJoinTextarea.dispatchEvent(new Event('input'));
+                        astronomyInterestTextarea.dispatchEvent(new Event('input'));
+                        
                         // Disable all form inputs
                         formInputs.forEach(input => input.disabled = true);
                         submitBtn.disabled = true;
