@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+   <style>
         @keyframes starry-glow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -67,7 +67,6 @@
         </div>
 
         <form id="membershipForm" class="space-y-8">
-            <!-- Your Personal Information -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">Your Personal Information</h3>
                 <div class="grid md:grid-cols-2 gap-6">
@@ -99,7 +98,6 @@
                 </div>
             </div>
 
-            <!-- Your School and Social Media -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">School & Social Information</h3>
                 <div class="grid md:grid-cols-2 gap-6">
@@ -130,7 +128,6 @@
                 </div>
             </div>
 
-            <!-- Emergency Contact -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">Emergency Contact</h3>
                 <p class="text-gray-400 text-sm mb-4">In case of an emergency, who should we contact?</p>
@@ -146,7 +143,6 @@
                 </div>
             </div>
 
-            <!-- Your Interests -->
             <div class="space-y-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">Your Interests & Experience</h3>
                 <div>
@@ -173,7 +169,6 @@
                 </div>
             </div>
 
-            <!-- Next Steps -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">What's Next?</h3>
                 <p class="text-gray-400 text-base mb-4">
@@ -190,7 +185,6 @@
                 </p>
             </div>
 
-            <!-- Terms & Conditions and Submit -->
             <div class="space-y-4 pt-6">
                 <div class="flex items-start">
                     <input type="checkbox" id="terms" required class="mt-1 form-checkbox h-4 w-4 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out bg-gray-700 border-gray-600">
@@ -206,7 +200,6 @@
         </form>
     </div>
 
-    <!-- Firebase and JavaScript Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
@@ -214,7 +207,15 @@
 
         // Firebase and app ID globals
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { /* fallback config if not provided */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+            authDomain: "liberian-astro-society.firebaseapp.com",
+            projectId: "liberian-astro-society",
+            storageBucket: "liberian-astro-society.firebasestorage.app",
+            messagingSenderId: "914979035379",
+            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
+            measurementId: "G-RBC64CGK4J"
+        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // Initialize Firebase
@@ -226,17 +227,7 @@
         let userId = null;
         let userEmail = null;
 
-        const membershipForm = document.getElementById('membershipForm');
-        const emailInput = document.getElementById('email');
-        const userIdDisplay = document.getElementById('userIdDisplay');
         const messageElement = document.getElementById('message');
-        const submitBtn = document.getElementById('submitBtn');
-        const formInputs = membershipForm.querySelectorAll('input, textarea, select');
-
-        const whyJoinTextarea = document.getElementById('whyJoin');
-        const astronomyInterestTextarea = document.getElementById('astronomyInterest');
-        const whyJoinWordCount = document.getElementById('whyJoinWordCount');
-        const astronomyInterestWordCount = document.getElementById('astronomyInterestWordCount');
 
         function showMessage(msg, type) {
             messageElement.textContent = msg;
@@ -249,174 +240,176 @@
                 messageElement.classList.add('text-gray-400', 'block');
             }
         }
-
-        function getWordCount(text) {
-            return text.split(/\s+/).filter(word => word.length > 0).length;
-        }
-
-        whyJoinTextarea.addEventListener('input', () => {
-            const count = getWordCount(whyJoinTextarea.value);
-            whyJoinWordCount.textContent = count;
-            whyJoinWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
-        });
-
-        astronomyInterestTextarea.addEventListener('input', () => {
-            const count = getWordCount(astronomyInterestTextarea.value);
-            astronomyInterestWordCount.textContent = count;
-            astronomyInterestWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
-        });
-
-        async function authenticateUser() {
-            try {
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Firebase authentication failed:", error);
-                // If custom token fails, try to sign in anonymously as a fallback.
-                if (error.code === 'auth/custom-token-mismatch') {
-                    console.log("Custom token mismatch, attempting anonymous sign-in.");
-                    try {
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const membershipForm = document.getElementById('membershipForm');
+            const emailInput = document.getElementById('email');
+            const userIdDisplay = document.getElementById('userIdDisplay');
+            const submitBtn = document.getElementById('submitBtn');
+            const formInputs = membershipForm.querySelectorAll('input, textarea, select');
+        
+            const whyJoinTextarea = document.getElementById('whyJoin');
+            const astronomyInterestTextarea = document.getElementById('astronomyInterest');
+            const whyJoinWordCount = document.getElementById('whyJoinWordCount');
+            const astronomyInterestWordCount = document.getElementById('astronomyInterestWordCount');
+        
+            function getWordCount(text) {
+                return text.split(/\s+/).filter(word => word.length > 0).length;
+            }
+        
+            whyJoinTextarea.addEventListener('input', () => {
+                const count = getWordCount(whyJoinTextarea.value);
+                whyJoinWordCount.textContent = count;
+                whyJoinWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
+            });
+        
+            astronomyInterestTextarea.addEventListener('input', () => {
+                const count = getWordCount(astronomyInterestTextarea.value);
+                astronomyInterestWordCount.textContent = count;
+                astronomyInterestWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
+            });
+        
+            async function authenticateUser() {
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
                         await signInAnonymously(auth);
-                    } catch (anonymousError) {
-                        console.error("Anonymous sign-in failed:", anonymousError);
-                        showMessage('Authentication failed. Please try refreshing the page.', 'error');
                     }
-                } else {
+                } catch (error) {
+                    console.error("Firebase authentication failed:", error);
                     showMessage('Authentication failed. Please try refreshing the page.', 'error');
                 }
             }
-        }
-
-        async function checkAndLoadApplication(currentUserId) {
-            try {
-                const applicationRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'applications', 'primary_application');
-                const docSnap = await getDoc(applicationRef);
-
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Populate form fields
-                    document.getElementById('fullName').value = data.fullName;
-                    document.getElementById('dob').value = data.dateOfBirth;
-                    document.getElementById('gender').value = data.gender;
-                    document.getElementById('phone').value = data.phone;
-                    document.getElementById('schoolName').value = data.schoolName;
-                    document.getElementById('department').value = data.department;
-                    document.getElementById('major').value = data.major;
-                    document.getElementById('facebook').value = data.facebook;
-                    document.getElementById('instagram').value = data.instagram;
-                    document.getElementById('x').value = data.x;
-                    document.getElementById('emergencyName').value = data.emergencyContactName;
-                    document.getElementById('emergencyPhone').value = data.emergencyContactPhone;
-                    document.getElementById('whyJoin').value = data.whyJoin;
-                    document.getElementById('astronomyInterest').value = data.astronomyInterest;
-                    document.getElementById('howHeard').value = data.howHeard;
-                    document.getElementById('priorExperience').value = data.priorExperience;
-                    document.getElementById('terms').checked = data.agreedToTerms;
-
-                    // Disable all form inputs
-                    formInputs.forEach(input => input.disabled = true);
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = 'Application Already Submitted';
-                    submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                    submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
-
-                    showMessage('Your application has already been submitted and is on file. You can view your information below.', 'success');
+        
+            async function checkAndLoadApplication(currentUserId) {
+                try {
+                    const applicationRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'applications', 'primary_application');
+                    const docSnap = await getDoc(applicationRef);
+        
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        // Populate form fields
+                        document.getElementById('fullName').value = data.fullName;
+                        document.getElementById('dob').value = data.dateOfBirth;
+                        document.getElementById('gender').value = data.gender;
+                        document.getElementById('phone').value = data.phone;
+                        document.getElementById('schoolName').value = data.schoolName;
+                        document.getElementById('department').value = data.department;
+                        document.getElementById('major').value = data.major;
+                        document.getElementById('facebook').value = data.facebook;
+                        document.getElementById('instagram').value = data.instagram;
+                        document.getElementById('x').value = data.x;
+                        document.getElementById('emergencyName').value = data.emergencyContactName;
+                        document.getElementById('emergencyPhone').value = data.emergencyContactPhone;
+                        document.getElementById('whyJoin').value = data.whyJoin;
+                        document.getElementById('astronomyInterest').value = data.astronomyInterest;
+                        document.getElementById('howHeard').value = data.howHeard;
+                        document.getElementById('priorExperience').value = data.priorExperience;
+                        document.getElementById('terms').checked = data.agreedToTerms;
+        
+                        // Disable all form inputs
+                        formInputs.forEach(input => input.disabled = true);
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Application Already Submitted';
+                        submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                        submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
+        
+                        showMessage('Your application has already been submitted and is on file. You can view your information below.', 'success');
+                    }
+                } catch (error) {
+                    console.error("Error checking for existing application: ", error);
                 }
-            } catch (error) {
-                console.error("Error checking for existing application: ", error);
             }
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userId = user.uid;
-                userEmail = user.email;
-                userIdDisplay.textContent = userId;
-                emailInput.value = userEmail || 'Not Available';
-                checkAndLoadApplication(userId);
-            } else {
-                authenticateUser();
-            }
-        });
-
-        membershipForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const whyJoinCount = getWordCount(whyJoinTextarea.value);
-            const astronomyInterestCount = getWordCount(astronomyInterestTextarea.value);
-
-            if (whyJoinCount < 300 || whyJoinCount > 500) {
-                showMessage('Please ensure your response for "Why join LAS?" is between 300 and 500 words.', 'error');
-                return;
-            }
-
-            if (astronomyInterestCount < 300 || astronomyInterestCount > 500) {
-                showMessage('Please ensure your response for "Interests in Astronomy" is between 300 and 500 words.', 'error');
-                return;
-            }
-
-            if (!userId) {
-                showMessage("User not authenticated. Please wait and try again.", 'error');
-                console.error("User ID is not available.");
-                return;
-            }
-
-            const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'applications', 'primary_application');
-            const docSnap = await getDoc(applicationRef);
-
-            if (docSnap.exists()) {
-                showMessage('You have already submitted an application. Thank you!', 'error');
-                return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-            showMessage('Submitting your application now...', 'info');
-
-            const formData = {
-                fullName: document.getElementById('fullName').value,
-                dateOfBirth: document.getElementById('dob').value,
-                gender: document.getElementById('gender').value,
-                phone: document.getElementById('phone').value,
-                email: userEmail,
-                schoolName: document.getElementById('schoolName').value,
-                department: document.getElementById('department').value,
-                major: document.getElementById('major').value,
-                facebook: document.getElementById('facebook').value,
-                instagram: document.getElementById('instagram').value,
-                x: document.getElementById('x').value,
-                emergencyContactName: document.getElementById('emergencyName').value,
-                emergencyContactPhone: document.getElementById('emergencyPhone').value,
-                whyJoin: document.getElementById('whyJoin').value,
-                astronomyInterest: document.getElementById('astronomyInterest').value,
-                howHeard: document.getElementById('howHeard').value,
-                priorExperience: document.getElementById('priorExperience').value,
-                agreedToTerms: document.getElementById('terms').checked,
-                submissionTimestamp: serverTimestamp()
-            };
-
-            try {
-                await setDoc(applicationRef, formData);
-                
-                showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
-                
-                // Redirect to the assessment page after a short delay
-                setTimeout(() => {
-                    window.location.href = 'assessment.html'; 
-                }, 2000); // Redirects after 2 seconds
-                
-            } catch (error) {
-                console.error("Error writing document: ", error);
-                showMessage("Error submitting form. Please try again.", 'error');
-                
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit My Application';
-            }
+        
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userId = user.uid;
+                    userEmail = user.email;
+                    userIdDisplay.textContent = userId;
+                    emailInput.value = userEmail || 'Not Available';
+                    checkAndLoadApplication(userId);
+                } else {
+                    authenticateUser();
+                }
+            });
+        
+            membershipForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+        
+                const whyJoinCount = getWordCount(whyJoinTextarea.value);
+                const astronomyInterestCount = getWordCount(astronomyInterestTextarea.value);
+        
+                if (whyJoinCount < 300 || whyJoinCount > 500) {
+                    showMessage('Please ensure your response for "Why join LAS?" is between 300 and 500 words.', 'error');
+                    return;
+                }
+        
+                if (astronomyInterestCount < 300 || astronomyInterestCount > 500) {
+                    showMessage('Please ensure your response for "Interests in Astronomy" is between 300 and 500 words.', 'error');
+                    return;
+                }
+        
+                if (!userId) {
+                    showMessage("User not authenticated. Please wait and try again.", 'error');
+                    console.error("User ID is not available.");
+                    return;
+                }
+        
+                const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'applications', 'primary_application');
+                const docSnap = await getDoc(applicationRef);
+        
+                if (docSnap.exists()) {
+                    showMessage('You have already submitted an application. Thank you!', 'error');
+                    return;
+                }
+        
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+                showMessage('Submitting your application now...', 'info');
+        
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    dateOfBirth: document.getElementById('dob').value,
+                    gender: document.getElementById('gender').value,
+                    phone: document.getElementById('phone').value,
+                    email: userEmail,
+                    schoolName: document.getElementById('schoolName').value,
+                    department: document.getElementById('department').value,
+                    major: document.getElementById('major').value,
+                    facebook: document.getElementById('facebook').value,
+                    instagram: document.getElementById('instagram').value,
+                    x: document.getElementById('x').value,
+                    emergencyContactName: document.getElementById('emergencyName').value,
+                    emergencyContactPhone: document.getElementById('emergencyPhone').value,
+                    whyJoin: document.getElementById('whyJoin').value,
+                    astronomyInterest: document.getElementById('astronomyInterest').value,
+                    howHeard: document.getElementById('howHeard').value,
+                    priorExperience: document.getElementById('priorExperience').value,
+                    agreedToTerms: document.getElementById('terms').checked,
+                    submissionTimestamp: serverTimestamp()
+                };
+        
+                try {
+                    await setDoc(applicationRef, formData);
+                    
+                    showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
+                    
+                    // Redirect to the assessment page after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'assessment.html'; 
+                    }, 2000); // Redirects after 2 seconds
+                    
+                } catch (error) {
+                    console.error("Error writing document: ", error);
+                    showMessage("Error submitting form. Please try again.", 'error');
+                    
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit My Application';
+                }
+            });
         });
     </script>
 </body>
