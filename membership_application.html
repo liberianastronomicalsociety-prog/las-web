@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Official Membership Application</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
             background: #0d1117;
             background-image: 
                 linear-gradient(rgba(12, 74, 110, 0.7), rgba(30, 58, 138, 0.7)),
-                url('https://images.unsplash.com/photo-1506744038136-413d32152069?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+                url('https://images.unsplash.com/photo-1518173946274-3298186f885e?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -173,6 +173,23 @@
                 </div>
             </div>
 
+            <!-- Next Steps -->
+            <div class="border-b border-gray-600 pb-6">
+                <h3 class="text-2xl font-semibold text-white mb-4">What's Next?</h3>
+                <p class="text-gray-400 text-base mb-4">
+                    Thank you for completing the initial application. After you submit this form, here are the next steps to become an official member of the Liberian Astronomical Society:
+                </p>
+                <ol class="list-decimal list-inside space-y-2 text-gray-300">
+                    <li>You will be redirected to a **15-question assessment** to test your astronomy knowledge. You need a score of at least 8 to pass.</li>
+                    <li>If you pass, you will be scheduled for an **interview with an administrator**.</li>
+                    <li>After the interview, you will receive the **official membership form** and details for a one-time newcomer due of **$5 USD**, payable via Orange Money at `0772858306`.</li>
+                    <li>Once everything is complete, you'll get your **official membership letter**!</li>
+                </ol>
+                <p class="text-gray-400 text-sm mt-4">
+                    Remember, a monthly due of $500 LRD is required to maintain your active membership status.
+                </p>
+            </div>
+
             <!-- Terms & Conditions and Submit -->
             <div class="space-y-4 pt-6">
                 <div class="flex items-start">
@@ -191,13 +208,13 @@
 
     <!-- Firebase and JavaScript Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
         // Firebase and app ID globals
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { /* fallback config if not provided */ };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // Initialize Firebase
@@ -214,6 +231,7 @@
         const userIdDisplay = document.getElementById('userIdDisplay');
         const messageElement = document.getElementById('message');
         const submitBtn = document.getElementById('submitBtn');
+        const formInputs = membershipForm.querySelectorAll('input, textarea, select');
 
         const whyJoinTextarea = document.getElementById('whyJoin');
         const astronomyInterestTextarea = document.getElementById('astronomyInterest');
@@ -257,7 +275,59 @@
                 }
             } catch (error) {
                 console.error("Firebase authentication failed:", error);
-                showMessage('Authentication failed. Please try refreshing the page.', 'error');
+                // If custom token fails, try to sign in anonymously as a fallback.
+                if (error.code === 'auth/custom-token-mismatch') {
+                    console.log("Custom token mismatch, attempting anonymous sign-in.");
+                    try {
+                        await signInAnonymously(auth);
+                    } catch (anonymousError) {
+                        console.error("Anonymous sign-in failed:", anonymousError);
+                        showMessage('Authentication failed. Please try refreshing the page.', 'error');
+                    }
+                } else {
+                    showMessage('Authentication failed. Please try refreshing the page.', 'error');
+                }
+            }
+        }
+
+        async function checkAndLoadApplication(currentUserId) {
+            try {
+                const applicationRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'applications', 'primary_application');
+                const docSnap = await getDoc(applicationRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // Populate form fields
+                    document.getElementById('fullName').value = data.fullName;
+                    document.getElementById('dob').value = data.dateOfBirth;
+                    document.getElementById('gender').value = data.gender;
+                    document.getElementById('phone').value = data.phone;
+                    document.getElementById('schoolName').value = data.schoolName;
+                    document.getElementById('department').value = data.department;
+                    document.getElementById('major').value = data.major;
+                    document.getElementById('facebook').value = data.facebook;
+                    document.getElementById('instagram').value = data.instagram;
+                    document.getElementById('x').value = data.x;
+                    document.getElementById('emergencyName').value = data.emergencyContactName;
+                    document.getElementById('emergencyPhone').value = data.emergencyContactPhone;
+                    document.getElementById('whyJoin').value = data.whyJoin;
+                    document.getElementById('astronomyInterest').value = data.astronomyInterest;
+                    document.getElementById('howHeard').value = data.howHeard;
+                    document.getElementById('priorExperience').value = data.priorExperience;
+                    document.getElementById('terms').checked = data.agreedToTerms;
+
+                    // Disable all form inputs
+                    formInputs.forEach(input => input.disabled = true);
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Application Already Submitted';
+                    submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                    submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
+
+                    showMessage('Your application has already been submitted and is on file. You can view your information below.', 'success');
+                }
+            } catch (error) {
+                console.error("Error checking for existing application: ", error);
             }
         }
 
@@ -267,6 +337,7 @@
                 userEmail = user.email;
                 userIdDisplay.textContent = userId;
                 emailInput.value = userEmail || 'Not Available';
+                checkAndLoadApplication(userId);
             } else {
                 authenticateUser();
             }
@@ -291,6 +362,14 @@
             if (!userId) {
                 showMessage("User not authenticated. Please wait and try again.", 'error');
                 console.error("User ID is not available.");
+                return;
+            }
+
+            const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'applications', 'primary_application');
+            const docSnap = await getDoc(applicationRef);
+
+            if (docSnap.exists()) {
+                showMessage('You have already submitted an application. Thank you!', 'error');
                 return;
             }
 
@@ -321,9 +400,6 @@
             };
 
             try {
-                // Path to the document: /artifacts/{appId}/users/{userId}/applications/{timestamp}
-                const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'applications', new Date().getTime().toString());
-                
                 await setDoc(applicationRef, formData);
                 
                 showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
