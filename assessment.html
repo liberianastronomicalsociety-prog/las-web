@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAS Individual Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            background-image: radial-gradient(circle at 10% 20%, #1e3a8a, #0c4a6e);
+            background-attachment: fixed;
+            color: #d1d5db;
+        }
+        .assessment-card {
+            background-color: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        input[type="radio"]:checked + label {
+            background-color: #4f46e5;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+        .correct-answer {
+            color: #10B981; /* green-500 */
+        }
+        .incorrect-answer {
+            color: #EF4444; /* red-500 */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 min-h-screen">
+
+    <div class="assessment-card p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-4xl mx-auto my-8">
+        <div class="flex flex-col items-center mb-6">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-2">LAS Individual Assessment</h2>
+            <p class="text-gray-400 text-center text-lg max-w-2xl">
+                This 15-question quiz will test your basic knowledge of astronomy. You must score at least 8 out of 15 to pass and proceed to the next step.
+            </p>
+        </div>
+
+        <form id="assessmentForm" class="space-y-6">
+            <div id="questionsContainer"></div>
+
+            <div class="flex items-center space-x-4 pt-4">
+                <button type="submit" id="submitBtn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 transition-all duration-300">
+                    Submit Assessment
+                </button>
+            </div>
+            
+            <div id="result" class="mt-6 text-center text-xl font-bold hidden"></div>
+            <div id="message" class="mt-4 text-center text-sm font-medium hidden"></div>
+
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase and app ID globals
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        setLogLevel('debug');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = null;
+
+        const questions = [
+            { question: "What is the largest planet in our solar system?", options: ["Mars", "Jupiter", "Saturn", "Neptune"], answer: "Jupiter" },
+            { question: "What is the name of our home galaxy?", options: ["Andromeda Galaxy", "Triangulum Galaxy", "Milky Way", "Sombrero Galaxy"], answer: "Milky Way" },
+            { question: "What celestial body orbits the Earth?", options: ["Sun", "Moon", "Mars", "Venus"], answer: "Moon" },
+            { question: "What is a light-year a measure of?", options: ["Time", "Mass", "Distance", "Speed"], answer: "Distance" },
+            { question: "Which planet is known as the 'Red Planet'?", options: ["Venus", "Mars", "Mercury", "Uranus"], answer: "Mars" },
+            { question: "What is the term for a small rock or particle from space that enters Earth's atmosphere?", options: ["Asteroid", "Comet", "Meteor", "Planetoid"], answer: "Meteor" },
+            { question: "Which planet is the hottest in our solar system?", options: ["Mercury", "Venus", "Earth", "Mars"], answer: "Venus" },
+            { question: "The rings of Saturn are primarily made of what?", options: ["Solid rock", "Ice and rock particles", "Gas and dust", "Molten lava"], answer: "Ice and rock particles" },
+            { question: "What is the center of a black hole called?", options: ["Event horizon", "Singularity", "Quasar", "Supernova"], answer: "Singularity" },
+            { question: "Which constellation contains the 'Big Dipper'?", options: ["Orion", "Ursa Major", "Cassiopeia", "Gemini"], answer: "Ursa Major" },
+            { question: "What force keeps planets in orbit around the Sun?", options: ["Electromagnetism", "Gravity", "Friction", "Nuclear force"], answer: "Gravity" },
+            { question: "What is the name of the first human to walk on the Moon?", options: ["Yuri Gagarin", "Buzz Aldrin", "Neil Armstrong", "Alan Shepard"], answer: "Neil Armstrong" },
+            { question: "What is a group of stars forming a pattern in the sky called?", options: ["Nebula", "Galaxy", "Cluster", "Constellation"], answer: "Constellation" },
+            { question: "Which planet is known for its prominent rings?", options: ["Jupiter", "Uranus", "Neptune", "Saturn"], answer: "Saturn" },
+            { question: "What is the closest star to Earth?", options: ["Alpha Centauri", "Proxima Centauri", "Sirius", "The Sun"], answer: "The Sun" }
+        ];
+
+        const questionsContainer = document.getElementById('questionsContainer');
+        const assessmentForm = document.getElementById('assessmentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultElement = document.getElementById('result');
+        const messageElement = document.getElementById('message');
+        const passScore = 8;
+
+        function renderQuestions() {
+            questionsContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const questionHtml = `
+                    <div class="space-y-4 p-6 rounded-xl border border-gray-700">
+                        <p class="text-white font-semibold text-lg">${index + 1}. ${q.question}</p>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            ${q.options.map(option => `
+                                <div class="relative">
+                                    <input type="radio" id="q${index}-option-${option}" name="q${index}" value="${option}" class="hidden">
+                                    <label for="q${index}-option-${option}" class="block w-full px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 border border-gray-600 hover:bg-gray-700 text-gray-300">
+                                        ${option}
+                                    </label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                questionsContainer.innerHTML += questionHtml;
+            });
+        }
+
+        function showMessage(msg, type) {
+            messageElement.textContent = msg;
+            messageElement.classList.remove('hidden', 'text-green-500', 'text-red-500', 'text-gray-400');
+            if (type === 'success') {
+                messageElement.classList.add('text-green-500', 'block');
+            } else if (type === 'error') {
+                messageElement.classList.add('text-red-500', 'block');
+            } else {
+                messageElement.classList.add('text-gray-400', 'block');
+            }
+        }
+
+        function showResult(score) {
+            resultElement.classList.remove('hidden');
+            if (score >= passScore) {
+                resultElement.classList.add('text-green-500');
+                resultElement.innerHTML = `Congratulations! You passed with a score of ${score} out of 15.`;
+            } else {
+                resultElement.classList.add('text-red-500');
+                resultElement.innerHTML = `Unfortunately, you did not pass. Your score was ${score} out of 15. Please review your answers and try again.`;
+            }
+        }
+
+        async function authenticateUser() {
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase authentication failed:", error);
+                showMessage('Authentication failed. Please try refreshing the page.', 'error');
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+            } else {
+                authenticateUser();
+            }
+        });
+
+        renderQuestions();
+
+        assessmentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!userId) {
+                showMessage("User not authenticated. Please wait and try again.", 'error');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Calculating Score...';
+            
+            let score = 0;
+            const userAnswers = {};
+
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                const userAnswer = selectedOption ? selectedOption.value : null;
+                userAnswers[`question${index + 1}`] = userAnswer;
+                
+                if (userAnswer === q.answer) {
+                    score++;
+                }
+            });
+
+            // Display results
+            showResult(score);
+            
+            showMessage('Saving your results...', 'info');
+
+            const assessmentData = {
+                score: score,
+                passed: score >= passScore,
+                userAnswers: userAnswers,
+                submissionTimestamp: serverTimestamp()
+            };
+
+            try {
+                // Path to the document: /artifacts/{appId}/users/{userId}/assessments/{timestamp}
+                const assessmentRef = doc(db, 'artifacts', appId, 'users', userId, 'assessments', new Date().getTime().toString());
+                
+                await setDoc(assessmentRef, assessmentData);
+                
+                showMessage('Assessment results saved successfully!', 'success');
+                // You can add a redirect here if needed, for example to the interview scheduling page.
+                // window.location.href = 'interview_schedule.html'; 
+                
+            } catch (error) {
+                console.error("Error writing document: ", error);
+                showMessage("Error saving results. Please try again.", 'error');
+                
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Assessment';
+            }
+        });
+    </script>
+</body>
+</html>
