@@ -200,227 +200,228 @@
         </form>
     </div>
 
-   <script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
-       
-        // Enable debug logging for Firebase
-        setLogLevel('debug');
+        
+    // Enable debug logging for Firebase
+    setLogLevel('debug');
 
-        // Firebase and app ID globals
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = {
-            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
-            authDomain: "liberian-astro-society.firebaseapp.com",
-            projectId: "liberian-astro-society",
-            storageBucket: "liberian-astro-society.firebasestorage.app",
-            messagingSenderId: "914979035379",
-            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
-            measurementId: "G-RBC64CGK4J"
-        };
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    // Firebase and app ID globals
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = {
+        apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+        authDomain: "liberian-astro-society.firebaseapp.com",
+        projectId: "liberian-astro-society",
+        storageBucket: "liberian-astro-society.firebasestorage.app",
+        messagingSenderId: "914979035379",
+        appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
+        measurementId: "G-RBC64CGK4J"
+    };
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        let userId = null;
-        let userEmail = null;
+    let userId = null;
+    let userEmail = null;
 
-        const messageElement = document.getElementById('message');
+    const messageElement = document.getElementById('message');
 
-        function showMessage(msg, type) {
-            messageElement.textContent = msg;
-            messageElement.classList.remove('hidden', 'text-green-500', 'text-red-500', 'text-gray-400');
-            if (type === 'success') {
-                messageElement.classList.add('text-green-500', 'block');
-            } else if (type === 'error') {
-                messageElement.classList.add('text-red-500', 'block');
-            } else {
-                messageElement.classList.add('text-gray-400', 'block');
+    function showMessage(msg, type) {
+        messageElement.textContent = msg;
+        messageElement.classList.remove('hidden', 'text-green-500', 'text-red-500', 'text-gray-400');
+        if (type === 'success') {
+            messageElement.classList.add('text-green-500', 'block');
+        } else if (type === 'error') {
+            messageElement.classList.add('text-red-500', 'block');
+        } else {
+            messageElement.classList.add('text-gray-400', 'block');
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const membershipForm = document.getElementById('membershipForm');
+        const emailInput = document.getElementById('email');
+        const userIdDisplay = document.getElementById('userIdDisplay');
+        const submitBtn = document.getElementById('submitBtn');
+        const formInputs = membershipForm.querySelectorAll('input, textarea, select');
+    
+        const whyJoinTextarea = document.getElementById('whyJoin');
+        const astronomyInterestTextarea = document.getElementById('astronomyInterest');
+        const whyJoinWordCount = document.getElementById('whyJoinWordCount');
+        const astronomyInterestWordCount = document.getElementById('astronomyInterestWordCount');
+    
+        function getWordCount(text) {
+            if (!text || text.trim() === '') {
+                return 0;
+            }
+            return text.trim().split(/\s+/).length;
+        }
+
+        whyJoinTextarea.addEventListener('input', () => {
+            const count = getWordCount(whyJoinTextarea.value);
+            whyJoinWordCount.textContent = count;
+            whyJoinWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
+        });
+    
+        astronomyInterestTextarea.addEventListener('input', () => {
+            const count = getWordCount(astronomyInterestTextarea.value);
+            astronomyInterestWordCount.textContent = count;
+            astronomyInterestWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
+        });
+    
+        async function checkAndLoadApplication(currentUserId) {
+            try {
+                // Correctly form the document path according to the security rules
+                const applicationRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'members', currentUserId);
+                const docSnap = await getDoc(applicationRef);
+    
+                if (docSnap.exists() && docSnap.data().submissionTimestamp) {
+                    const data = docSnap.data();
+                    
+                    // Populate form fields
+                    document.getElementById('fullName').value = data.fullName || '';
+                    document.getElementById('dob').value = data.dateOfBirth || '';
+                    document.getElementById('gender').value = data.gender || '';
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('schoolName').value = data.schoolName || '';
+                    document.getElementById('department').value = data.department || '';
+                    document.getElementById('major').value = data.major || '';
+                    document.getElementById('facebook').value = data.facebook || '';
+                    document.getElementById('instagram').value = data.instagram || '';
+                    document.getElementById('x').value = data.x || '';
+                    document.getElementById('emergencyName').value = data.emergencyContactName || '';
+                    document.getElementById('emergencyPhone').value = data.emergencyContactPhone || '';
+                    document.getElementById('whyJoin').value = data.whyJoin || '';
+                    document.getElementById('astronomyInterest').value = data.astronomyInterest || '';
+                    document.getElementById('howHeard').value = data.howHeard || '';
+                    document.getElementById('priorExperience').value = data.priorExperience || '';
+                    document.getElementById('terms').checked = data.agreedToTerms || false;
+    
+                    // Manually trigger word count update after loading data
+                    whyJoinTextarea.dispatchEvent(new Event('input'));
+                    astronomyInterestTextarea.dispatchEvent(new Event('input'));
+                    
+                    // Disable all form inputs
+                    formInputs.forEach(input => input.disabled = true);
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Application Already Submitted';
+                    submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                    submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
+    
+                    showMessage('Your application has already been submitted and is on file. You can view your information below.', 'success');
+                }
+            } catch (error) {
+                console.error("Error checking for existing application: ", error);
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const membershipForm = document.getElementById('membershipForm');
-            const emailInput = document.getElementById('email');
-            const userIdDisplay = document.getElementById('userIdDisplay');
-            const submitBtn = document.getElementById('submitBtn');
-            const formInputs = membershipForm.querySelectorAll('input, textarea, select');
-        
-            const whyJoinTextarea = document.getElementById('whyJoin');
-            const astronomyInterestTextarea = document.getElementById('astronomyInterest');
-            const whyJoinWordCount = document.getElementById('whyJoinWordCount');
-            const astronomyInterestWordCount = document.getElementById('astronomyInterestWordCount');
-        
-            function getWordCount(text) {
-                if (!text || text.trim() === '') {
-                    return 0;
-                }
-                return text.trim().split(/\s+/).length;
-            }
-
-            whyJoinTextarea.addEventListener('input', () => {
-                const count = getWordCount(whyJoinTextarea.value);
-                whyJoinWordCount.textContent = count;
-                whyJoinWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
-            });
-        
-            astronomyInterestTextarea.addEventListener('input', () => {
-                const count = getWordCount(astronomyInterestTextarea.value);
-                astronomyInterestWordCount.textContent = count;
-                astronomyInterestWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
-            });
-        
-            async function checkAndLoadApplication(currentUserId) {
+    
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                userEmail = user.email;
+                userIdDisplay.textContent = userId;
+                emailInput.value = userEmail || 'Not Available';
+                checkAndLoadApplication(userId);
+            } else {
+                // Sign in with custom token if available, otherwise sign in anonymously
                 try {
-                    // Correctly form the document path according to the security rules
-                    const applicationRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'members', currentUserId);
-                    const docSnap = await getDoc(applicationRef);
-        
-                    if (docSnap.exists() && docSnap.data().submissionTimestamp) {
-                        const data = docSnap.data();
-                        
-                        // Populate form fields
-                        document.getElementById('fullName').value = data.fullName || '';
-                        document.getElementById('dob').value = data.dateOfBirth || '';
-                        document.getElementById('gender').value = data.gender || '';
-                        document.getElementById('phone').value = data.phone || '';
-                        document.getElementById('schoolName').value = data.schoolName || '';
-                        document.getElementById('department').value = data.department || '';
-                        document.getElementById('major').value = data.major || '';
-                        document.getElementById('facebook').value = data.facebook || '';
-                        document.getElementById('instagram').value = data.instagram || '';
-                        document.getElementById('x').value = data.x || '';
-                        document.getElementById('emergencyName').value = data.emergencyContactName || '';
-                        document.getElementById('emergencyPhone').value = data.emergencyContactPhone || '';
-                        document.getElementById('whyJoin').value = data.whyJoin || '';
-                        document.getElementById('astronomyInterest').value = data.astronomyInterest || '';
-                        document.getElementById('howHeard').value = data.howHeard || '';
-                        document.getElementById('priorExperience').value = data.priorExperience || '';
-                        document.getElementById('terms').checked = data.agreedToTerms || false;
-        
-                        // Manually trigger word count update after loading data
-                        whyJoinTextarea.dispatchEvent(new Event('input'));
-                        astronomyInterestTextarea.dispatchEvent(new Event('input'));
-                        
-                        // Disable all form inputs
-                        formInputs.forEach(input => input.disabled = true);
-                        submitBtn.disabled = true;
-                        submitBtn.textContent = 'Application Already Submitted';
-                        submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                        submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
-        
-                        showMessage('Your application has already been submitted and is on file. You can view your information below.', 'success');
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Signed in with custom token.");
+                    } else {
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously.");
                     }
                 } catch (error) {
-                    console.error("Error checking for existing application: ", error);
+                    console.error("Firebase sign-in failed. Error:", error);
+                    showMessage("Authentication failed. Please try again.", 'error');
                 }
             }
-        
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    userEmail = user.email;
-                    userIdDisplay.textContent = userId;
-                    emailInput.value = userEmail || 'Not Available';
-                    checkAndLoadApplication(userId);
-                } else {
-                    // Sign in with custom token if available, otherwise sign in anonymously
-                    try {
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            await signInWithCustomToken(auth, __initial_auth_token);
-                            console.log("Signed in with custom token.");
-                        } else {
-                            await signInAnonymously(auth);
-                            console.log("Signed in anonymously.");
-                        }
-                    } catch (error) {
-                        console.error("Firebase sign-in failed. Error:", error);
-                        showMessage("Authentication failed. Please try again.", 'error');
-                    }
-                }
-            });
-        
-            membershipForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-        
-                const whyJoinCount = getWordCount(whyJoinTextarea.value);
-                const astronomyInterestCount = getWordCount(astronomyInterestTextarea.value);
-        
-                if (whyJoinCount < 300 || whyJoinCount > 500) {
-                    showMessage('Please ensure your response for "Why join LAS?" is between 300 and 500 words.', 'error');
-                    return;
-                }
-        
-                if (astronomyInterestCount < 300 || astronomyInterestCount > 500) {
-                    showMessage('Please ensure your response for "Interests in Astronomy" is between 300 and 500 words.', 'error');
-                    return;
-                }
-        
-                if (!userId) {
-                    showMessage("User not authenticated. Please wait and try again.", 'error');
-                    console.error("User ID is not available.");
-                    return;
-                }
-        
-                // Correctly form the document path for the current user's application
-                const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'members', userId);
-                const docSnap = await getDoc(applicationRef);
-        
-                if (docSnap.exists() && docSnap.data().submissionTimestamp) {
-                    showMessage('You have already submitted an application. Thank you!', 'error');
-                    return;
-                }
-        
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
-                showMessage('Submitting your application now...', 'info');
-        
-                const formData = {
-                    fullName: document.getElementById('fullName').value,
-                    dateOfBirth: document.getElementById('dob').value,
-                    gender: document.getElementById('gender').value,
-                    phone: document.getElementById('phone').value,
-                    email: userEmail,
-                    schoolName: document.getElementById('schoolName').value,
-                    department: document.getElementById('department').value,
-                    major: document.getElementById('major').value,
-                    facebook: document.getElementById('facebook').value,
-                    instagram: document.getElementById('instagram').value,
-                    x: document.getElementById('x').value,
-                    emergencyContactName: document.getElementById('emergencyName').value,
-                    emergencyContactPhone: document.getElementById('emergencyContactPhone').value,
-                    whyJoin: document.getElementById('whyJoin').value,
-                    astronomyInterest: document.getElementById('astronomyInterest').value,
-                    howHeard: document.getElementById('howHeard').value,
-                    priorExperience: document.getElementById('priorExperience').value,
-                    agreedToTerms: document.getElementById('terms').checked,
-                    submissionTimestamp: serverTimestamp()
-                };
-        
-                try {
-                    await setDoc(applicationRef, formData, { merge: true });
-                    
-                    showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
-                    
-                    // Redirect to the assessment page after a short delay
-                    setTimeout(() => {
-                        window.location.href = 'assessment.html'; 
-                    }, 2000); // Redirects after 2 seconds
-                    
-                } catch (error) {
-                    console.error("Error submitting document: ", error);
-                    showMessage("Error submitting form. Please try again.", 'error');
-                    
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit My Application';
-                }
-            });
         });
-    </script>
+    
+        membershipForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+    
+            const whyJoinCount = getWordCount(whyJoinTextarea.value);
+            const astronomyInterestCount = getWordCount(astronomyInterestTextarea.value);
+    
+            if (whyJoinCount < 300 || whyJoinCount > 500) {
+                showMessage('Please ensure your response for "Why join LAS?" is between 300 and 500 words.', 'error');
+                return;
+            }
+    
+            if (astronomyInterestCount < 300 || astronomyInterestCount > 500) {
+                showMessage('Please ensure your response for "Interests in Astronomy" is between 300 and 500 words.', 'error');
+                return;
+            }
+    
+            if (!userId) {
+                showMessage("User not authenticated. Please wait and try again.", 'error');
+                console.error("User ID is not available.");
+                return;
+            }
+    
+            // Correctly form the document path for the current user's application
+            const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'members', userId);
+            const docSnap = await getDoc(applicationRef);
+    
+            if (docSnap.exists() && docSnap.data().submissionTimestamp) {
+                showMessage('You have already submitted an application. Thank you!', 'error');
+                return;
+            }
+    
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            showMessage('Submitting your application now...', 'info');
+    
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                dateOfBirth: document.getElementById('dob').value,
+                gender: document.getElementById('gender').value,
+                phone: document.getElementById('phone').value,
+                email: userEmail,
+                schoolName: document.getElementById('schoolName').value,
+                department: document.getElementById('department').value,
+                major: document.getElementById('major').value,
+                facebook: document.getElementById('facebook').value,
+                instagram: document.getElementById('instagram').value,
+                x: document.getElementById('x').value,
+                emergencyContactName: document.getElementById('emergencyName').value,
+                // FIX: Corrected the ID to 'emergencyPhone' to match the HTML
+                emergencyContactPhone: document.getElementById('emergencyPhone').value,
+                whyJoin: document.getElementById('whyJoin').value,
+                astronomyInterest: document.getElementById('astronomyInterest').value,
+                howHeard: document.getElementById('howHeard').value,
+                priorExperience: document.getElementById('priorExperience').value,
+                agreedToTerms: document.getElementById('terms').checked,
+                submissionTimestamp: serverTimestamp()
+            };
+    
+            try {
+                await setDoc(applicationRef, formData, { merge: true });
+                
+                showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
+                
+                // FIX: Reduced the timeout to 500ms for a faster user experience
+                setTimeout(() => {
+                    window.location.href = 'assessment.html'; 
+                }, 500); // Redirects after 0.5 seconds
+                
+            } catch (error) {
+                console.error("Error submitting document: ", error);
+                showMessage("Error submitting form. Please try again.", 'error');
+                
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit My Application';
+            }
+        });
+    });
+</script>
 </body>
 </html>
