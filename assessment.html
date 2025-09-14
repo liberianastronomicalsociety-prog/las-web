@@ -67,7 +67,15 @@
 
         // Firebase and app ID globals
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = {
+            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+            authDomain: "liberian-astro-society.firebaseapp.com",
+            projectId: "liberian-astro-society",
+            storageBucket: "liberian-astro-society.firebasestorage.app",
+            messagingSenderId: "914979035379",
+            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
+            measurementId: "G-RBC64CGK4J"
+        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // Initialize Firebase
