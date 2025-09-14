@@ -180,10 +180,10 @@
                     Thank you for completing the initial application. After you submit this form, here are the next steps to become an official member of the Liberian Astronomical Society:
                 </p>
                 <ol class="list-decimal list-inside space-y-2 text-gray-300">
-                    <li>You will be redirected to a 15-Question assessment to test your astronomy knowledge. You need a score of at least 8 to pass.</li>
-                    <li>If you pass, you will be scheduled for an Interview with an Administrator.</li>
-                    <li>After the interview, you will receive the Official Membership form and details for a one-time newcomer due of $5 USD, payable via Orange Money at `0772858306`.</li>
-                    <li>Once everything is complete, you'll get your Official Membership letter!</li>
+                    <li>You will be redirected to a 15-question assessment to test your astronomy knowledge. You need a score of at least 8 to pass.</li>
+                    <li>If you pass, you will be scheduled for an interview with an administrator.</li>
+                    <li>After the interview, you will receive the official membership form and details for a one-time newcomer due of $5 USD, payable via Orange Money at `0772858306`.</li>
+                    <li>Once everything is complete, you'll get your official membership letter!</li>
                 </ol>
                 <p class="text-gray-400 text-sm mt-4">
                     Remember, a monthly due of $500 LRD is required to maintain your active membership status.
@@ -208,9 +208,9 @@
 
     <!-- Firebase and JavaScript Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.3.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/12.3.1/firebase-firestore.js";
 
         // Enable debug logging for Firebase
         setLogLevel('debug');
@@ -328,16 +328,18 @@
                     emailInput.value = userEmail || 'Not Available';
                     checkAndLoadApplication(userId);
                 } else {
-                    if (initialAuthToken) {
-                        try {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                        } catch (error) {
-                            console.error("Firebase custom token sign-in failed. This likely indicates an issue with the provided authentication token.", error);
-                            showMessage("Authentication failed. Please refresh the page. If the problem persists, there may be an issue with your account credentials.", 'error');
+                    // Sign in with custom token if available, otherwise sign in anonymously
+                    try {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                            console.log("Signed in with custom token.");
+                        } else {
+                            await signInAnonymously(auth);
+                            console.log("Signed in anonymously.");
                         }
-                    } else {
-                        console.error("No authentication token provided.");
-                        showMessage("Authentication failed. No token found.", 'error');
+                    } catch (error) {
+                        console.error("Firebase sign-in failed. Error:", error);
+                        showMessage("Authentication failed. Please try again.", 'error');
                     }
                 }
             });
