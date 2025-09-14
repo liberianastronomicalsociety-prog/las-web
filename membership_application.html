@@ -9,13 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @keyframes starry-glow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #0d1117;
-            background-image: radial-gradient(circle at 10% 20%, #1e3a8a, #0c4a6e);
+            background-image: 
+                linear-gradient(rgba(12, 74, 110, 0.7), rgba(30, 58, 138, 0.7)),
+                url('https://images.unsplash.com/photo-1506744038136-413d32152069?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
             background-attachment: fixed;
             color: #d1d5db;
+            position: relative;
         }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+            background-size: 200% 200%;
+            animation: starry-glow 30s ease-in-out infinite;
+            pointer-events: none;
+        }
+
         .form-card {
             background-color: rgba(17, 24, 39, 0.5);
             backdrop-filter: blur(10px);
@@ -126,10 +151,16 @@
                 <div>
                     <label for="whyJoin" class="block text-sm font-medium text-gray-300 mb-1">Why do you want to join the Liberian Astronomical Society?</label>
                     <textarea id="whyJoin" rows="4" required class="w-full px-4 py-2 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <div class="text-xs text-gray-400 mt-1">
+                        Word count: <span id="whyJoinWordCount">0</span>/500
+                    </div>
                 </div>
                 <div>
                     <label for="astronomyInterest" class="block text-sm font-medium text-gray-300 mb-1">What are your interests in astronomy?</label>
                     <textarea id="astronomyInterest" rows="4" required class="w-full px-4 py-2 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <div class="text-xs text-gray-400 mt-1">
+                        Word count: <span id="astronomyInterestWordCount">0</span>/500
+                    </div>
                 </div>
                 <div>
                     <label for="howHeard" class="block text-sm font-medium text-gray-300 mb-1">How did you hear about LAS?</label>
@@ -183,6 +214,11 @@
         const messageElement = document.getElementById('message');
         const submitBtn = document.getElementById('submitBtn');
 
+        const whyJoinTextarea = document.getElementById('whyJoin');
+        const astronomyInterestTextarea = document.getElementById('astronomyInterest');
+        const whyJoinWordCount = document.getElementById('whyJoinWordCount');
+        const astronomyInterestWordCount = document.getElementById('astronomyInterestWordCount');
+
         function showMessage(msg, type) {
             messageElement.textContent = msg;
             messageElement.classList.remove('hidden', 'text-green-500', 'text-red-500', 'text-gray-400');
@@ -194,6 +230,22 @@
                 messageElement.classList.add('text-gray-400', 'block');
             }
         }
+
+        function getWordCount(text) {
+            return text.split(/\s+/).filter(word => word.length > 0).length;
+        }
+
+        whyJoinTextarea.addEventListener('input', () => {
+            const count = getWordCount(whyJoinTextarea.value);
+            whyJoinWordCount.textContent = count;
+            whyJoinWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
+        });
+
+        astronomyInterestTextarea.addEventListener('input', () => {
+            const count = getWordCount(astronomyInterestTextarea.value);
+            astronomyInterestWordCount.textContent = count;
+            astronomyInterestWordCount.style.color = (count < 300 || count > 500) ? '#f87171' : '#a7a7a7';
+        });
 
         async function authenticateUser() {
             try {
@@ -221,8 +273,23 @@
 
         membershipForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const whyJoinCount = getWordCount(whyJoinTextarea.value);
+            const astronomyInterestCount = getWordCount(astronomyInterestTextarea.value);
+
+            if (whyJoinCount < 300 || whyJoinCount > 500) {
+                showMessage('Please ensure your response for "Why join LAS?" is between 300 and 500 words.', 'error');
+                return;
+            }
+
+            if (astronomyInterestCount < 300 || astronomyInterestCount > 500) {
+                showMessage('Please ensure your response for "Interests in Astronomy" is between 300 and 500 words.', 'error');
+                return;
+            }
+
             if (!userId) {
                 showMessage("User not authenticated. Please wait and try again.", 'error');
+                console.error("User ID is not available.");
                 return;
             }
 
@@ -258,9 +325,12 @@
                 
                 await setDoc(applicationRef, formData);
                 
-                showMessage('Application submitted successfully! Your journey continues with the assessment.', 'success');
-                // You can add a redirect here if needed, for example to the assessment page.
-                // window.location.href = 'assessment.html'; 
+                showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
+                
+                // Redirect to the assessment page after a short delay
+                setTimeout(() => {
+                    window.location.href = 'assessment.html'; 
+                }, 2000); // Redirects after 2 seconds
                 
             } catch (error) {
                 console.error("Error writing document: ", error);
