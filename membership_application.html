@@ -67,7 +67,6 @@
         </div>
 
         <form id="membershipForm" class="space-y-8">
-            <!-- Your Personal Information -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">Your Personal Information</h3>
                 <div class="grid md:grid-cols-2 gap-6">
@@ -99,7 +98,6 @@
                 </div>
             </div>
 
-            <!-- Your School and Social Media -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">School & Social Information</h3>
                 <div class="grid md:grid-cols-2 gap-6">
@@ -130,7 +128,6 @@
                 </div>
             </div>
 
-            <!-- Emergency Contact -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">Emergency Contact</h3>
                 <p class="text-gray-400 text-sm mb-4">In case of an emergency, who should we contact?</p>
@@ -146,7 +143,6 @@
                 </div>
             </div>
 
-            <!-- Your Interests -->
             <div class="space-y-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">Your Interests & Experience</h3>
                 <div>
@@ -173,7 +169,6 @@
                 </div>
             </div>
 
-            <!-- Next Steps -->
             <div class="border-b border-gray-600 pb-6">
                 <h3 class="text-2xl font-semibold text-white mb-4">What's Next?</h3>
                 <p class="text-gray-400 text-base mb-4">
@@ -190,7 +185,6 @@
                 </p>
             </div>
 
-            <!-- Terms & Conditions and Submit -->
             <div class="space-y-4 pt-6">
                 <div class="flex items-start">
                     <input type="checkbox" id="terms" required class="mt-1 form-checkbox h-4 w-4 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out bg-gray-700 border-gray-600">
@@ -206,7 +200,6 @@
         </form>
     </div>
 
-    <!-- Firebase and JavaScript Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.3.1/firebase-auth.js";
@@ -263,10 +256,12 @@
             const astronomyInterestWordCount = document.getElementById('astronomyInterestWordCount');
         
             function getWordCount(text) {
-                return text.split(/\s+/).filter(word => word.length > 0).length;
+                if (!text || text.trim() === '') {
+                    return 0;
+                }
+                return text.trim().split(/\s+/).length;
             }
 
-            // Moved word count logic here to ensure it runs immediately when the DOM is ready.
             whyJoinTextarea.addEventListener('input', () => {
                 const count = getWordCount(whyJoinTextarea.value);
                 whyJoinWordCount.textContent = count;
