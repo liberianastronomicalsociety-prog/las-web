@@ -42,6 +42,62 @@
         .nav-link:hover {
             color: #a5b4fc; /* Tailwind's indigo-300 */
         }
+            .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Certificate Carousel Styling */
+        .certificate-carousel {
+            position: relative;
+            width: 100%;
+            height: 224px; /* h-56 in Tailwind */
+            overflow: hidden;
+        }
+
+        .certificate-carousel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            animation: carousel-fade 25s infinite;
+        }
+
+        .certificate-carousel img:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .certificate-carousel img:nth-child(2) {
+            animation-delay: 5s;
+        }
+
+        .certificate-carousel img:nth-child(3) {
+            animation-delay: 10s;
+        }
+
+        .certificate-carousel img:nth-child(4) {
+            animation-delay: 15s;
+        }
+
+        .certificate-carousel img:nth-child(5) {
+            animation-delay: 20s;
+        }
+
+        @keyframes carousel-fade {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            20% { opacity: 1; }
+            25% { opacity: 0; }
+            100% { opacity: 0; }
+        }
     </style>
     <!-- Google Font - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -384,6 +440,23 @@
                     </p>
                     <a href="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Watch on YouTube →</a>
                 </div>
+             <!-- New animated certificate card -->
+            <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 overflow-hidden">
+                <div class="certificate-carousel">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
+                    <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
+                    <p class="text-gray-300 text-sm">
+                        Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) asteroid hunting campaign.
+                    </p>
+                    <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
+                </div>
             </div>
         </div>
     </div>
@@ -626,6 +699,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
