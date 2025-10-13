@@ -304,7 +304,11 @@
     <section id="portfolio" class="section-padding">
         <div class="container mx-auto text-center">
             <h2 class="text-4xl font-bold text-white mb-12">Our Work in Action</h2>
+            
+            <!-- Grid container for all project cards -->
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project Card 1: Campus Astronomy Class -->
                 <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 overflow-hidden">
                     <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus" class="w-full h-56 object-cover">
                     <div class="p-6">
@@ -314,41 +318,45 @@
                         </p>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 overflow-hidden">
-                <div class="certificate-carousel">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+
+                <!-- Project Card 2: IASC Certificates (with Carousel) -->
+                <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 overflow-hidden">
+                    <!-- Class changed to fade-carousel for automatic cycling -->
+                    <div class="fade-carousel">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
+                        <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
+                        <p class="text-gray-300 text-sm">
+                            Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) on our first asteroid hunting campaign attempt.
+                        </p>
+                        <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
-                    <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
-                    <p class="text-gray-300 text-sm">
-                        Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) on our first asteroid hunting campaign attempt.
-                    </p>
-                    <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
-                </div>
-            </div>
-        </div>
-        <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 overflow-hidden">
-                <div class="certificate-carousel">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/BARNARD%2033_2.png" alt="Horsehead Nebula" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Lagoon%20Galaxy.png" alt="Lagoon Nebula" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Heart%20Nebulae%202.png" alt="Heart Nebula" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/M51_2.png" alt="Whirlpool Galaxy" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Andonmara%20Galaxy.png" alt="Andromeda Galaxy" class="w-full h-full">
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our Astrophotography Projects</h3>
-                    <p class="text-gray-400 text-sm mb-4">Date: Oct 12, 2025</p>
-                    <p class="text-gray-300 text-sm">
-                        Proudly showcasing our images processed - Horsehead Nebula, Lagoon Nebula, Heart Nebula, Whirlpool Galaxy and Andromeda Galaxy - using GIMP and Photoshop during our first indoor Astrophotography Training.
-                    </p>
-                    <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
+                
+                <!-- Project Card 3: Astrophotography Projects (with Carousel) -->
+                <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 overflow-hidden">
+                    <!-- Class changed to fade-carousel for automatic cycling -->
+                    <div class="fade-carousel">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/BARNARD%2033_2.png" alt="Horsehead Nebula" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Lagoon%20Galaxy.png" alt="Lagoon Nebula" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Heart%20Nebulae%202.png" alt="Heart Nebula" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/M51_2.png" alt="Whirlpool Galaxy" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Andonmara%20Galaxy.png" alt="Andromeda Galaxy" class="w-full h-full">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our Astrophotography Projects</h3>
+                        <p class="text-gray-400 text-sm mb-4">Date: Oct 12, 2025</p>
+                        <p class="text-gray-300 text-sm">
+                            Proudly showcasing our images processed - Horsehead Nebula, Lagoon Nebula, Heart Nebula, Whirlpool Galaxy and Andromeda Galaxy - using GIMP and Photoshop during our first indoor Astrophotography Training.
+                        </p>
+                        <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -365,7 +373,7 @@
                 </p>
             </div>
 
-            <!-- Team Members Grid -->
+            <!-- Team Members Grid (4-column layout) -->
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
                 <!-- Team Member Card 1: Daniel A. Obajemu -->
                 <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
@@ -405,34 +413,41 @@
                 </div>
             </div>
 
-            <!-- Chief Advisor Section -->
+            <!-- Advisors Section (Chief and Outreach) -->
             <div class="mt-24">
-                <h2 class="text-3xl font-bold text-center text-white mb-12">Our Chief Advisor</h2>
-                <div class="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
-                    <div class="md:flex-shrink-0">
-                        <img class="h-48 w-full object-cover md:w-48" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Mr.%20Miracle.jpeg" alt="Mr. Miracle Chibuzor Marcel">
-                    </div>
-                    <div class="p-8 text-center md:text-left">
-                        <h3 class="text-2xl font-bold text-white">Mr. Miracle Chibuzor Marcel</h3>
-                        <p class="text-indigo-400 font-semibold mb-3">Pan-African Citizen Science e-Laboratory</p>
-                        <p class="text-gray-300">
-                            Guiding our society with a wealth of experience, Mr. Marcel provides invaluable strategic advice and fosters our connection with the broader Pan-African scientific community.
-                        </p>
-                    </div>
-                    <!-- Chief Advisor Section -->
-                    <div class="mt-24">
-                     <h2 class="text-3xl font-bold text-center text-white mb-12">Our Chief Advisor</h2>
-                    <div class="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
+                <h2 class="text-3xl font-bold text-center text-white mb-12">Our Key Advisors</h2>
+                
+                <!-- Grid container for the two advisor cards (side-by-side on large screens) -->
+                <div class="max-w-6xl mx-auto grid gap-8 lg:grid-cols-2">
+
+                    <!-- Chief Advisor Card -->
+                    <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
                         <div class="md:flex-shrink-0">
-                        <img class="h-48 w-full object-cover md:w-48" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/mum.jpg" alt="Mrs. Alisabatu Obajemu">
+                            <img class="h-48 w-full object-cover md:w-48" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Mr.%20Miracle.jpeg" alt="Mr. Miracle Chibuzor Marcel">
+                        </div>
+                        <div class="p-8 text-center md:text-left">
+                            <h3 class="text-2xl font-bold text-white">Mr. Miracle Chibuzor Marcel</h3>
+                            <p class="text-indigo-400 font-semibold mb-3">Chief Advisor</p>
+                            <p class="text-gray-300">
+                                Guiding our society with a wealth of experience, Mr. Marcel provides invaluable strategic advice and fosters our connection with the broader Pan-African scientific community.
+                            </p>
+                        </div>
                     </div>
-                    <div class="p-8 text-center md:text-left">
-                        <h3 class="text-2xl font-bold text-white">Mrs. Alisabatu Angelina Obajemu</h3>
-                        <p class="text-indigo-400 font-semibold mb-3">Stella Maris Polytechnic University</p>
-                        <p class="text-gray-300">
-                            Mrs. Obajemu is essential in developing and executing our public engagement and educational programs, ensuring we inspire the next generation of astronomers across Liberia.
-                        </p>
+
+                    <!-- Outreach Advisor Card -->
+                    <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
+                        <div class="md:flex-shrink-0">
+                            <img class="h-48 w-full object-cover md:w-48" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/mum.jpg" alt="Mrs. Alisabatu Obajemu">
+                        </div>
+                        <div class="p-8 text-center md:text-left">
+                            <h3 class="text-2xl font-bold text-white">Mrs. Alisabatu Angelina Obajemu</h3>
+                            <p class="text-indigo-400 font-semibold mb-3">Outreach Advisor</p>
+                            <p class="text-gray-300">
+                                Mrs. Obajemu is essential in developing and executing our public engagement and educational programs, ensuring we inspire the next generation of astronomers across Liberia.
+                            </p>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -750,6 +765,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
