@@ -710,13 +710,13 @@
         </div>
     </div>
 
-   <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         
         // --- Carousel Initialization ---
         /**
          * Initializes automatic cycling for all elements with the 'fade-carousel' class.
-         * Images fade in and out every 5 seconds.
+         * Images now 'blink' instantly every 1.5 seconds.
          */
         function initCarousels() {
             // Find all carousel containers
@@ -741,8 +741,8 @@
                     images[currentImageIndex].classList.add('active');
                 }
 
-                // 3. Cycle the image every 5 seconds (5000 milliseconds)
-                setInterval(cycleImage, 5000);
+                // 3. Cycle the image every 1.5 seconds (1500 milliseconds) for a rapid 'blink' effect
+                setInterval(cycleImage, 1500);
             });
         }
         initCarousels(); // Run immediately after DOM is ready
@@ -808,6 +808,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
