@@ -8,97 +8,103 @@
     <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .hero-bg-image {
-            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-        }
-        .hero-bg-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        .section-padding {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-        }
-        .nav-link {
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #a5b4fc; /* Tailwind's indigo-300 */
-        }
-            .section-padding {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
+ <style>
+    /* --- Global Layout & Typography --- */
+    body {
+        background-color: #111827; /* Tailwind gray-900 or similar dark color */
+        font-family: 'Inter', sans-serif;
+    }
+    html {
+        scroll-behavior: smooth; /* New: Enables smooth scrolling for anchors */
+    }
+    .section-padding {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+    }
 
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-        }
+    /* --- Navigation Styles (New) --- */
+    .nav-link {
+        transition: color 0.3s ease;
+    }
+    .nav-link:hover {
+        color: #a5b4fc; /* Tailwind's indigo-300 */
+    }
 
-        /* Certificate Carousel Styling */
-        .certificate-carousel {
-            position: relative;
-            width: 100%;
-            height: 224px; /* h-56 in Tailwind */
-            overflow: hidden;
-        }
+    /* --- Hero Background (New) --- */
+    .hero-bg-image {
+        background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+    .hero-bg-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+    }
 
-        .certificate-carousel img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            opacity: 0;
-            animation: carousel-fade 25s infinite;
-        }
+    /* --- Card & Hover Effects --- */
+    .card-hover:hover {
+        transform: translateY(-4px);
+        /* Keeping the original attractive indigo shadow */
+        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+    }
 
-        .certificate-carousel img:nth-child(1) {
-            animation-delay: 0s;
-        }
+    /* --- JS Carousel (Blinking Effect) --- */
+    .fade-carousel {
+        position: relative;
+        height: 14rem; /* h-56 */
+    }
+    .fade-carousel img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Keeps images full size, cutting off edges if necessary */
+        opacity: 0; /* Start hidden */
+        /* No transition for the 'blink' effect */
+    }
+    .fade-carousel img.active {
+        opacity: 1; /* Show active image */
+    }
 
-        .certificate-carousel img:nth-child(2) {
-            animation-delay: 5s;
-        }
-
-        .certificate-carousel img:nth-child(3) {
-            animation-delay: 10s;
-        }
-
-        .certificate-carousel img:nth-child(4) {
-            animation-delay: 15s;
-        }
-
-        .certificate-carousel img:nth-child(5) {
-            animation-delay: 20s;
-        }
-
-        @keyframes carousel-fade {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            20% { opacity: 1; }
-            25% { opacity: 0; }
-            100% { opacity: 0; }
-        }
-    </style>
+    /* --- CSS Carousel (New: Added for completeness/future use) --- */
+    .certificate-carousel {
+        position: relative;
+        width: 100%;
+        height: 224px; /* h-56 in Tailwind */
+        overflow: hidden;
+    }
+    .certificate-carousel img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ensures the entire image (like a certificate) is visible */
+        opacity: 0;
+        animation: carousel-fade 25s infinite;
+    }
+    .certificate-carousel img:nth-child(1) { animation-delay: 0s; }
+    .certificate-carousel img:nth-child(2) { animation-delay: 5s; }
+    .certificate-carousel img:nth-child(3) { animation-delay: 10s; }
+    .certificate-carousel img:nth-child(4) { animation-delay: 15s; }
+    .certificate-carousel img:nth-child(5) { animation-delay: 20s; }
+    @keyframes carousel-fade {
+        0% { opacity: 0; }
+        10% { opacity: 1; }
+        20% { opacity: 1; }
+        25% { opacity: 0; }
+        100% { opacity: 0; }
+    }
+</style>
     <!-- Google Font - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -808,6 +814,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
