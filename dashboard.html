@@ -9,7 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 1. PDF Generation Library -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <style>
+        /* --- Global Styles --- */
         body {
             font-family: 'Inter', sans-serif;
             background: #0d1117;
@@ -22,10 +25,29 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        /* Style for the acceptance letter section */
+        .acceptance-letter-bg {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.8), rgba(67, 56, 202, 0.8));
+            border: 2px solid #3b82f6; /* Blue border */
+        }
+        /* Simple spinner for loading state */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3b82f6; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
+    <!-- Dashboard Card Container -->
     <div class="dashboard-card p-8 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto transform transition-all duration-300">
         <div class="flex flex-col items-center mb-6 text-center">
             <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-16 w-auto mb-4">
@@ -47,10 +69,66 @@
             <p id="pendingMessage" class="mt-4 text-sm text-gray-400 hidden">
                 Your membership is pending approval. Please complete your application:
             </p>
-            <a id="applicationLink" href="membership_application.html" target="_blank" class="mt-4 inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 transition-all duration-300">
+            <a id="applicationLink" href="membership_application.html" target="_blank" class="mt-4 hidden inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 transition-all duration-300">
                 Complete Membership Application
             </a>
         </div>
+        
+        <!-- ACCEPTANCE LETTER SECTION -->
+        <div id="acceptanceLetterSection" class="acceptance-letter-bg p-6 rounded-xl shadow-inner mb-6 hidden">
+            <h2 class="text-3xl font-bold text-white mb-4 text-center">🎉 Congratulations! Your Application is Approved! 🎉</h2>
+            <!-- START UPDATED LETTER CONTENT -->
+            <div id="letterContent" class="bg-white/10 p-6 rounded-lg backdrop-blur-sm text-gray-200">
+                <p class="text-xl font-semibold text-white mb-4">
+                    Dear <strong id="memberName" class="text-indigo-300">Member</strong>,
+                </p>
+
+                <p class="mb-6 leading-relaxed">
+                    **Congratulations!** On behalf of the Liberian Astronomical Society, we are pleased to inform you that you have been officially accepted as a member of our great community. We welcome you to our growing community of astronomy and space science enthusiasts!
+                </p>
+                
+                <p class="font-semibold text-white mt-4 mb-2">As a member, you will have access to:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4 mb-6">
+                    <li>Training programs and workshops (including **asteroids hunting** and telescope training).</li>
+                    <li>Participation in national and international research projects.</li>
+                    <li>Exclusive updates, resources, and opportunities to contribute to astronomy outreach in Liberia.</li>
+                </ul>
+
+                <p class="font-semibold text-white mt-6 mb-2">Membership Renewal Fees:</p>
+                <div class="bg-gray-700/50 p-4 rounded-lg space-y-1 text-sm">
+                    <p><strong class="text-indigo-300">Students:</strong> $500 LRD / monthly</p>
+                    <p><strong class="text-indigo-300">Teachers:</strong> $5 USD / monthly</p>
+                    <p><strong class="text-indigo-300">Professors:</strong> $15 USD / monthly</p>
+                </div>
+
+                <p class="mt-6 mb-6 leading-relaxed">
+                    We are excited to have you on board and look forward to your active participation in our programs. Together we will inspire curiosity, promote scientific literacy, and build Liberia's presence in the global astronomy community.
+                </p>
+
+                <p class="mt-4 text-sm text-indigo-400">
+                    Once again, welcome to the LAS family.
+                    <br>
+                    — LAS Administrators
+                </p>
+            </div>
+            <!-- END UPDATED LETTER CONTENT -->
+            
+            <!-- DOWNLOAD AND ACTION BUTTONS -->
+            <div id="confirmationActions" class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button id="downloadLetterButton" class="w-full sm:w-auto bg-gray-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300 flex-shrink-0">
+                    Download Letter (PDF)
+                </button>
+                <button id="acceptButton" class="w-full sm:w-auto bg-green-600 text-white py-2 px-4 rounded-lg font-semibold shadow-md hover:bg-green-700 transition-all duration-300 flex-grow">
+                    Accept Membership
+                </button>
+                <button id="declineButton" class="w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 flex-shrink-0">
+                    Decline Offer
+                </button>
+            </div>
+            <!-- END BUTTONS -->
+
+        </div>
+        <!-- END ACCEPTANCE LETTER SECTION -->
 
         <!-- Member-Only Resources Section -->
         <div class="mt-6 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
@@ -59,14 +137,17 @@
                 <!-- Celestial Object Finder -->
                 <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
                     <h3 class="text-lg font-semibold text-white mb-2">Celestial Object Finder</h3>
-                    <p class="text-gray-400 text-sm mb-4">Search for planets, stars, and constellations.</p>
+                    <p class="text-gray-400 text-sm mb-4">Search for planets, stars, and constellations using AI.</p>
                     <div class="flex space-x-2">
                         <input type="text" id="objectSearchInput" placeholder="e.g. Jupiter" class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <button id="searchButton" class="bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300">
                             Search
                         </button>
                     </div>
-                    <div id="searchResults" class="mt-4 text-gray-300 text-sm italic"></div>
+                    <!-- Results Display Area -->
+                    <div id="searchResults" class="mt-4 text-gray-300 text-sm leading-relaxed">
+                        Ready to search for a star or planet!
+                    </div>
                 </div>
 
                 <!-- Future Resources Placeholder -->
@@ -79,102 +160,286 @@
 
         <!-- Log out button -->
         <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
-            Log Out
+            Log Out (Simulated)
         </button>
     </div>
 
+    <!-- Custom Message Box (Replaces alert()) -->
+    <div id="messageBox" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 transition-opacity duration-300" aria-modal="true" role="dialog">
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-full border border-gray-700">
+            <h3 id="messageTitle" class="text-xl font-bold text-white mb-3">Message</h3>
+            <p id="messageText" class="text-gray-300 mb-6"></p>
+            <button id="closeMessageBox" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300">Close</button>
+        </div>
+    </div>
+
+
     <!-- Firebase and JavaScript Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+        // --- API CONFIGURATION ---
+        const apiKey = ""; 
+        // Using the required model name directly in the URL for maximum compatibility with the execution environment.
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const MAX_RETRIES = 3;
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
-            authDomain: "liberian-astro-society.firebaseapp.com",
-            projectId: "liberian-astro-society",
-            storageBucket: "liberian-astro-society.firebasestorage.app",
-            messagingSenderId: "914979035379",
-            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
-            measurementId: "G-RBC64CGK4J"
-        };
-    
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
+        // Utility function for exponential backoff
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // DOM Elements
         const userEmailDisplay = document.getElementById('userEmailDisplay');
         const membershipStatus = document.getElementById('membershipStatus');
         const pendingMessage = document.getElementById('pendingMessage');
         const applicationLink = document.getElementById('applicationLink');
         const searchInput = document.getElementById('objectSearchInput');
         const searchResults = document.getElementById('searchResults');
+        const acceptanceLetterSection = document.getElementById('acceptanceLetterSection');
+        const memberName = document.getElementById('memberName');
+        const logoutButton = document.getElementById('logoutButton');
+        const letterContent = document.getElementById('letterContent');
+        const confirmationActions = document.getElementById('confirmationActions');
 
-        // Check for user login status and fetch profile data
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userEmailDisplay.textContent = user.email;
+        // NEW BUTTONS
+        const downloadLetterButton = document.getElementById('downloadLetterButton');
+        const searchButton = document.getElementById('searchButton');
+        const acceptButton = document.getElementById('acceptButton');
+        const declineButton = document.getElementById('declineButton');
 
-                // Fetch user data from Firestore
-                const userDocRef = doc(db, "members", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
 
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    const status = userData.membership_status || 'Pending';
-                    membershipStatus.textContent = status;
-                    
-                    if (status === 'Pending') {
-                        membershipStatus.classList.remove('text-green-400');
-                        membershipStatus.classList.add('text-yellow-400');
-                        pendingMessage.classList.remove('hidden');
-                        applicationLink.classList.remove('hidden');
-                    } else if (status === 'Active') {
-                        membershipStatus.classList.remove('text-yellow-400');
-                        membershipStatus.classList.add('text-green-400');
-                        pendingMessage.classList.add('hidden');
-                        applicationLink.classList.add('hidden');
-                    }
-                } else {
-                    // This is a new user account, but no profile document exists.
-                    // This can happen if the signup process didn't complete fully.
-                    membershipStatus.textContent = "Profile missing. Please contact support.";
-                    membershipStatus.classList.add('text-red-400');
-                }
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
+        // Message Box Elements
+        const messageBox = document.getElementById('messageBox');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
+        const closeMessageBox = document.getElementById('closeMessageBox');
 
-        // Search functionality
-        document.getElementById('searchButton').addEventListener('click', () => {
-            const query = searchInput.value.toLowerCase();
-            const objects = {
-                "jupiter": "Jupiter is the largest planet in our solar system, with a diameter of about 140,000 km. It's a gas giant with a famous Great Red Spot, a storm that has been raging for centuries.",
-                "mars": "Mars is known as the Red Planet due to its iron oxide-rich surface. It has a thin atmosphere and is home to the largest volcano in the solar system, Olympus Mons.",
-                "moon": "The Moon is Earth's only natural satellite. It has a cratered, rocky surface and is the fifth-largest moon in the solar system.",
-                "sirius": "Sirius is the brightest star in the night sky. It is a binary star system located in the constellation Canis Major.",
-                "orion": "Orion is one of the most recognizable constellations. It's named after the hunter in Greek mythology and is home to prominent stars like Betelgeuse and Rigel."
-            };
-            
-            if (objects[query]) {
-                searchResults.textContent = objects[query];
-            } else {
-                searchResults.textContent = "No information found. Please try a different object (e.g., Jupiter, Mars, Moon, Sirius, Orion).";
-            }
-        });
+        // --- MESSAGE BOX UTILITY ---
+        const displayMessage = (title, text) => {
+            messageTitle.textContent = title;
+            messageText.textContent = text;
+            messageBox.classList.remove('hidden');
+            messageBox.classList.add('flex');
+        };
 
-        // Log out functionality
-        document.getElementById('logoutButton').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = 'login.html';
-            }).catch((error) => {
-                console.error("Logout failed:", error.message);
-                alert("Logout failed: " + error.message);
+        if (closeMessageBox) {
+            closeMessageBox.addEventListener('click', () => {
+                messageBox.classList.add('hidden');
+                messageBox.classList.remove('flex');
             });
+        }
+        
+        // --- DOWNLOAD FUNCTION (UPDATED FOR PDF) ---
+        const handleDownload = () => {
+            // Check if jsPDF library is loaded
+            if (typeof window.jspdf === 'undefined') {
+                displayMessage("Download Error", "The PDF generation library is not available. Please try again later.");
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            
+            // 1. Get the content element you want to convert
+            const content = document.getElementById('letterContent');
+            
+            // 2. Configure and generate the PDF
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'in',
+                format: 'letter'
+            });
+
+            // doc.html() converts the HTML element into a PDF representation
+            doc.html(content, {
+                callback: function (doc) {
+                    doc.save('LAS_Acceptance_Letter.pdf');
+                    displayMessage("Download Complete", "Your official acceptance letter has been downloaded as a **PDF** file!");
+                },
+                x: 0.5,
+                y: 0.5,
+                html2canvas: {
+                    scale: 0.5, // Scale down the content to fit nicely on the PDF
+                    width: 7.5 // Width of the content area in inches
+                }
+            });
+        };
+
+        // --- GEMINI AI SEARCH FUNCTION ---
+        const runGeminiSearch = async (query) => {
+            searchResults.innerHTML = '<div class="flex items-center space-x-2"><div class="loader"></div><span class="text-indigo-400">Searching the cosmos...</span></div>';
+            searchButton.disabled = true;
+
+            const systemPrompt = "You are an expert astronomical search engine. Provide a concise, educational summary (2-3 sentences max) of the celestial object requested. Do not include any conversational filler.";
+            const userQuery = `Find and describe the celestial object: ${query}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            for (let i = 0; i < MAX_RETRIES; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        // Log the error for debugging purposes
+                        console.error(`Attempt ${i + 1} failed. Status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        const text = candidate.content.parts[0].text;
+                        
+                        let sources = [];
+                        const groundingMetadata = candidate.groundingMetadata;
+                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                            sources = groundingMetadata.groundingAttributions
+                                .map(attribution => ({
+                                    uri: attribution.web?.uri,
+                                    title: attribution.web?.title,
+                                }))
+                                .filter(source => source.uri && source.title);
+                        }
+
+                        let sourceHTML = '';
+                        if (sources.length > 0) {
+                            // Display the title and up to 3 sources for grounding
+                            sourceHTML = `
+                                <div class="mt-3 pt-3 border-t border-gray-600">
+                                    <p class="font-medium text-xs text-indigo-400 mb-1">Sources (Grounding):</p>
+                                    <ul class="list-disc list-inside space-y-0.5 ml-2">
+                                        ${sources.slice(0, 3).map(s => `
+                                            <li><a href="${s.uri}" target="_blank" class="text-xs text-indigo-300 hover:text-indigo-200 underline truncate block">${s.title}</a></li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+
+                        searchResults.innerHTML = `<p class="font-medium text-white">${query}:</p>${text}${sourceHTML}`;
+                        searchButton.disabled = false;
+                        return; // Success, exit the retry loop
+
+                    } else {
+                        throw new Error("Invalid or empty response from the AI.");
+                    }
+                } catch (error) {
+                    console.error("AI Search Error:", error);
+                    if (i < MAX_RETRIES - 1) {
+                        await delay(Math.pow(2, i) * 1000); // Exponential backoff
+                    } else {
+                        searchResults.innerHTML = '<span class="text-red-400">Sorry, could not fetch information. Please try again!</span>';
+                    }
+                }
+            }
+            searchButton.disabled = false;
+        };
+
+        // --- SIMULATION FUNCTION: TRANSITION STATUS ---
+        const updateStatusUI = (status, displayName) => {
+            membershipStatus.textContent = status;
+
+            if (status === 'Active') {
+                membershipStatus.classList.remove('text-yellow-400', 'text-red-400');
+                membershipStatus.classList.add('text-green-400');
+                pendingMessage.classList.add('hidden');
+                applicationLink.classList.add('hidden');
+                confirmationActions.classList.add('hidden'); // Hide buttons
+                // Update letter content to reflect active status
+                document.getElementById('letterContent').innerHTML = `
+                    <p class="text-xl font-semibold text-white mb-4">
+                        Dear <strong class="text-green-300">${displayName}</strong>,
+                    </p>
+                    <p class="text-gray-200 mb-6 leading-relaxed">
+                        Welcome to the family! Your membership is now **ACTIVE**. You have full access to all member resources.
+                    </p>
+                    <p class="text-gray-200 font-semibold">
+                        Let's explore the universe together!
+                    </p>
+                    <p class="mt-4 text-sm text-indigo-400">
+                        — The LAS Board
+                    </p>
+                `;
+                // Hide the acceptance letter section when active, as the status is now confirmed
+                acceptanceLetterSection.classList.add('hidden'); 
+
+            } else if (status === 'Approved') {
+                membershipStatus.classList.remove('text-green-400', 'text-red-400');
+                membershipStatus.classList.add('text-yellow-400');
+                acceptanceLetterSection.classList.remove('hidden');
+                confirmationActions.classList.remove('hidden'); // Show buttons
+            } else if (status === 'Declined') {
+                membershipStatus.classList.remove('text-yellow-400', 'text-green-400');
+                membershipStatus.classList.add('text-red-400');
+                acceptanceLetterSection.classList.add('hidden');
+            }
+        };
+        
+        const handleAccept = () => {
+            // In a live app: Firestore update to set membership_status: 'Active'
+            updateStatusUI('Active', memberName.textContent);
+            displayMessage("Membership Confirmed", "Welcome! Your membership is now active. Explore your exclusive resources below.");
+            console.log("Simulated Firestore Update: membership_status set to 'Active'.");
+        };
+
+        const handleDecline = () => {
+            // In a live app: Firestore update to set membership_status: 'Declined'
+            updateStatusUI('Declined', memberName.textContent);
+            displayMessage("Offer Declined", "We're sorry to see you go. Your membership offer has been declined. You can always re-apply later.");
+            console.log("Simulated Firestore Update: membership_status set to 'Declined'.");
+        };
+
+
+        // --- SIMULATION FUNCTION: SHOWING INITIAL APPROVED STATUS ---
+        const simulateApprovedUser = () => {
+            // Simulated data for an APPROVED member, awaiting confirmation
+            const simulatedUser = {
+                email: 'daniel.obajemu@las.org',
+                full_name: 'Daniel A. Obajemu' 
+            };
+            const userData = {
+                // Initial status to show the letter and confirmation buttons
+                membership_status: 'Approved', 
+                full_name: simulatedUser.full_name
+            };
+
+            const status = userData.membership_status || 'Pending';
+            const displayName = userData.full_name || simulatedUser.email.split('@')[0]; 
+
+            userEmailDisplay.textContent = simulatedUser.email;
+            memberName.textContent = displayName;
+            updateStatusUI(status, displayName);
+        };
+        
+        // --- EVENT LISTENERS ---
+        downloadLetterButton.addEventListener('click', handleDownload);
+        acceptButton.addEventListener('click', handleAccept);
+        declineButton.addEventListener('click', handleDecline);
+
+        logoutButton.addEventListener('click', () => {
+            console.log("Simulated Logout: In a live app, this would perform Firebase signOut().");
+            displayMessage("Session Ended", "You have successfully logged out (simulated). You would now be redirected to the login page.");
         });
+
+        // --- AI Search Event Listener ---
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) {
+                runGeminiSearch(query);
+            } else {
+                searchResults.innerHTML = '<span class="text-red-400">Please enter the name of a celestial object to search.</span>';
+            }
+        });
+
+        // --- RUN SIMULATION ---
+        simulateApprovedUser();
     </script>
 </body>
 </html>
-
-
