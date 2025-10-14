@@ -59,8 +59,8 @@
         <div class="mt-8 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
             <h2 class="text-2xl font-semibold text-white mb-4">Membership Status</h2>
             <div class="flex items-center space-x-4">
-                <span class="text-gray-400 text-sm">Email:</span>
-                <span id="userEmailDisplay" class="font-medium text-white"></span>
+                <span class="text-gray-400 text-sm">User ID:</span>
+                <span id="userEmailDisplay" class="font-medium text-white">Connecting...</span>
             </div>
             <div class="flex items-center space-x-4 mt-2">
                 <span class="text-gray-400 text-sm">Status:</span>
@@ -160,7 +160,7 @@
 
         <!-- Log out button -->
         <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
-            Log Out (Simulated)
+            Log Out
         </button>
     </div>
 
@@ -176,14 +176,33 @@
 
     <!-- Firebase and JavaScript Logic -->
     <script type="module">
+        // --- FIREBASE IMPORTS (using required version 11.6.1) ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Note: setLogLevel is optional, but useful for debugging
+        // import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+
         // --- API CONFIGURATION ---
-        const apiKey = ""; 
-        // Using the required model name directly in the URL for maximum compatibility with the execution environment.
+        const apiKey = "";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
         const MAX_RETRIES = 3;
 
         // Utility function for exponential backoff
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // --- FIREBASE INITIALIZATION & GLOBAL VARS ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-las-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        let app;
+        let db;
+        let auth;
+        let currentUserId = null;
+        let currentUserName = "LAS Member"; // Default name
+        let userDocRef; // Reference to the user's status document
 
         // DOM Elements
         const userEmailDisplay = document.getElementById('userEmailDisplay');
@@ -195,15 +214,13 @@
         const acceptanceLetterSection = document.getElementById('acceptanceLetterSection');
         const memberName = document.getElementById('memberName');
         const logoutButton = document.getElementById('logoutButton');
-        const letterContent = document.getElementById('letterContent');
         const confirmationActions = document.getElementById('confirmationActions');
-
+        
         // NEW BUTTONS
         const downloadLetterButton = document.getElementById('downloadLetterButton');
         const searchButton = document.getElementById('searchButton');
         const acceptButton = document.getElementById('acceptButton');
         const declineButton = document.getElementById('declineButton');
-
 
         // Message Box Elements
         const messageBox = document.getElementById('messageBox');
@@ -226,27 +243,22 @@
             });
         }
         
-        // --- DOWNLOAD FUNCTION (UPDATED FOR PDF) ---
+        // --- DOWNLOAD FUNCTION (PDF) ---
         const handleDownload = () => {
-            // Check if jsPDF library is loaded
             if (typeof window.jspdf === 'undefined') {
                 displayMessage("Download Error", "The PDF generation library is not available. Please try again later.");
                 return;
             }
             
             const { jsPDF } = window.jspdf;
-            
-            // 1. Get the content element you want to convert
             const content = document.getElementById('letterContent');
             
-            // 2. Configure and generate the PDF
             const doc = new jsPDF({
                 orientation: 'portrait',
                 unit: 'in',
                 format: 'letter'
             });
 
-            // doc.html() converts the HTML element into a PDF representation
             doc.html(content, {
                 callback: function (doc) {
                     doc.save('LAS_Acceptance_Letter.pdf');
@@ -255,8 +267,8 @@
                 x: 0.5,
                 y: 0.5,
                 html2canvas: {
-                    scale: 0.5, // Scale down the content to fit nicely on the PDF
-                    width: 7.5 // Width of the content area in inches
+                    scale: 0.5, 
+                    width: 7.5 
                 }
             });
         };
@@ -286,7 +298,6 @@
                     });
 
                     if (!response.ok) {
-                        // Log the error for debugging purposes
                         console.error(`Attempt ${i + 1} failed. Status: ${response.status}`);
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -310,7 +321,6 @@
 
                         let sourceHTML = '';
                         if (sources.length > 0) {
-                            // Display the title and up to 3 sources for grounding
                             sourceHTML = `
                                 <div class="mt-3 pt-3 border-t border-gray-600">
                                     <p class="font-medium text-xs text-indigo-400 mb-1">Sources (Grounding):</p>
@@ -325,7 +335,7 @@
 
                         searchResults.innerHTML = `<p class="font-medium text-white">${query}:</p>${text}${sourceHTML}`;
                         searchButton.disabled = false;
-                        return; // Success, exit the retry loop
+                        return; 
 
                     } else {
                         throw new Error("Invalid or empty response from the AI.");
@@ -333,7 +343,7 @@
                 } catch (error) {
                     console.error("AI Search Error:", error);
                     if (i < MAX_RETRIES - 1) {
-                        await delay(Math.pow(2, i) * 1000); // Exponential backoff
+                        await delay(Math.pow(2, i) * 1000); 
                     } else {
                         searchResults.innerHTML = '<span class="text-red-400">Sorry, could not fetch information. Please try again!</span>';
                     }
@@ -342,17 +352,22 @@
             searchButton.disabled = false;
         };
 
-        // --- SIMULATION FUNCTION: TRANSITION STATUS ---
+        // --- UI STATUS UPDATE HANDLER ---
         const updateStatusUI = (status, displayName) => {
             membershipStatus.textContent = status;
+            memberName.textContent = displayName;
+
+            // Reset classes
+            membershipStatus.classList.remove('text-yellow-400', 'text-red-400', 'text-green-400');
+            acceptanceLetterSection.classList.add('hidden');
+            pendingMessage.classList.add('hidden');
+            applicationLink.classList.add('hidden');
+            confirmationActions.classList.add('hidden');
 
             if (status === 'Active') {
-                membershipStatus.classList.remove('text-yellow-400', 'text-red-400');
                 membershipStatus.classList.add('text-green-400');
-                pendingMessage.classList.add('hidden');
-                applicationLink.classList.add('hidden');
-                confirmationActions.classList.add('hidden'); // Hide buttons
-                // Update letter content to reflect active status
+                
+                // Show the "Welcome" message for active members
                 document.getElementById('letterContent').innerHTML = `
                     <p class="text-xl font-semibold text-white mb-4">
                         Dear <strong class="text-green-300">${displayName}</strong>,
@@ -367,66 +382,148 @@
                         — The LAS Board
                     </p>
                 `;
-                // Hide the acceptance letter section when active, as the status is now confirmed
-                acceptanceLetterSection.classList.add('hidden'); 
-
             } else if (status === 'Approved') {
-                membershipStatus.classList.remove('text-green-400', 'text-red-400');
                 membershipStatus.classList.add('text-yellow-400');
                 acceptanceLetterSection.classList.remove('hidden');
-                confirmationActions.classList.remove('hidden'); // Show buttons
+                confirmationActions.classList.remove('hidden');
+                // Note: The letter content is the original static one for this status.
+            } else if (status === 'Pending') {
+                membershipStatus.classList.add('text-yellow-400');
+                pendingMessage.classList.remove('hidden');
+                applicationLink.classList.remove('hidden');
             } else if (status === 'Declined') {
-                membershipStatus.classList.remove('text-yellow-400', 'text-green-400');
                 membershipStatus.classList.add('text-red-400');
-                acceptanceLetterSection.classList.add('hidden');
             }
         };
         
-        const handleAccept = () => {
-            // In a live app: Firestore update to set membership_status: 'Active'
-            updateStatusUI('Active', memberName.textContent);
-            displayMessage("Membership Confirmed", "Welcome! Your membership is now active. Explore your exclusive resources below.");
-            console.log("Simulated Firestore Update: membership_status set to 'Active'.");
+        // --- FIRESTORE WRITE OPERATIONS ---
+        const handleAccept = async () => {
+            if (!userDocRef) return displayMessage("Error", "Authentication not complete. Please wait.");
+            try {
+                // Update Firestore: set membership_status to 'Active'
+                await updateDoc(userDocRef, {
+                    membership_status: 'Active',
+                    acceptance_date: new Date().toISOString()
+                });
+                displayMessage("Membership Confirmed", "Welcome! Your membership is now active. The dashboard is updating.");
+            } catch (error) {
+                console.error("Error accepting membership:", error);
+                displayMessage("Update Failed", "Could not update your membership status. Please try again.");
+            }
         };
 
-        const handleDecline = () => {
-            // In a live app: Firestore update to set membership_status: 'Declined'
-            updateStatusUI('Declined', memberName.textContent);
-            displayMessage("Offer Declined", "We're sorry to see you go. Your membership offer has been declined. You can always re-apply later.");
-            console.log("Simulated Firestore Update: membership_status set to 'Declined'.");
+        const handleDecline = async () => {
+            if (!userDocRef) return displayMessage("Error", "Authentication not complete. Please wait.");
+            try {
+                // Update Firestore: set membership_status to 'Declined'
+                await updateDoc(userDocRef, {
+                    membership_status: 'Declined',
+                    declination_date: new Date().toISOString()
+                });
+                displayMessage("Offer Declined", "Your membership offer has been declined. The dashboard is updating.");
+            } catch (error) {
+                console.error("Error declining membership:", error);
+                displayMessage("Update Failed", "Could not update your membership status. Please try again.");
+            }
         };
 
+        const handleLogout = async () => {
+            try {
+                if (auth) {
+                    await signOut(auth);
+                }
+                displayMessage("Session Ended", "You have successfully logged out. The page will reload.");
+                // Reload to clear state, simulating redirection to login
+                setTimeout(() => window.location.reload(), 1500);
+            } catch (error) {
+                console.error("Logout Error:", error);
+                displayMessage("Logout Failed", "Could not sign out completely.");
+            }
+        };
 
-        // --- SIMULATION FUNCTION: SHOWING INITIAL APPROVED STATUS ---
-        const simulateApprovedUser = () => {
-            // Simulated data for an APPROVED member, awaiting confirmation
-            const simulatedUser = {
-                email: 'daniel.obajemu@las.org',
-                full_name: 'Daniel A. Obajemu' 
-            };
-            const userData = {
-                // Initial status to show the letter and confirmation buttons
-                membership_status: 'Approved', 
-                full_name: simulatedUser.full_name
-            };
+        // --- FIRESTORE READ LISTENER ---
+        const loadMembershipStatus = () => {
+            // Listen for real-time changes to the user's status document
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    currentUserName = userData.full_name || currentUserId;
+                    const status = userData.membership_status || 'Pending';
 
-            const status = userData.membership_status || 'Pending';
-            const displayName = userData.full_name || simulatedUser.email.split('@')[0]; 
+                    // Update UI based on fetched data
+                    updateStatusUI(status, currentUserName);
+                    
+                } else {
+                    // If the document doesn't exist, create a default 'Pending' state
+                    setDoc(userDocRef, {
+                        full_name: currentUserId || 'New Member',
+                        membership_status: 'Pending',
+                        application_date: new Date().toISOString()
+                    }, { merge: true }).then(() => {
+                        updateStatusUI('Pending', currentUserId || 'New Member');
+                    }).catch(e => console.error("Error setting initial doc:", e));
+                }
+            }, (error) => {
+                console.error("Firestore Listener Error:", error);
+                displayMessage("Data Error", "Could not fetch real-time membership data.");
+            });
+        };
+        
+        // --- MAIN FIREBASE INITIALIZATION ---
+        const initializeFirebaseAndLoadData = async () => {
+            if (!firebaseConfig) {
+                displayMessage("Firebase Error", "Firebase configuration is missing. Cannot initialize the application.");
+                return;
+            }
 
-            userEmailDisplay.textContent = simulatedUser.email;
-            memberName.textContent = displayName;
-            updateStatusUI(status, displayName);
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                // setLogLevel('Debug'); // Uncomment this line if you need deep console debugging for Firestore
+
+                // 1. Authentication
+                // Use the environment token for secure sign-in, otherwise sign in anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // 2. Auth State Listener
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUserId = user.uid;
+                        // For demonstration, displaying the full UID as the 'email' field
+                        userEmailDisplay.textContent = user.email || user.uid; 
+                        
+                        // 3. Define Firestore Path (Private Data)
+                        // Path: /artifacts/{appId}/users/{userId}/membership_data/status_document
+                        const userMembershipPath = `artifacts/${appId}/users/${currentUserId}/membership_data`;
+                        userDocRef = doc(db, userMembershipPath, 'status_document');
+
+                        // 4. Start listening for data changes
+                        loadMembershipStatus();
+                    } else {
+                        currentUserId = null;
+                        userEmailDisplay.textContent = 'Not Authenticated';
+                        membershipStatus.textContent = 'Guest';
+                        updateStatusUI('Unauthenticated', 'Guest');
+                    }
+                });
+
+            } catch (error) {
+                console.error("Initialization Error:", error);
+                displayMessage("Error", `Could not connect to Firebase: ${error.message}`);
+            }
         };
         
         // --- EVENT LISTENERS ---
         downloadLetterButton.addEventListener('click', handleDownload);
         acceptButton.addEventListener('click', handleAccept);
         declineButton.addEventListener('click', handleDecline);
-
-        logoutButton.addEventListener('click', () => {
-            console.log("Simulated Logout: In a live app, this would perform Firebase signOut().");
-            displayMessage("Session Ended", "You have successfully logged out (simulated). You would now be redirected to the login page.");
-        });
+        logoutButton.addEventListener('click', handleLogout);
 
         // --- AI Search Event Listener ---
         searchButton.addEventListener('click', () => {
@@ -438,8 +535,8 @@
             }
         });
 
-        // --- RUN SIMULATION ---
-        simulateApprovedUser();
+        // --- START THE APPLICATION ---
+        initializeFirebaseAndLoadData();
     </script>
 </body>
 </html>
