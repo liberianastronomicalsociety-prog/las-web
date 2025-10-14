@@ -372,15 +372,25 @@
             }
         });
 
+       // Download Letter (PDF generation)
         downloadLetterButton.addEventListener('click', () => {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const doc = new jsPDF('p', 'mm', 'a4'); // Initialize with standard size
+
             const element = document.getElementById('letterContent');
             
-            // Note: This is a simplistic HTML conversion. For complex layouts, use html2canvas with jsPDF.
-            doc.text("LAS Acceptance Letter", 10, 10);
-            doc.fromHTML(element, 15, 15);
-            doc.save('LAS_Acceptance_Letter.pdf');
+            // Use the recommended html() method for modern jsPDF
+            // This method properly renders the HTML content onto the PDF.
+            doc.html(element, {
+                callback: function (doc) {
+                    doc.save('LAS_Acceptance_Letter.pdf');
+                },
+                x: 10,
+                y: 10,
+                html2canvas: { scale: 0.5 } // Scale down content to fit A4 well
+            });
+            
+            // Remove the old doc.fromHTML and doc.text calls
         });
 
 
@@ -463,4 +473,5 @@
     </script>
 </body>
 </html>
+
 
