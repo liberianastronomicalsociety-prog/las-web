@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 1. PDF Generation Library -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <style>
         /* --- Global Styles --- */
@@ -47,7 +46,6 @@
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <!-- Dashboard Card Container -->
     <div class="dashboard-card p-8 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto transform transition-all duration-300">
         <div class="flex flex-col items-center mb-6 text-center">
             <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-16 w-auto mb-4">
@@ -55,7 +53,6 @@
             <p class="text-gray-400 text-lg">Your journey through the cosmos awaits.</p>
         </div>
 
-        <!-- Membership Status Section -->
         <div class="mt-8 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
             <h2 class="text-2xl font-semibold text-white mb-4">Membership Status</h2>
             <div class="flex items-center space-x-4">
@@ -74,10 +71,8 @@
             </a>
         </div>
         
-        <!-- ACCEPTANCE LETTER SECTION -->
         <div id="acceptanceLetterSection" class="acceptance-letter-bg p-6 rounded-xl shadow-inner mb-6 hidden">
             <h2 class="text-3xl font-bold text-white mb-4 text-center">🎉 Congratulations! Your Application is Approved! 🎉</h2>
-            <!-- START UPDATED LETTER CONTENT -->
             <div id="letterContent" class="bg-white/10 p-6 rounded-lg backdrop-blur-sm text-gray-200">
                 <p class="text-xl font-semibold text-white mb-4">
                     Dear <strong id="memberName" class="text-indigo-300">Member</strong>,
@@ -111,9 +106,6 @@
                     — LAS Administrators
                 </p>
             </div>
-            <!-- END UPDATED LETTER CONTENT -->
-            
-            <!-- DOWNLOAD AND ACTION BUTTONS -->
             <div id="confirmationActions" class="mt-6 flex flex-col sm:flex-row gap-3">
                 <button id="downloadLetterButton" class="w-full sm:w-auto bg-gray-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300 flex-shrink-0">
                     Download Letter (PDF)
@@ -125,16 +117,10 @@
                     Decline Offer
                 </button>
             </div>
-            <!-- END BUTTONS -->
-
-        </div>
-        <!-- END ACCEPTANCE LETTER SECTION -->
-
-        <!-- Member-Only Resources Section -->
+            </div>
         <div class="mt-6 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
             <h2 class="text-2xl font-semibold text-white mb-4">Member-Only Resources</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Celestial Object Finder -->
                 <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
                     <h3 class="text-lg font-semibold text-white mb-2">Celestial Object Finder</h3>
                     <p class="text-gray-400 text-sm mb-4">Search for planets, stars, and constellations using AI.</p>
@@ -144,13 +130,11 @@
                             Search
                         </button>
                     </div>
-                    <!-- Results Display Area -->
                     <div id="searchResults" class="mt-4 text-gray-300 text-sm leading-relaxed">
                         Ready to search for a star or planet!
                     </div>
                 </div>
 
-                <!-- Future Resources Placeholder -->
                 <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
                     <h3 class="text-lg font-semibold text-white mb-2">Upcoming Events</h3>
                     <p class="text-gray-400 text-sm">Check back soon for details on our next star-gazing events and workshops!</p>
@@ -158,13 +142,11 @@
             </div>
         </div>
 
-        <!-- Log out button -->
         <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
             Log Out
         </button>
     </div>
 
-    <!-- Custom Message Box (Replaces alert()) -->
     <div id="messageBox" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 transition-opacity duration-300" aria-modal="true" role="dialog">
         <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-full border border-gray-700">
             <h3 id="messageTitle" class="text-xl font-bold text-white mb-3">Message</h3>
@@ -174,7 +156,6 @@
     </div>
 
 
-    <!-- Firebase and JavaScript Logic -->
     <script type="module">
         // --- FIREBASE IMPORTS (using required version 11.6.1) ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -193,8 +174,19 @@
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         // --- FIREBASE INITIALIZATION & GLOBAL VARS ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-las-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        // ----- START: YOUR FIREBASE CONFIGURATION -----
+        const appId = "1:914979035379:web:ad9a2dbb05ebd48c407f86";
+        const firebaseConfig = {
+            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+            authDomain: "liberian-astro-society.firebaseapp.com",
+            projectId: "liberian-astro-society",
+            storageBucket: "liberian-astro-society.firebasestorage.app",
+            messagingSenderId: "914979035379",
+            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
+            measurementId: "G-RBC64CGK4J"
+        };
+        // ----- END: YOUR FIREBASE CONFIGURATION -----
+
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         
         let app;
@@ -207,337 +199,4 @@
         // DOM Elements
         const userEmailDisplay = document.getElementById('userEmailDisplay');
         const membershipStatus = document.getElementById('membershipStatus');
-        const pendingMessage = document.getElementById('pendingMessage');
-        const applicationLink = document.getElementById('applicationLink');
-        const searchInput = document.getElementById('objectSearchInput');
-        const searchResults = document.getElementById('searchResults');
-        const acceptanceLetterSection = document.getElementById('acceptanceLetterSection');
-        const memberName = document.getElementById('memberName');
-        const logoutButton = document.getElementById('logoutButton');
-        const confirmationActions = document.getElementById('confirmationActions');
-        
-        // NEW BUTTONS
-        const downloadLetterButton = document.getElementById('downloadLetterButton');
-        const searchButton = document.getElementById('searchButton');
-        const acceptButton = document.getElementById('acceptButton');
-        const declineButton = document.getElementById('declineButton');
-
-        // Message Box Elements
-        const messageBox = document.getElementById('messageBox');
-        const messageTitle = document.getElementById('messageTitle');
-        const messageText = document.getElementById('messageText');
-        const closeMessageBox = document.getElementById('closeMessageBox');
-
-        // --- MESSAGE BOX UTILITY ---
-        const displayMessage = (title, text) => {
-            messageTitle.textContent = title;
-            messageText.textContent = text;
-            messageBox.classList.remove('hidden');
-            messageBox.classList.add('flex');
-        };
-
-        if (closeMessageBox) {
-            closeMessageBox.addEventListener('click', () => {
-                messageBox.classList.add('hidden');
-                messageBox.classList.remove('flex');
-            });
-        }
-        
-        // --- DOWNLOAD FUNCTION (PDF) ---
-        const handleDownload = () => {
-            if (typeof window.jspdf === 'undefined') {
-                displayMessage("Download Error", "The PDF generation library is not available. Please try again later.");
-                return;
-            }
-            
-            const { jsPDF } = window.jspdf;
-            const content = document.getElementById('letterContent');
-            
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'in',
-                format: 'letter'
-            });
-
-            doc.html(content, {
-                callback: function (doc) {
-                    doc.save('LAS_Acceptance_Letter.pdf');
-                    displayMessage("Download Complete", "Your official acceptance letter has been downloaded as a **PDF** file!");
-                },
-                x: 0.5,
-                y: 0.5,
-                html2canvas: {
-                    scale: 0.5, 
-                    width: 7.5 
-                }
-            });
-        };
-
-        // --- GEMINI AI SEARCH FUNCTION ---
-        const runGeminiSearch = async (query) => {
-            searchResults.innerHTML = '<div class="flex items-center space-x-2"><div class="loader"></div><span class="text-indigo-400">Searching the cosmos...</span></div>';
-            searchButton.disabled = true;
-
-            const systemPrompt = "You are an expert astronomical search engine. Provide a concise, educational summary (2-3 sentences max) of the celestial object requested. Do not include any conversational filler.";
-            const userQuery = `Find and describe the celestial object: ${query}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-            };
-
-            for (let i = 0; i < MAX_RETRIES; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        console.error(`Attempt ${i + 1} failed. Status: ${response.status}`);
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                    const candidate = result.candidates?.[0];
-
-                    if (candidate && candidate.content?.parts?.[0]?.text) {
-                        const text = candidate.content.parts[0].text;
-                        
-                        let sources = [];
-                        const groundingMetadata = candidate.groundingMetadata;
-                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                            sources = groundingMetadata.groundingAttributions
-                                .map(attribution => ({
-                                    uri: attribution.web?.uri,
-                                    title: attribution.web?.title,
-                                }))
-                                .filter(source => source.uri && source.title);
-                        }
-
-                        let sourceHTML = '';
-                        if (sources.length > 0) {
-                            sourceHTML = `
-                                <div class="mt-3 pt-3 border-t border-gray-600">
-                                    <p class="font-medium text-xs text-indigo-400 mb-1">Sources (Grounding):</p>
-                                    <ul class="list-disc list-inside space-y-0.5 ml-2">
-                                        ${sources.slice(0, 3).map(s => `
-                                            <li><a href="${s.uri}" target="_blank" class="text-xs text-indigo-300 hover:text-indigo-200 underline truncate block">${s.title}</a></li>
-                                        `).join('')}
-                                    </ul>
-                                </div>
-                            `;
-                        }
-
-                        searchResults.innerHTML = `<p class="font-medium text-white">${query}:</p>${text}${sourceHTML}`;
-                        searchButton.disabled = false;
-                        return; 
-
-                    } else {
-                        throw new Error("Invalid or empty response from the AI.");
-                    }
-                } catch (error) {
-                    console.error("AI Search Error:", error);
-                    if (i < MAX_RETRIES - 1) {
-                        await delay(Math.pow(2, i) * 1000); 
-                    } else {
-                        searchResults.innerHTML = '<span class="text-red-400">Sorry, could not fetch information. Please try again!</span>';
-                    }
-                }
-            }
-            searchButton.disabled = false;
-        };
-
-        // --- UI STATUS UPDATE HANDLER ---
-        const updateStatusUI = (status, displayName) => {
-            membershipStatus.textContent = status;
-            memberName.textContent = displayName;
-
-            // Reset classes
-            membershipStatus.classList.remove('text-yellow-400', 'text-red-400', 'text-green-400');
-            acceptanceLetterSection.classList.add('hidden');
-            pendingMessage.classList.add('hidden');
-            applicationLink.classList.add('hidden');
-            confirmationActions.classList.add('hidden');
-
-            if (status === 'Active') {
-                membershipStatus.classList.add('text-green-400');
-                
-                // Show the "Welcome" message for active members
-                document.getElementById('letterContent').innerHTML = `
-                    <p class="text-xl font-semibold text-white mb-4">
-                        Dear <strong class="text-green-300">${displayName}</strong>,
-                    </p>
-                    <p class="text-gray-200 mb-6 leading-relaxed">
-                        Welcome to the family! Your membership is now **ACTIVE**. You have full access to all member resources.
-                    </p>
-                    <p class="text-gray-200 font-semibold">
-                        Let's explore the universe together!
-                    </p>
-                    <p class="mt-4 text-sm text-indigo-400">
-                        — The LAS Board
-                    </p>
-                `;
-            } else if (status === 'Approved') {
-                membershipStatus.classList.add('text-yellow-400');
-                acceptanceLetterSection.classList.remove('hidden');
-                confirmationActions.classList.remove('hidden');
-                // Note: The letter content is the original static one for this status.
-            } else if (status === 'Pending') {
-                membershipStatus.classList.add('text-yellow-400');
-                pendingMessage.classList.remove('hidden');
-                applicationLink.classList.remove('hidden');
-            } else if (status === 'Declined') {
-                membershipStatus.classList.add('text-red-400');
-            }
-        };
-        
-        // --- FIRESTORE WRITE OPERATIONS ---
-        const handleAccept = async () => {
-            if (!userDocRef) return displayMessage("Error", "Authentication not complete. Please wait.");
-            try {
-                // Update Firestore: set membership_status to 'Active'
-                await updateDoc(userDocRef, {
-                    membership_status: 'Active',
-                    acceptance_date: new Date().toISOString()
-                });
-                displayMessage("Membership Confirmed", "Welcome! Your membership is now active. The dashboard is updating.");
-            } catch (error) {
-                console.error("Error accepting membership:", error);
-                displayMessage("Update Failed", "Could not update your membership status. Please try again.");
-            }
-        };
-
-        const handleDecline = async () => {
-            if (!userDocRef) return displayMessage("Error", "Authentication not complete. Please wait.");
-            try {
-                // Update Firestore: set membership_status to 'Declined'
-                await updateDoc(userDocRef, {
-                    membership_status: 'Declined',
-                    declination_date: new Date().toISOString()
-                });
-                displayMessage("Offer Declined", "Your membership offer has been declined. The dashboard is updating.");
-            } catch (error) {
-                console.error("Error declining membership:", error);
-                displayMessage("Update Failed", "Could not update your membership status. Please try again.");
-            }
-        };
-
-        const handleLogout = async () => {
-            try {
-                if (auth) {
-                    await signOut(auth);
-                }
-                displayMessage("Session Ended", "You have successfully logged out. The page will reload.");
-                // Reload to clear state, simulating redirection to login
-                setTimeout(() => window.location.reload(), 1500);
-            } catch (error) {
-                console.error("Logout Error:", error);
-                displayMessage("Logout Failed", "Could not sign out completely.");
-            }
-        };
-
-        // --- FIRESTORE READ LISTENER ---
-        const loadMembershipStatus = () => {
-            // Listen for real-time changes to the user's status document
-            onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    currentUserName = userData.full_name || currentUserId;
-                    const status = userData.membership_status || 'Pending';
-
-                    // Update UI based on fetched data
-                    updateStatusUI(status, currentUserName);
-                    
-                } else {
-                    // If the document doesn't exist, create a default 'Pending' state
-                    setDoc(userDocRef, {
-                        full_name: currentUserId || 'New Member',
-                        membership_status: 'Pending',
-                        application_date: new Date().toISOString()
-                    }, { merge: true }).then(() => {
-                        updateStatusUI('Pending', currentUserId || 'New Member');
-                    }).catch(e => console.error("Error setting initial doc:", e));
-                }
-            }, (error) => {
-                console.error("Firestore Listener Error:", error);
-                displayMessage("Data Error", "Could not fetch real-time membership data.");
-            });
-        };
-        
-        // --- MAIN FIREBASE INITIALIZATION ---
-        const initializeFirebaseAndLoadData = async () => {
-            if (!firebaseConfig) {
-                displayMessage("Firebase Error", "Firebase configuration is missing. Cannot initialize the application.");
-                return;
-            }
-
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                
-                // setLogLevel('Debug'); // Uncomment this line if you need deep console debugging for Firestore
-
-                // 1. Authentication
-                // Use the environment token for secure sign-in, otherwise sign in anonymously
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                // 2. Auth State Listener
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        currentUserId = user.uid;
-                        // For demonstration, displaying the full UID as the 'email' field
-                        userEmailDisplay.textContent = user.email || user.uid; 
-                        
-                        // 3. Define Firestore Path (Private Data)
-                        // Path: /artifacts/{appId}/users/{userId}/membership_data/status_document
-                        const userMembershipPath = `artifacts/${appId}/users/${currentUserId}/membership_data`;
-                        userDocRef = doc(db, userMembershipPath, 'status_document');
-
-                        // 4. Start listening for data changes
-                        loadMembershipStatus();
-                    } else {
-                        currentUserId = null;
-                        userEmailDisplay.textContent = 'Not Authenticated';
-                        membershipStatus.textContent = 'Guest';
-                        updateStatusUI('Unauthenticated', 'Guest');
-                    }
-                });
-
-            } catch (error) {
-                console.error("Initialization Error:", error);
-                displayMessage("Error", `Could not connect to Firebase: ${error.message}`);
-            }
-        };
-        
-        // --- EVENT LISTENERS ---
-        downloadLetterButton.addEventListener('click', handleDownload);
-        acceptButton.addEventListener('click', handleAccept);
-        declineButton.addEventListener('click', handleDecline);
-        logoutButton.addEventListener('click', handleLogout);
-
-        // --- AI Search Event Listener ---
-        searchButton.addEventListener('click', () => {
-            const query = searchInput.value.trim();
-            if (query) {
-                runGeminiSearch(query);
-            } else {
-                searchResults.innerHTML = '<span class="text-red-400">Please enter the name of a celestial object to search.</span>';
-            }
-        });
-
-        // --- START THE APPLICATION ---
-        initializeFirebaseAndLoadData();
-    </script>
-</body>
-</html>
-
+        const
