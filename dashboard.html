@@ -118,6 +118,7 @@
                 </button>
             </div>
             </div>
+        
         <div class="mt-6 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
             <h2 class="text-2xl font-semibold text-white mb-4">Member-Only Resources</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -161,10 +162,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, updateDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        // Note: setLogLevel is optional, but useful for debugging
-        // import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-
+        
         // --- API CONFIGURATION ---
         const apiKey = "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
@@ -175,7 +173,6 @@
 
         // --- FIREBASE INITIALIZATION & GLOBAL VARS ---
         // ----- START: YOUR FIREBASE CONFIGURATION -----
-        const appId = "1:914979035379:web:ad9a2dbb05ebd48c407f86";
         const firebaseConfig = {
             apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
             authDomain: "liberian-astro-society.firebaseapp.com",
@@ -199,4 +196,270 @@
         // DOM Elements
         const userEmailDisplay = document.getElementById('userEmailDisplay');
         const membershipStatus = document.getElementById('membershipStatus');
-        const
+        const pendingMessage = document.getElementById('pendingMessage');
+        const applicationLink = document.getElementById('applicationLink');
+        const acceptanceLetterSection = document.getElementById('acceptanceLetterSection');
+        const memberName = document.getElementById('memberName');
+        const logoutButton = document.getElementById('logoutButton');
+        const downloadLetterButton = document.getElementById('downloadLetterButton');
+        const acceptButton = document.getElementById('acceptButton');
+        const declineButton = document.getElementById('declineButton');
+        const messageBox = document.getElementById('messageBox');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
+        const closeMessageBox = document.getElementById('closeMessageBox');
+        const objectSearchInput = document.getElementById('objectSearchInput');
+        const searchButton = document.getElementById('searchButton');
+        const searchResults = document.getElementById('searchResults');
+        
+        // ------------------------------------
+        // --- 1. CORE FIREBASE INITIALIZATION ---
+        // ------------------------------------
+        
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase App Initialized.");
+        } catch (error) {
+            console.error("Firebase Initialization Error:", error);
+            displayMessage('Error', 'Failed to initialize Firebase. Check your config and network connection.', 'error');
+        }
+
+        // ------------------------------------
+        // --- 2. MEMBERSHIP STATUS HANDLERS ---
+        // ------------------------------------
+        
+        const statusToColor = (status) => {
+            switch (status) {
+                case 'Approved':
+                    return 'text-green-400';
+                case 'Pending':
+                    return 'text-yellow-400';
+                case 'Declined':
+                    return 'text-red-500';
+                case 'Accepted': // Falls through to green below
+                case 'Incomplete':
+                default:
+                    return 'text-red-400';
+            }
+        };
+
+        const updateDashboard = (statusKey, displayText, colorClass, name = "Member", isAccepted = false) => {
+            membershipStatus.textContent = displayText;
+            membershipStatus.className = `font-bold ${colorClass}`;
+            memberName.textContent = name;
+
+            // Hide everything first
+            pendingMessage.classList.add('hidden');
+            applicationLink.classList.add('hidden');
+            acceptanceLetterSection.classList.add('hidden');
+
+            // Show relevant sections based on status
+            if (statusKey === 'Incomplete') {
+                pendingMessage.classList.remove('hidden');
+                applicationLink.classList.remove('hidden');
+                membershipStatus.textContent = 'Application Incomplete';
+            } else if (statusKey === 'Approved' && !isAccepted) {
+                acceptanceLetterSection.classList.remove('hidden');
+            } else if (statusKey === 'Accepted' || (statusKey === 'Approved' && isAccepted)) {
+                membershipStatus.textContent = 'Active Member';
+                membershipStatus.className = `font-bold text-green-500`;
+            }
+        };
+
+        const handleUserStatusUpdate = (docSnapshot) => {
+            if (!docSnapshot.exists()) {
+                console.warn("User document not found. Setting status to Incomplete.");
+                // Create document with initial status
+                setDoc(userDocRef, {
+                    status: 'Incomplete',
+                    name: currentUserName,
+                    email: currentUserId,
+                    accepted: false
+                }, { merge: true });
+                updateDashboard('Incomplete', 'Application Incomplete', 'text-red-400');
+                return;
+            }
+
+            const userData = docSnapshot.data();
+            const status = userData.status || 'Pending';
+            currentUserName = userData.name || currentUserId.split('@')[0] || "LAS Member";
+            const accepted = userData.accepted || false;
+
+            updateDashboard(status, status, statusToColor(status), currentUserName, accepted);
+        };
+
+        // ------------------------------------
+        // --- 3. AUTHENTICATION & LISTENER ---
+        // ------------------------------------
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.email || user.uid;
+                userEmailDisplay.textContent = currentUserId;
+
+                // Start Firestore Listener
+                userDocRef = doc(db, "memberships", user.uid);
+                
+                onSnapshot(userDocRef, handleUserStatusUpdate, (error) => {
+                    console.error("Firestore Listener Error:", error);
+                    updateDashboard('Error', 'Connection Error', 'text-red-500');
+                    displayMessage('Database Error', 'Could not fetch real-time membership status.', 'error');
+                });
+                
+            } else if (initialAuthToken) {
+                // Sign in with custom token (e.g., from a server)
+                try {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } catch (error) {
+                    console.error("Custom Token Sign-In Failed:", error);
+                    userEmailDisplay.textContent = 'Token expired/invalid. Signing in anonymously...';
+                    await signInAnonymously(auth); 
+                }
+            } else {
+                // Fallback: Sign in anonymously for basic dashboard access
+                try {
+                    await signInAnonymously(auth);
+                    userEmailDisplay.textContent = 'Guest User (Anonymous)';
+                } catch (error) {
+                    console.error("Anonymous Sign-In Failed:", error);
+                    userEmailDisplay.textContent = 'Login Failed';
+                    membershipStatus.textContent = 'Not Logged In';
+                    membershipStatus.className = 'font-bold text-red-500';
+                }
+            }
+        });
+
+
+        // ------------------------------------
+        // --- 4. DASHBOARD ACTION HANDLERS ---
+        // ------------------------------------
+        
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                displayMessage('Logout Error', 'An error occurred during sign out.', 'error');
+            }
+        });
+
+        acceptButton.addEventListener('click', async () => {
+            if (!userDocRef) return displayMessage('Error', 'User data not loaded yet.', 'error');
+            
+            try {
+                await updateDoc(userDocRef, {
+                    accepted: true,
+                    status: 'Accepted'
+                });
+                displayMessage('Success!', 'Welcome to LAS! Your membership is now active.', 'success');
+            } catch (error) {
+                displayMessage('Error', 'Failed to update membership status. Please check Firestore rules.', 'error');
+            }
+        });
+
+        declineButton.addEventListener('click', async () => {
+            if (!userDocRef) return displayMessage('Error', 'User data not loaded yet.', 'error');
+            
+            try {
+                await updateDoc(userDocRef, { status: 'Declined' });
+                displayMessage('Offer Declined', 'You have declined the membership offer.', 'info');
+                await signOut(auth);
+                window.location.reload();
+            } catch (error) {
+                displayMessage('Error', 'Failed to update status.', 'error');
+            }
+        });
+
+        downloadLetterButton.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const element = document.getElementById('letterContent');
+            
+            // Note: This is a simplistic HTML conversion. For complex layouts, use html2canvas with jsPDF.
+            doc.text("LAS Acceptance Letter", 10, 10);
+            doc.fromHTML(element, 15, 15);
+            doc.save('LAS_Acceptance_Letter.pdf');
+        });
+
+
+        // ------------------------------------
+        // --- 5. UTILITY FUNCTIONS (Messaging) ---
+        // ------------------------------------
+
+        function displayMessage(title, text, type = 'info') {
+            messageTitle.textContent = title;
+            messageText.textContent = text;
+            
+            let color = 'text-white';
+            if (type === 'error') color = 'text-red-400';
+            if (type === 'success') color = 'text-green-400';
+            messageTitle.className = `text-xl font-bold mb-3 ${color}`;
+            
+            messageBox.classList.remove('hidden');
+            messageBox.classList.add('flex');
+        }
+
+        closeMessageBox.addEventListener('click', () => {
+            messageBox.classList.add('hidden');
+            messageBox.classList.remove('flex');
+        });
+        
+        // ------------------------------------
+        // --- 6. GEMINI API (Celestial Search) ---
+        // ------------------------------------
+        
+        searchButton.addEventListener('click', async () => {
+            const query = objectSearchInput.value.trim();
+            if (!query) {
+                searchResults.textContent = "Please enter an astronomical object to search.";
+                return;
+            }
+
+            searchResults.innerHTML = '<div class="loader inline-block mr-2"></div> Searching...';
+
+            const prompt = `You are an expert astronomer for the Liberian Astronomical Society. Provide a brief, engaging, and informative description (max 100 words) of the celestial object: "${query}". Include one interesting fact about it.`;
+            
+            let result = "Could not connect to the astronomical database (API error).";
+
+            for (let i = 0; i < MAX_RETRIES; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ role: "user", parts: [{ text: prompt }] }],
+                            config: { temperature: 0.7, maxOutputTokens: 200 }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429) { // Rate limit error
+                            await delay(Math.pow(2, i) * 1000); // Exponential backoff
+                            continue;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.candidates && data.candidates.length > 0) {
+                        result = data.candidates[0].content.parts[0].text;
+                    } else {
+                         result = "The search produced an empty result. Try a different object name.";
+                    }
+                    break; 
+
+                } catch (error) {
+                    result = `Search failed: ${error.message}`;
+                    if (i < MAX_RETRIES - 1) { await delay(Math.pow(2, i) * 1000); }
+                }
+            }
+
+            searchResults.innerHTML = result.replace(/\*\*/g, '<strong>').replace(/\n/g, '<br>');
+        });
+        
+    </script>
+</body>
+</html>
