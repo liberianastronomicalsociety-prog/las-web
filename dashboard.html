@@ -300,7 +300,7 @@
                 userEmailDisplay.textContent = currentUserId;
 
                 // Start Firestore Listener
-                userDocRef = doc(db, "memberships", user.uid);
+                userDocRef = doc(db, "members", user.uid);
                 
                 onSnapshot(userDocRef, handleUserStatusUpdate, (error) => {
                     console.error("Firestore Listener Error:", error);
@@ -463,3 +463,4 @@
     </script>
 </body>
 </html>
+
