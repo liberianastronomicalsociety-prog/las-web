@@ -79,12 +79,12 @@
                 </p>
 
                 <p class="mb-6 leading-relaxed">
-                    **Congratulations!** On behalf of the Liberian Astronomical Society, we are pleased to inform you that you have been officially accepted as a member of our great community. We welcome you to our growing community of astronomy and space science enthusiasts!
+                    Congratulations! On behalf of the Liberian Astronomical Society, we are pleased to inform you that you have been officially accepted as a member of our great community. We welcome you to our growing community of astronomy and space science enthusiasts!
                 </p>
                 
                 <p class="font-semibold text-white mt-4 mb-2">As a member, you will have access to:</p>
                 <ul class="list-disc list-inside space-y-2 ml-4 mb-6">
-                    <li>Training programs and workshops (including **asteroids hunting** and telescope training).</li>
+                    <li>Training programs and workshops (including asteroids hunting and telescope training).</li>
                     <li>Participation in national and international research projects.</li>
                     <li>Exclusive updates, resources, and opportunities to contribute to astronomy outreach in Liberia.</li>
                 </ul>
@@ -143,7 +143,7 @@
             </div>
         </div>
 
-        <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300">
+        <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:focus:ring-offset-gray-900 transition-all duration-300">
             Log Out
         </button>
     </div>
@@ -155,13 +155,21 @@
             <button id="closeMessageBox" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300">Close</button>
         </div>
     </div>
+    
+    <div id="signUpForm" class="hidden absolute top-0 left-0">
+        <input type="email" id="signupEmail" placeholder="Email">
+        <input type="password" id="signupPassword" placeholder="Password">
+        <button id="signupButton">Sign Up</button>
+    </div>
 
+### JavaScript (`<script type="module">`)
 
+```javascript
     <script type="module">
         // --- FIREBASE IMPORTS (using required version 11.6.1) ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
+        import { getFirestore, doc, updateDoc, setDoc, onSnapshot } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
         
         // --- API CONFIGURATION ---
         const apiKey = "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks";
@@ -212,6 +220,11 @@
         const searchButton = document.getElementById('searchButton');
         const searchResults = document.getElementById('searchResults');
         
+        // New DOM elements for sign-up form placeholder
+        const signupButton = document.getElementById('signupButton');
+        const signupEmailInput = document.getElementById('signupEmail');
+        const signupPasswordInput = document.getElementById('signupPassword');
+        
         // ------------------------------------
         // --- 1. CORE FIREBASE INITIALIZATION ---
         // ------------------------------------
@@ -238,7 +251,7 @@
                     return 'text-yellow-400';
                 case 'Declined':
                     return 'text-red-500';
-                case 'Accepted': // Falls through to green below
+                case 'Accepted': 
                 case 'Incomplete':
                 default:
                     return 'text-red-400';
@@ -331,9 +344,59 @@
             }
         });
 
-
         // ------------------------------------
-        // --- 4. DASHBOARD ACTION HANDLERS ---
+        // --- 4. NEW: USER SIGN-UP HANDLER ---
+        // ------------------------------------
+
+        /**
+         * Creates a new user in Firebase Auth and immediately sets their
+         * membership status to 'Incomplete' in Firestore.
+         */
+        async function handleNewUserSignUp(email, password) {
+            if (!auth || !db) {
+                displayMessage('Error', 'System not initialized. Please try reloading the page.', 'error');
+                return;
+            }
+
+            try {
+                // 1. Create the user with Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // 2. *** CRITICAL STEP: Create the initial membership document ***
+                if (user) {
+                    const userDocRef = doc(db, "members", user.uid);
+                    await setDoc(userDocRef, {
+                        // Set the initial status to 'Incomplete'
+                        status: 'Incomplete', 
+                        name: user.email.split('@')[0] || "New Member", 
+                        email: user.email,
+                        accepted: false
+                    }, { merge: true });
+
+                    // 3. Success Feedback and Redirection
+                    console.log(`User ${user.email} created and status set to Incomplete.`);
+                    window.location.href = 'dashboard.html'; // Redirect to dashboard
+                }
+
+            } catch (error) {
+                let errorMessage = "An unknown error occurred during sign up.";
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'The email address is already in use by another account.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'The email address is not valid.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'The password must be at least 6 characters long.';
+                }
+                
+                console.error("Sign up failed:", error);
+                displayMessage('Sign Up Failed', errorMessage, 'error');
+            }
+        }
+        
+        // ------------------------------------
+        // --- 5. DASHBOARD ACTION HANDLERS ---
         // ------------------------------------
         
         logoutButton.addEventListener('click', async () => {
@@ -344,6 +407,20 @@
                 displayMessage('Logout Error', 'An error occurred during sign out.', 'error');
             }
         });
+
+        // Placeholder Listener for the hypothetical Sign-Up button
+        if (signupButton) {
+            signupButton.addEventListener('click', () => {
+                const email = signupEmailInput.value;
+                const password = signupPasswordInput.value;
+                
+                if (email && password) {
+                    handleNewUserSignUp(email, password);
+                } else {
+                    displayMessage('Error', 'Please enter a valid email and password.', 'error');
+                }
+            });
+        }
 
         acceptButton.addEventListener('click', async () => {
             if (!userDocRef) return displayMessage('Error', 'User data not loaded yet.', 'error');
@@ -380,22 +457,21 @@
             const element = document.getElementById('letterContent');
             
             // Use the recommended html() method for modern jsPDF
-            // This method properly renders the HTML content onto the PDF.
             doc.html(element, {
                 callback: function (doc) {
                     doc.save('LAS_Acceptance_Letter.pdf');
                 },
                 x: 10,
                 y: 10,
-                html2canvas: { scale: 0.5 } // Scale down content to fit A4 well
+                html2canvas: { 
+                    scale: 0.5 // Scale down content to fit A4 well
+                } 
             });
-            
-            // Remove the old doc.fromHTML and doc.text calls
         });
 
 
         // ------------------------------------
-        // --- 5. UTILITY FUNCTIONS (Messaging) ---
+        // --- 6. UTILITY FUNCTIONS (Messaging) ---
         // ------------------------------------
 
         function displayMessage(title, text, type = 'info') {
@@ -417,7 +493,7 @@
         });
         
         // ------------------------------------
-        // --- 6. GEMINI API (Celestial Search) ---
+        // --- 7. GEMINI API (Celestial Search) ---
         // ------------------------------------
         
         searchButton.addEventListener('click', async () => {
@@ -457,7 +533,7 @@
                     if (data.candidates && data.candidates.length > 0) {
                         result = data.candidates[0].content.parts[0].text;
                     } else {
-                         result = "The search produced an empty result. Try a different object name.";
+                        result = "The search produced an empty result. Try a different object name.";
                     }
                     break; 
 
@@ -473,5 +549,3 @@
     </script>
 </body>
 </html>
-
-
