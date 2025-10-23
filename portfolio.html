@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberian Astronomical Society (LAS) - Our Activities & Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Global Layout & Typography --- */
+        body {
+            background-color: #111827; /* Dark theme background */
+            font-family: 'Inter', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        /* --- Navigation Styles --- */
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #a5b4fc; /* Tailwind's indigo-300 */
+        }
+        
+        /* --- Card & Hover Effects --- */
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+        }
+
+        /* The carousel styles are included for consistency */
+        .carousel-item {
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            border-color: #6366f1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header / Navigation Bar -->
+    <header>
+        <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
+            <div class="container mx-auto flex justify-between items-center px-4">
+                <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto">
+                    <span>LAS</span>
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop Navigation (Links updated for Multi-Page) -->
+                <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
+                    <li><a href="index.html" class="nav-link">Home</a></li> 
+                    <li><a href="about.html" class="nav-link">About Us</a></li> 
+                    <!-- ACTIVITIES link is highlighted for this page -->
+                    <li><a href="portfolio.html" class="nav-link text-indigo-400 font-bold">Activities</a></li> 
+                    <li><a href="index.html#team" class="nav-link">Our Team</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="index.html#author" class="nav-link">About the President</a></li>
+                    <li><a href="index.html#get-involved" class="nav-link">Get Involved</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- Mobile Menu (Links updated for Multi-Page) -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
+                <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <!-- ACTIVITIES link is highlighted for this page -->
+                    <li><a href="portfolio.html" class="nav-link text-indigo-400 font-bold">Activities</a></li>
+                    <li><a href="index.html#team" class="nav-link">Our Team</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="index.html#author" class="nav-link">About the President</a></li>
+                    <li><a href="index.html#get-involved" class="nav-link">Get Involved</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Activities Section -->
+        <section id="activities" class="section-padding bg-gray-800">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-white mb-12">Our Hands-on Activities</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Activity Card 1: Hand-On Workshops -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-indigo-600 text-center card-hover transition-all duration-300">
+                        <span class="text-6xl mb-4 inline-block">🛠️</span>
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Hand-On Workshops</h3>
+                        <p class="text-gray-300">
+                            We organize workshops to guide young Liberians through all the steps in our projects, from start to finish.
+                        </p>
+                    </div>
+                    <!-- Activity Card 2: Citizen Science Project -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-indigo-600 text-center card-hover transition-all duration-300">
+                        <span class="text-6xl mb-4 inline-block">🔬</span>
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Citizen Science Project</h3>
+                        <p class="text-gray-300">
+                            We actively participate in projects under the Pan-African Citizen Science e-Laboratory, contributing to real-world astronomical research.
+                        </p>
+                    </div>
+                    <!-- Activity Card 3: Star Gazing -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-indigo-600 text-center card-hover transition-all duration-300">
+                        <span class="text-6xl mb-4 inline-block">🔭</span>
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Star Gazing</h3>
+                        <p class="text-gray-300">
+                            We host events for the public to come and see the celestial wonders by themselves, making astronomy more accessible and exciting for everyone.
+                        </p>
+                    </div>
+                    <!-- Activity Card 4: Outreach Programs -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-indigo-600 text-center card-hover transition-all duration-300">
+                        <span class="text-6xl mb-4 inline-block">📢</span>
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach Programs</h3>
+                        <p class="text-gray-300">
+                            We visit schools and universities across Liberia to spread the knowledge of astronomy and inspire the next generation of scientists.
+                        </p>
+                    </div>
+                    <!-- Activity Card 5: Conferences / Seminars -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-indigo-600 text-center card-hover transition-all duration-300">
+                        <span class="text-6xl mb-4 inline-block">🎙️</span>
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Conferences / Seminars</h3>
+                        <p class="text-gray-300">
+                            We organize programs where astronomers and enthusiasts from across Liberia and the world can come and share ideas.
+                        </p>
+                    </div>
+                    <!-- Activity Card 6: Membership Registration -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-indigo-600 text-center card-hover transition-all duration-300">
+                        <span class="text-6xl mb-4 inline-block">✍️</span>
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Membership Registration</h3>
+                        <p class="text-gray-300">
+                            Interested in joining? The process includes filling out a registration form, attending an interview, and paying membership fees.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-700">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex justify-center space-x-4 mb-4">
+                <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition">Home</a>
+                <span class="text-gray-600">|</span>
+                <a href="about.html" class="text-gray-400 hover:text-indigo-400 transition">About Us</a>
+                <span class="text-gray-600">|</span>
+                <!-- ACTIVITIES link is highlighted for this page -->
+                <a href="portfolio.html" class="text-indigo-400 font-bold transition">Activities</a>
+                <span class="text-gray-600">|</span>
+                <a href="blog.html" class="text-gray-400 hover:text-indigo-400 transition">Blog</a>
+                <span class="text-gray-600">|</span>
+                <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition">Contact</a>
+            </div>
+            <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // --- 1. Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // --- 2. Close mobile menu on link click ---
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                 link.addEventListener('click', () => {
+                     if (mobileMenu) {
+                         mobileMenu.classList.add('hidden');
+                     }
+                 });
+            });
+        });
+    </script>
+</body>
+</html>
