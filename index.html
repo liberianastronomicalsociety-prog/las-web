@@ -5,176 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liberian Astronomical Society - Unlocking the cosmos from Liberia.</title>
     <meta name="description" content="The Liberian Astronomical Society (LAS) is a non-governmental organization dedicated to promoting astronomy education and engaging young Liberians in space science.">
+    <!-- Using a secure HTTPS link for the favicon -->
     <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
- <style>
-    /* --- Global Layout & Typography --- */
-    body {
-        background-color: #111827; /* Tailwind gray-900 or similar dark color */
-        font-family: 'Inter', sans-serif;
-    }
-    html {
-        scroll-behavior: smooth; /* New: Enables smooth scrolling for anchors */
-    }
-    .section-padding {
-        padding-top: 5rem;
-        padding-bottom: 5rem;
-    }
 
-    /* --- Navigation Styles (New) --- */
-    .nav-link {
-        transition: color 0.3s ease;
-    }
-    .nav-link:hover {
-        color: #a5b4fc; /* Tailwind's indigo-300 */
-    }
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    /* --- Hero Background (New) --- */
-    .hero-bg-image {
-        background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-    }
-    .hero-bg-image::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1;
-    }
-
-        /* --- Card & Hover Effects (From your script) --- */
-        /* Used for static cards outside the carousel (e.g., in About section) */
-        .card-hover:hover {
-            transform: translateY(-4px);
-            /* Keeping the attractive indigo shadow */
-            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+    <style>
+        /* --- Global Layout & Typography --- */
+        body {
+            background-color: #0f172a; /* Tailwind slate-900 or similar dark color for body */
+            font-family: 'Inter', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
         }
 
-        /* --- News Carousel (Essential for JS Functionality) --- */
-        .carousel-item {
-            transition: opacity 0.5s ease-in-out;
-            opacity: 0; /* Initially hidden */
-            position: absolute; /* Stack items */
-            top: 0;
-            left: 0;
-            width: 100%;
-            /* Default subtle shadow */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        /* --- Navigation Styles --- */
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #a5b4fc; /* Tailwind's indigo-300 */
         }
 
-        .carousel-item.active {
-            opacity: 1;
-            position: relative; /* Bring the active item into the flow */
-            z-index: 10;
-            /* **UPDATED**: Enhanced active state with a soft indigo glow */
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5); /* Soft Indigo Glow */
-            border-color: #6366f1; /* Tailwind indigo-600 */
-        }
-
-        /* Styling for navigation buttons */
-        .carousel-btn {
-            background-color: rgba(99, 102, 241, 0.7); /* Indigo-500 with transparency */
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        .carousel-btn:hover {
-            background-color: rgba(99, 102, 241, 1);
-            transform: scale(1.05);
-        }
-        
-        /* **NEW**: Dot indicator hover effect */
-        .dot {
-             transition: background-color 0.3s, transform 0.2s;
-        }
-        .dot:hover {
-             transform: scale(1.2);
-        }
-
-        /* --- Certificate Carousel (From your script) --- */
-        .certificate-carousel {
+        /* --- Hero Background (Incorporates the Wallpaper) --- */
+        .hero-bg-image {
+            /* The image URL provided by the user is correctly set here */
+            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
-            width: 100%;
-            height: 224px; /* h-56 in Tailwind */
-            overflow: hidden;
-            background-color: #1f2937; /* **UPDATED**: Dark background for better certificate contrast */
+            background-attachment: fixed; /* Ensures the background stays put */
         }
-        .certificate-carousel img {
+        /* Dark overlay for better text readability */
+        .hero-bg-image::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Ensures the entire image (like a certificate) is visible */
-            opacity: 0;
-            animation: carousel-fade 25s infinite;
+            background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for contrast */
+            z-index: 1;
         }
-        .certificate-carousel img:nth-child(1) { animation-delay: 0s; }
-        .certificate-carousel img:nth-child(2) { animation-delay: 5s; }
-        .certificate-carousel img:nth-child(3) { animation-delay: 10s; }
-        .certificate-carousel img:nth-child(4) { animation-delay: 15s; }
-        .certificate-carousel img:nth-child(5) { animation-delay: 20s; }
-        @keyframes carousel-fade {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            20% { opacity: 1; }
-            25% { opacity: 0; }
-            100% { opacity: 0; }
+        
+        /* Partner Card Hover Effect */
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(167, 139, 250, 0.3), 0 4px 6px -2px rgba(167, 139, 250, 0.1);
         }
-     /* Add this to your <style> block for both carousels to maintain vertical stability */
-#carousel-items,
-#news-carousel-items {
-    min-height: 550px; /* Adjust this value based on the tallest card's content */
-    /* If you prefer Tailwind units, h-96 is 24rem (384px), h-128 is 32rem (512px) */
-    /* 550px is a good starting point for content with an image and text. */
-}
-</style>
-    <!-- Google Font - Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        
+        /* Form Button styling */
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
+        }
+    </style>
 </head>
-<body class="bg-gray-950 text-gray-200 font-inter">
-
-    <!-- Hero Section -->
-    <header id="home" class="relative overflow-hidden pt-10 sm:pt-16 lg:pt-8 hero-bg-image">
-        <div class="container mx-auto px-4 py-12 text-center relative z-10">
-            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Official Logo" class="mx-auto h-40 md:h-52 mb-6 drop-shadow-lg">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-4 leading-tight">
-                Liberian Astronomical Society
-            </h1>
-            <p class="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 font-medium">
-                "Unlocking the cosmos from Liberia."
-            </p>
-            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto mb-12">
-                The Liberian Astronomical Society (LAS) is a non-governmental organization (NGO) founded on April 12, 2025,
-                with the aim of spreading astronomy education across Liberia  and foster a national STEM culture in the country. We are proud to be the first astronomical
-                sector ever recorded in Liberia's history.
-            </p>
-            <a href="#about" class="inline-block px-8 py-4 bg-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500">
-                Learn More
-            </a>
-        </div>
-        <div class="absolute inset-0 z-0 opacity-20">
-            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
-                <path fill="#0f172a" fill-opacity="1" d="M0,96L60,117.3C120,139,240,181,360,186.7C480,192,600,160,720,133.3C840,107,960,85,1080,90.7C1200,96,1320,128,1380,144L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
-            </svg>
-        </div>
-    </header>
+<body class="bg-gray-950 text-gray-200">
 
     <!-- Navigation Bar -->
     <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
-    <div class="container mx-auto flex justify-between items-center px-4">
-        <a href="#home" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
-            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-10 w-auto">
-            <span>LAS</span>
-         </a>
-       <!-- Mobile Menu Button -->
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="#home" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
+                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-10 w-auto">
+                <span>LAS</span>
+            </a>
+            
+            <!-- Mobile Menu Button -->
             <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -182,600 +89,167 @@
                     </svg>
                 </button>
             </div>
-        <!-- Desktop Navigation -->
-        <ul class="hidden md:flex space-x-8 text-gray-400">
-            <li><a href="#home" class="nav-link">Home</a></li>
-            <li><a href="#about" class="nav-link">About Us</a></li>
-            <li><a href="#activities" class="nav-link">Activities</a></li>
-            <li><a href="#team" class="nav-link">Our Team</a></li>
-            <li><a href="#blog" class="nav-link">Blog</a></li>
-            <li><a href="#author" class="nav-link">About the President</a></li>
-            <li><a href="#get-involved" class="nav-link">Get Involved</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-            <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-            <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
-        </ul>
-    </div>
-    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
-        <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
-            <li><a href="#home" class="nav-link">Home</a></li>
-            <li><a href="#about" class="nav-link">About Us</a></li>
-            <li><a href="#activities" class="nav-link">Activities</a></li>
-            <li><a href="#team" class="nav-link">Our Team</a></li>
-            <li><a href="#blog" class="nav-link">Blog</a></li>
-            <li><a href="#author" class="nav-link">About the President</a></li>
-            <li><a href="#get-involved" class="nav-link">Get Involved</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-            <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-            <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
-        </ul>
-    </div>
-</nav>
-    <!-- About Section -->
-   <section id="about" class="bg-gray-800 section-padding">
-    <div class="container mx-auto">
-        <h2 class="text-4xl font-bold text-center text-white mb-12">Our Vision & Mission</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-           <!-- Vision & Mission Section --> 
-            <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
-                 <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Vision</h3>
-                <p class="text-gray-300 mb-6">
-                    To spread astronomy education across Liberia.
-                </p>
-                <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Mission</h3>
-                <p class="text-gray-300 mb-6">Our mission is to make astronomy accessible to everyone in Liberia. We are dedicated to achieving this through the following key objectives:</p>
-                <ul class="space-y-4 text-gray-300">
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Introduce astronomy to the public and spark curiosity about the universe.</p>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Engage and empower young Liberians through hands-on astronomy activities and community outreach.</p>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Advocate for astronomy to be offered as a degree course at all universities in Liberia.</p>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Establish and foster partnerships with university science clubs to promote astronomical education.</p>
-                    </li>
-                </ul>
-            </div>
-             <!-- Core Values Section -->
-            <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
-                <h3 class="text-2xl font-bold text-indigo-400 mb-4">Core Values</h3>
-                <div class="grid sm:grid-cols-1 gap-6 text-gray-300">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">🔭</span>
-                        <p><strong>CURIOSITY & DISCOVERY:</strong> We nurture a culture of curiosity, inspiring Liberians to look up, ask questions, and explore the universe.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">📚</span>
-                        <p><strong>ACCESSIBLE EDUCATION:</strong> We are dedicated to providing astronomy education to schools, communities, and individuals across Liberia.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">🤝</span>
-                        <p><strong>INCLUSIVENESS & COMMUNITY:</strong> We believe astronomy belongs to everyone, and we strive to build a diverse and welcoming space for all.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">📈</span>
-                        <p><strong>COLLABORATION & GROWTH:</strong> We promote teamwork among scientists, educators, and international partners.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">🔬</span>
-                        <p><strong>SCIENTIFIC INTEGRITY:</strong> We uphold truth, transparency, and the highest standards of scientific inquiry.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">🚀</span>
-                        <p><strong>INNOVATION & OPPORTUNITY:</strong> We use creative approaches to overcome local challenges and open new paths for research, careers, and inspiration in astronomy.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-    <!-- Activities Section -->
-    <section id="activities" class="section-padding">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-white mb-12">Our Hands-on Activities</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Activity Card 1 -->
-                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 text-center card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">🛠️</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Hand-On Workshops</h3>
-                    <p class="text-gray-300">
-                        We organize workshops to guide young Liberians through all the steps in our projects, from start to finish.
-                    </p>
-                </div>
-                <!-- Activity Card 2 -->
-                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 text-center card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">🔬</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Citizen Science Project</h3>
-                    <p class="text-gray-300">
-                        We actively participate in projects under the Pan-African Citizen Science e-Laboratory, contributing to real-world astronomical research.
-                    </p>
-                </div>
-                <!-- Activity Card 3 -->
-                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 text-center card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">🔭</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Star Gazing</h3>
-                    <p class="text-gray-300">
-                        We host events for the public to come and see the celestial wonders by themselves, making astronomy more accessible and exciting for everyone.
-                    </p>
-                </div>
-                <!-- Activity Card 4 -->
-                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 text-center card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">📢</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach Programs</h3>
-                    <p class="text-gray-300">
-                        We visit schools and universities across Liberia to spread the knowledge of astronomy and inspire the next generation of scientists.
-                    </p>
-                </div>
-                <!-- Activity Card 5 -->
-                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 text-center card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">🎙️</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Conferences / Seminars</h3>
-                    <p class="text-gray-300">
-                        We organize programs where astronomers and enthusiasts from across Liberia and the world can come and share ideas.
-                    </p>
-                </div>
-                <!-- Activity Card 6 -->
-                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 text-center card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">✍️</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Membership Registration</h3>
-                    <p class="text-gray-300">
-                        Interested in joining? The process includes filling out a registration form, attending an interview, and paying membership fees.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Our Works Section -->
-    <section id="portfolio" class="section-padding">
-    <div class="container mx-auto text-center">
-        <h2 class="text-4xl font-bold text-white mb-12">Our Work in Action</h2>
-        <div id="carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
-
-            <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-
-            <div id="carousel-items" class="relative overflow-hidden"> 
             
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <div class="certificate-carousel">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus 1" class="w-full h-56 object-cover">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%201.jpg" alt="LAS President teaching on campus 2" class="w-full h-56 object-cover">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus 1" class="w-full h-56 object-cover">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%201.jpg" alt="LAS President teaching on campus 2" class="w-full h-56 object-cover">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus 1" class="w-full h-56 object-cover">
-                    </div>      
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Campus Astronomy Class</h3>
-                        <p class="text-gray-300 text-sm">
-                            Our President, Daniel A. Obajemu, shares his passion for the cosmos by teaching a hands-on astronomy class on his university campus.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <div class="certificate-carousel">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) on our first asteroid hunting campaign attempt.
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <div class="certificate-carousel">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/BARNARD%2033_2.png" alt="Horsehead Nebula" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Lagoon%20Galaxy.png" alt="Lagoon Nebula" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Heart%20Nebulae%202.png" alt="Heart Nebula" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/M51_2.png" alt="Whirlpool Galaxy" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Andonmara%20Galaxy.png" alt="Andromeda Galaxy" class="w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our Astrophotography Projects</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: Oct 12, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            Proudly showcasing our images processed - Horsehead Nebula, Lagoon Nebula, Heart Nebula, Whirlpool Galaxy and Andromeda Galaxy - using GIMP and Photoshop during our first indoor Astrophotography Training.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <div class="certificate-carousel">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_2301996913642555.jpeg" alt="Picture 1" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_829395132782547.jpeg" alt="Picture 2" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_835182659055931.jpeg" alt="Picture 3" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_24782856664668488.jpeg" alt="Picture 4" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_1894301934767661.jpeg" alt="Picture 5" class="w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Kakata</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: Oct 20, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            Our outreach expanded to Kakata, Margibi County, where we engage students at Booker Washington Institute (BWI), inspiring the next generation of Liberian scientists. 🚀
-                        </p>
-                    </div>
-                </div>
-                
-            </div>
-            <button onclick="changeSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-            
+            <!-- Desktop Navigation Links -->
+            <ul class="hidden md:flex items-center space-x-6 lg:space-x-8 text-gray-400">
+                <li><a href="#home" class="nav-link text-sm font-medium">Home</a></li>
+                <li><a href="about.html" class="nav-link text-sm font-medium">About Us</a></li>
+                <li><a href="portfolio.html" class="nav-link text-sm font-medium">Activities</a></li>
+                <li><a href="team.html" class="nav-link text-sm font-medium">Our Team</a></li>
+                <li><a href="blog.html" class="nav-link text-sm font-medium">Blog</a></li>
+                <li><a href="president.html" class="nav-link text-sm font-medium">President</a></li>
+                <li><a href="getinvolve.html" class="nav-link text-sm font-medium">Get Involved</a></li>
+                <li><a href="#contact" class="nav-link text-sm font-medium">Contact</a></li>
+                <li class="pl-4">
+                    <a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-indigo-400 hover:text-white transition-all duration-300">
+                        Member Login
+                    </a>
+                </li>
+                <li>
+                    <a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-indigo-700 transition-all duration-300">
+                        Join Us
+                    </a>
+                </li>
+            </ul>
         </div>
-        </div>
-</section>
-    
-    <!-- Key Faces Section -->
-    <section id="team" class="py-20">
-        <div class="container mx-auto px-4">
-            <!-- Section Heading and Description -->
-            <div>
-                <h2 class="text-4xl font-bold text-center text-white mb-8">Meet Our Team</h2>
-                <p class="text-xl text-center text-gray-300 max-w-3xl mx-auto mb-16">
-                    Meet the key faces dedicated to our mission. The driving force behind the Liberian Astronomical Society's efforts to promote scientific curiosity and education.
-                </p>
-            </div>
-
-            <!-- Team Members Grid (4-column layout) -->
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
-                <!-- Team Member Card 1: Daniel A. Obajemu -->
-                <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                    <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/President.jpg" alt="Daniel A. Obajemu">
-                    <h3 class="text-2xl font-bold text-white">Daniel A. Obajemu</h3>
-                    <p class="text-indigo-400 font-semibold mb-3">Founder / President</p>
-                    <p class="text-gray-300 text-sm">
-                        Harvest Intercontinental American University
-                    </p>
-                </div>
-                <!-- Team Member Card 2: Sadayah Isaac Davis -->
-                <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                    <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Sada.jpg" alt="Sadayah Isaac Davis">
-                    <h3 class="text-2xl font-bold text-white">Sadayah Isaac Davis</h3>
-                    <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
-                    <p class="text-gray-300 text-sm">
-                        College Of West Africa
-                    </p>
-                </div>
-                <!-- Team Member Card 3: Ceree P. Williams -->
-                <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                    <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ce.jpg" alt="Ceree P. Williams">
-                    <h3 class="text-2xl font-bold text-white">Ceree P. Williams</h3>
-                    <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
-                    <p class="text-gray-300 text-sm">
-                        St. Peter Catholic High School
-                    </p>
-                </div>
-                <!-- Team Member Card 4: Adrienne Celine Uche Duru -->
-                <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                    <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Uche.jpg" alt="Adrienne Celine Uche Duru">
-                    <h3 class="text-2xl font-bold text-white">Adrienne Celine Uche Duru</h3>
-                    <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
-                    <p class="text-gray-300 text-sm">
-                        Stella Maris Polythenic University
-                    </p>
-                </div>
-            </div>
-
-            <!-- Advisors Section (Chief and Outreach) -->
-            <div class="mt-24">
-                <h2 class="text-3xl font-bold text-center text-white mb-12">Our Key Advisors</h2>
-                
-                <!-- Grid container for the two advisor cards (side-by-side on large screens) -->
-                <div class="max-w-6xl mx-auto grid gap-8 lg:grid-cols-2">
-
-                    <!-- Chief Advisor Card -->
-                    <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
-                        <div class="md:flex-shrink-0">
-                            <img class="h-48 w-full object-cover md:w-48" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Mr.%20Miracle.jpeg" alt="Mr. Miracle Chibuzor Marcel">
-                        </div>
-                        <div class="p-8 text-center md:text-left">
-                            <h3 class="text-2xl font-bold text-white">Mr. Miracle Chibuzor Marcel</h3>
-                            <p class="text-indigo-400 font-semibold mb-3">Chief Advisor</p>
-                            <p class="text-gray-300">
-                                Guiding our society with a wealth of experience, Mr. Marcel provides invaluable strategic advice and fosters our connection with the broader Pan-African scientific community.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Outreach Advisor Card -->
-                    <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
-                        <div class="md:flex-shrink-0">
-                            <img class="h-48 w-full object-cover md:w-48" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/mum.jpg" alt="Mrs. Alisabatu Obajemu">
-                        </div>
-                        <div class="p-8 text-center md:text-left">
-                            <h3 class="text-2xl font-bold text-white">Mrs. Alisabatu Angelina Obajemu</h3>
-                            <p class="text-indigo-400 font-semibold mb-3">Outreach Advisor</p>
-                            <p class="text-gray-300">
-                                Mrs. Obajemu is essential in developing and executing our public engagement and educational programs, ensuring we inspire the next generation of astronomers across Liberia.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About the President Section -->
-    <section id="author" class="bg-gray-800 section-padding">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-white mb-12">About the President</h2>
-            <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
-                <img class="w-48 h-48 rounded-full border-4 border-indigo-500 flex-shrink-0" src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/President.jpg" alt="Daniel A. Obajemu, President of LAS">
-                <div class="text-center md:text-left">
-                    <h3 class="text-3xl font-bold text-white">Daniel Ayorinde Obajemu</h3>
-                    <p class="text-indigo-400 text-lg mb-4">Founder & President, Liberian Astronomical Society</p>
-                    <p class="text-gray-300 mb-4">
-                        Daniel A. Obajemu is a visionary in the field of astronomy, dedicated to advancing scientific education in Africa, specifically Liberia. As the founder and President of the Liberian Astronomical Society (LAS), he has established Liberia's first astronomical society to promote space science. Daniel also serves as a Research Analyst at the Pan-African Citizen Science e-Laboratory and was appointed Committee Chair for the PACS e-Lab Committee, an initiative under the African Astronomical Society (AfAS). His educational background includes a High School Diploma and Vocational Certificate from Monrovia College & Industrial Training School.
-                    </p>
-                    <h4 class="text-xl font-semibold text-white mb-2">Honours & Awards</h4>
-                    <ul class="list-disc list-inside text-gray-400 space-y-1">
-                        <li>Liberia Academic Excellence Award 4.0 - Ministry of Education, Liberia (2024)</li>
-                        <li>IAAC's National Award & Bronze Honor - International Astronomy & Astrophysics Competition (2023)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Blog Section -->
-<section id="blog" class="section-padding bg-gray-900">
-    <div class="container mx-auto text-center">
-        <h2 class="text-4xl font-bold text-white mb-12">Our Latest News & Blog</h2>
-        <p class="text-lg text-gray-300 max-w-3xl mx-auto mb-16">
-            Stay up-to-date with our latest projects, astronomical discoveries, and community events.
-        </p>
         
-        <div id="news-carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
-
-            <button onclick="changeNewsSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-
-            <div id="news-carousel-items" class="relative overflow-hidden">
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" alt="Asteroids Hunting Session Flyer" class="w-full h-56 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">1st Asteroids Hunting Session</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: September 20, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            Join the Liberian Astronomical Society for our first Asteroids Hunting Session as part of the Pan-African Citizen Science Asteroids Campaign! This is a unique opportunity to contribute to real-world astronomical research.
-                        </p>
-                        <a href="https://forms.gle/KYT6Vp4K5iWn4Gcx7" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Register & Learn More →</a>
-                    </div>
-                </div>
-
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <iframe class="w-full h-56" src="https://www.youtube.com/embed/TNNGe-AGqYA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Liberian Astronomical Society & African Space Leaders</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: September 18, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            Watch a presentation from the Liberian Astronomical Society and African Space Leaders focusing on astrophotography and image processing using software like FITS Liberator and GIMP. The video also highlights how they engage the public and inspire the next generation through their work, including a showcase of their Astro Album.
-                        </p>
-                        <a href="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Watch on YouTube →</a>
-                    </div>
-                </div>
-
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <div class="certificate-carousel">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) on our first asteroid hunting campaign attempt.
-                        </p>
-                        <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
-                    </div>
-                </div>
-                
-                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" alt="Outreach Flyer" class="w-full h-56 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Bringing the Stars to Liberia: Astronomy Outreach 🌌</h3>
-                        <p class="text-gray-400 text-sm mb-4">Date: November 1 - 26, 2025</p>
-                        <p class="text-gray-300 text-sm">
-                            We're thrilled to announce the "Diversity in Astronomy within Liberia" Outreach program, set to ignite curiosity and inspire the next generation of scientists! The universe belongs to everyone, and this initiative aims to promote diversity and equal access to science education in Liberia. We are bringing engaging, hands-on learning about the cosmos directly to communities in Bong County and Grand Bassa County. Join us as we explore the wonders above from November 1 to 26. Follow our journey as we prove that the next great astronomer can come from any corner of Liberia! Let’s inspire a passion for science, one stargazing session at a time. ✨
-                        </p>
-                        <a href="#Get in touch" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Learn More →</a>
-                    </div>
-                </div>
-                
-            </div>
-            <button onclick="changeNewsSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-            
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95 backdrop-blur-sm shadow-inner">
+            <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
+                <li><a href="#home" class="nav-link text-lg">Home</a></li>
+                <li><a href="about.html" class="nav-link text-lg">About Us</a></li>
+                <li><a href="portfolio.html" class="nav-link text-lg">Activities</a></li>
+                <li><a href="team.html" class="nav-link text-lg">Our Team</a></li>
+                <li><a href="blog.html" class="nav-link text-lg">Blog</a></li>
+                <li><a href="president.html" class="nav-link text-lg">About the President</a></li>
+                <li><a href="getinvolve.html" class="nav-link text-lg">Get Involved</a></li>
+                <li><a href="#contact" class="nav-link text-sm font-medium">Contact</a></li>
+                <li><a href="login.html" class="inline-block w-3/4 text-center text-indigo-400 border-2 border-indigo-400 px-4 py-2 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+                <li><a href="signup.html" class="inline-block w-3/4 text-center text-white bg-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+            </ul>
         </div>
-        </div>
-</section>
-    <!-- Membership Section -->
-    <section id="membership" class="bg-gray-800 section-padding py-24">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6">Your Journey to the Stars Starts Here</h2>
-        <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto mb-12">
-            Becoming a member of the Liberian Astronomical Society is a step-by-step journey designed to welcome passionate stargazers like you. Follow these simple steps to join our mission of unlocking the cosmos from Liberia.
-        </p>
+    </nav>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-            <div class="flex flex-col items-center bg-gray-700 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-105">
-                <div class="text-white text-4xl font-extrabold mb-2">1</div>
-                <h3 class="text-xl font-bold text-white mb-2">Create Your Account</h3>
-                <p class="text-gray-400 text-sm">Sign up with your email and a password to complete the registration form.</p>
-            </div>
-            <div class="flex flex-col items-center bg-gray-700 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-105">
-                <div class="text-white text-4xl font-extrabold mb-2">2</div>
-                <h3 class="text-xl font-bold text-white mb-2">Pass the Assessment</h3>
-                <p class="text-gray-400 text-sm">Take a 15-question assessment and score at least 8 to proceed to the next stage.</p>
-            </div>
-            <div class="flex flex-col items-center bg-gray-700 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-105">
-                <div class="text-white text-4xl font-extrabold mb-2">3</div>
-                <h3 class="text-xl font-bold text-white mb-2">Interview with an Admin</h3>
-                <p class="text-gray-400 text-sm">We'll schedule an interview with an LAS administrator to get to know you better.</p>
-            </div>
-            <div class="flex flex-col items-center bg-gray-700 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-105">
-                <div class="text-white text-4xl font-extrabold mb-2">4</div>
-                <h3 class="text-xl font-bold text-white mb-2">Complete Official Form & Dues</h3>
-                <p class="text-gray-400 text-sm">Upon approval, you will receive an official form and pay a one-time newcomer due of $5 USD.</p>
-            </div>
-            <div class="flex flex-col items-center bg-gray-700 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-105">
-                <div class="text-white text-4xl font-extrabold mb-2">5</div>
-                <h3 class="text-xl font-bold text-white mb-2">Receive Your Official Letter</h3>
-                <p class="text-gray-400 text-sm">Once complete, you will receive your official membership letter via your portal.</p>
-            </div>
-        </div>
-
-        <a href="signup.html" class="inline-block px-10 py-5 bg-indigo-600 text-white font-bold text-xl rounded-xl shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500">
-            Start Your Application
-        </a>
-
-        <div class="mt-12 text-center text-gray-300 text-sm">
-            <p class="mb-2">Newcomer Dues: $5 USD</p>
-            <p>Monthly Renewal Dues: $500 LRD</p>
-        </div>
-    </div>
-</section>
-
-    <!-- Get Involved Section -->
-    <section id="get-involved" class="section-padding bg-gray-800">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-white mb-12">How You Can Get Involved</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto mb-16">
-                Join our mission to bring astronomy education to Liberia. There are many ways to contribute to the Liberian Astronomical Society.
+    <!-- Header/Hero Section with Wallpaper Background -->
+    <header id="home" class="relative overflow-hidden pt-10 sm:pt-16 lg:pt-8 hero-bg-image min-h-[80vh] flex items-center justify-center">
+        <div class="container mx-auto px-4 py-12 text-center relative z-10">
+            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Official Logo" class="mx-auto h-32 sm:h-40 md:h-52 mb-6 drop-shadow-2xl">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-4 leading-tight drop-shadow-lg">
+                Liberian Astronomical Society
+            </h1>
+            <p class="text-xl md:text-2xl text-indigo-300 max-w-4xl mx-auto mb-12 font-medium italic drop-shadow-md">
+                "Unlocking the cosmos from Liberia."
             </p>
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">💰</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Make a Donation</h3>
-                    <p class="text-gray-300 mb-4">
-                        Your contribution helps us fund our outreach programs, purchase equipment, and make astronomy accessible to all.
-                    </p>
-                    <a href="mailto:liberianastronomicalsociety@gmail.com" class="inline-block py-2 px-6 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all duration-300">Donate Now</a>
-                </div>
-                
-                <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">🤝</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Become a Volunteer</h3>
-                    <p class="text-gray-300 mb-4">
-                        Share your time and skills! We're always looking for passionate people to help with events, content creation, and more.
-                    </p>
-                    <a href="#contact" class="inline-block py-2 px-6 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all duration-300">Volunteer Today</a>
-                </div>
-
-                <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
-                    <span class="text-6xl mb-4 inline-block">🏢</span>
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Partner with Us</h3>
-                    <p class="text-gray-300 mb-4">
-                        If you are an organization or business, we invite you to collaborate with us to expand our mission's reach.
-                    </p>
-                    <a href="#contact" class="inline-block py-2 px-6 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all duration-300">Contact Us</a>
-                </div>
-            </div>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto mb-12 drop-shadow">
+                The Liberian Astronomical Society (LAS) is a non-governmental organization (NGO) founded on April 12, 2025,
+                with the aim of spreading astronomy education across Liberia and foster a national STEM culture in the country. We are proud to be the first astronomical
+                sector ever recorded in Liberia's history.
+            </p>
+            <a href="#about" class="inline-block px-8 py-4 bg-indigo-600 text-white font-bold text-lg rounded-xl shadow-xl transition-all duration-300 hover:bg-indigo-700 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-indigo-500">
+                Learn More
+            </a>
         </div>
-    </section>
-
-    <!-- Partners Section -->
-    <section id="partners" class="section-padding">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-white mb-12">Our Partners</h2>
-            <div class="flex flex-col md:flex-row justify-center items-center space-y-6 md:space-y-0 md:space-x-12">
-                <a href="https://www.pacselab.space/" target="_blank" class="block bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/IMG-20250729-WA0012.jpg" alt="Pan-African Citizen Science e-Laboratory (PACSe-Lab) Logo" class="w-48 mx-auto">
-                </a>
-            </div>
+        <!-- This SVG element remains, but the opacity is low, serving as a subtle texture overlay on top of the dark filter -->
+        <div class="absolute inset-0 z-0 opacity-10">
+             <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                 <path fill="#0f172a" fill-opacity="1" d="M0,96L60,117.3C120,139,240,181,360,186.7C480,192,600,160,720,133.3C840,107,960,85,1080,90.7C1200,96,1320,128,1380,144L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+             </svg>
         </div>
-    </section>
+    </header>
     
-    <!-- Contact & Footer Section -->
+    <!-- Partners Section -->
+    <section id="partners" class="section-padding bg-gray-900">
+        <div class="container mx-auto text-center px-4">
+            <h2 class="text-4xl font-bold text-white mb-12">Our Partners</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+                
+                <!-- Partner 1: PACSe-Lab -->
+                <a href="https://www.pacselab.space/" target="_blank" rel="noopener noreferrer" class="block bg-gray-800 p-6 rounded-xl shadow-2xl border border-indigo-700 hover:border-indigo-400 card-hover transition-all duration-300 w-full max-w-xs transform hover:scale-[1.05]">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/IMG-20250729-WA0012.jpg" 
+                         alt="Pan-African Citizen Science e-Laboratory (PACSe-Lab) Logo" 
+                         class="w-full h-auto mx-auto rounded-lg shadow-md max-h-32 object-contain"
+                         onerror="this.onerror=null; this.src='https://placehold.co/300x128/3f3f46/ffffff?text=PACSe-Lab+Logo';">
+                    <p class="mt-4 text-indigo-400 font-semibold text-lg">PACSe-Lab</p>
+                </a>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact Section -->
     <footer id="contact" class="bg-gray-950 section-padding pt-16">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-white mb-12">Contact Us</h2>
-            <div class="max-w-3xl mx-auto grid md:grid-cols-2 gap-12">
-                <!-- Contact Form -->
-               <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700">
-    <h3 class="text-2xl font-bold text-white mb-4">Send us a message</h3>
-    <form action="https://api.web3forms.com/submit" method="POST">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-extrabold text-center text-white mb-16">Contact Us & Get Connected</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+                
+                <!-- Contact Form Card -->
+                <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl border border-gray-700 transform hover:shadow-indigo-900/50 transition-shadow duration-500">
+                    <h3 class="text-2xl font-bold text-white mb-6">Send us a message</h3>
+                    <form action="https://api.web3forms.com/submit" method="POST" id="contact-form">
+                        <!-- Web3Forms Access Key (Placeholder for demonstration) -->
+                        <input type="hidden" name="access_key" value="7a5bd0b6-925e-45f9-b582-8b879aa3546a">
 
-        <input type="hidden" name="access_key" value="7a5bd0b6-925e-45f9-b582-8b879aa3546a">
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-400 mb-2 text-sm font-medium">Name</label>
+                            <input type="text" id="name" name="name" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="Your Full Name" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-400 mb-2 text-sm font-medium">Email</label>
+                            <input type="email" id="email" name="email" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="your.email@example.com" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-gray-400 mb-2 text-sm font-medium">Message</label>
+                            <textarea id="message" name="message" rows="4" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="How can we help you?" required></textarea>
+                        </div>
 
-        <div>
-            <label for="name" class="block text-gray-400 mb-1">Name</label>
-            <input type="text" id="name" name="name" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Your Name" required>
-        </div>
-        <div>
-            <label for="email" class="block text-gray-400 mb-1">Email</label>
-            <input type="email" id="email" name="email" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="your.email@example.com" required>
-        </div>
-        <div>
-            <label for="message" class="block text-gray-400 mb-1">Message</label>
-            <textarea id="message" name="message" rows="4" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Your message..." required></textarea>
-        </div>
+                        <!-- hCaptcha is recommended by Web3Forms for spam protection -->
+                        <div class="h-captcha mb-6" data-captcha="true"></div>
 
-        <div class="h-captcha" data-captcha="true"></div>
+                        <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition-all duration-300 btn-primary">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
 
-        <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition-all duration-300 btn-primary">Send Message</button>
-    </form>
-</div>
-
-                <!-- Contact Info & Socials -->
-                <div class="flex flex-col justify-between bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700">
+                <!-- Contact Info and Social Links Card -->
+                <div class="flex flex-col justify-between bg-gray-900 p-8 rounded-2xl shadow-2xl border border-gray-700">
                     <div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Get in touch</h3>
-                        <p class="text-gray-400 mb-4">For general inquiries, collaboration, or to support our mission, please reach out to us. We look forward to hearing from you!</p>
-                        <div class="space-y-3 mb-8">
-                            <div class="flex items-center space-x-3">
-                                <span class="text-indigo-400">📍</span>
-                                <span class="text-gray-300">Monrovia, Liberia</span>
+                        <h3 class="text-2xl font-bold text-white mb-6">Get in touch</h3>
+                        <p class="text-gray-400 mb-8">For general inquiries, collaboration, or to support our mission, please reach out to us. We look forward to hearing from you!</p>
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-start space-x-3">
+                                <span class="text-indigo-400 mt-0.5 text-xl">📍</span>
+                                <span class="text-gray-300 font-medium">Monrovia, Liberia</span>
                             </div>
-                            <!-- Updated contact info -->
-                            <div class="flex items-center space-x-3">
-                                <span class="text-indigo-400">📧</span>
-                                <a href="mailto:liberianastronomicalsociety@gmail.com" class="text-gray-300 hover:text-white transition-all duration-300">liberianastronomicalsociety@gmail.com</a>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-indigo-400 mt-0.5 text-xl">📧</span>
+                                <a href="mailto:liberianastronomicalsociety@gmail.com" class="text-gray-300 hover:text-white transition-all duration-300 break-words">liberianastronomicalsociety@gmail.com</a>
                             </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="text-indigo-400">📞</span>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-indigo-400 mt-0.5 text-xl">📞</span>
                                 <a href="tel:+231777597234" class="text-gray-300 hover:text-white transition-all duration-300">+231 777 597 234</a>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Social Media Links -->
                     <div>
-                        <h3 class="text-xl font-bold text-white mb-4">Follow Us</h3>
+                        <h3 class="text-xl font-bold text-white mb-4 border-t border-gray-700 pt-4">Follow Our Cosmic Journey</h3>
                         <div class="flex space-x-6 text-gray-400 text-2xl">
-                            <!-- Updated Social Media Icons with Correct Links and added LinkedIn -->
-                            <a href="https://www.facebook.com/LiberianAstronomicalSociety" target="_blank" class="social-link transition-all duration-300" aria-label="Facebook">
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/LiberianAstronomicalSociety" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="Facebook">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85 0 3.204-.012 3.584-.07 4.85-0.148 3.251-1.691-4.77-4.919-4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.251-0.148-4.77-1.691-4.919-4.919-0.058-1.265-0.07-1.644-0.07-4.85s0.012-3.584 0.07-4.85c0.149-3.225 1.69-4.772 4.919-4.919 1.266-0.057 1.645-0.069 4.85-0.069zM12-2.163c-3.259 0-3.667.014-4.947.072-4.358.204-6.78 2.627-6.981 6.981-0.058 1.281-0.072 1.689-0.072 4.947s0.014 3.667 0.072 4.947c0.204 4.354 2.627 6.78 6.981 6.981 1.281 0.058 1.689 0.072 4.947 0.072s3.667-0.014 4.947-0.072c4.354-0.204 6.78-2.627 6.981-6.981 0.058-1.281 0.072-1.689 0.072-4.947s-0.014-3.667-0.072-4.947c-0.204-4.354-2.627-6.78-6.981-6.981-1.281-0.058-1.689-0.072-4.947-0.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-0.679 0-1.232 0.552-1.232 1.231 0 0.679 0.552 1.232 1.232 1.232s1.232-0.552 1.232-1.232c0-0.679-0.552-1.231-1.232-1.231z"/></svg>
                             </a>
-                            <a href="https://twitter.com/LiberianAstronomicalSociety" target="_blank" class="social-link transition-all duration-300" aria-label="Twitter">
+                            <!-- Twitter/X -->
+                            <a href="https://twitter.com/LiberianAstronomicalSociety" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="Twitter">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.795-1.574 2.162-2.723-.951.564-2.005.974-3.127 1.195-.898-.957-2.178-1.555-3.593-1.555-2.716 0-4.921 2.206-4.921 4.921 0 .386.044.761.127 1.122-4.091-.205-7.728-2.165-10.16-5.148-.424.729-.668 1.578-.668 2.481 0 1.708.868 3.215 2.188 4.093-.807-.026-1.565-.246-2.228-.616v.061c0 2.385 1.693 4.375 3.946 4.828-.413.111-.849.171-1.296.171-.317 0-.626-.031-.926-.089.629 1.956 2.456 3.371 4.606 3.41-1.688 1.328-3.811 2.126-6.115 2.126-.398 0-.792-.023-1.18-.069 2.173 1.392 4.76 2.209 7.547 2.209 9.058 0 14.01-7.502 14.01-14.01 0-.214-.005-.429-.014-.643.961-.697 1.794-1.564 2.458-2.559z"/></svg>
                             </a>
-                            <a href="https://www.instagram.com/libastrosoc2025" target="_blank" class="social-link transition-all duration-300" aria-label="Instagram">
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/libastrosoc2025" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="Instagram">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85 0 3.204-.012 3.584-.07 4.85-0.148 3.251-1.691-4.77-4.919-4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.251-0.148-4.77-1.691-4.919-4.919-0.058-1.265-0.07-1.644-0.07-4.85s0.012-3.584 0.07-4.85c0.149-3.225 1.69-4.772 4.919-4.919 1.266-0.057 1.645-0.069 4.85-0.069zM12-2.163c-3.259 0-3.667.014-4.947.072-4.358.204-6.78 2.627-6.981 6.981-0.058 1.281-0.072 1.689-0.072 4.947s0.014 3.667 0.072 4.947c0.204 4.354 2.627 6.78 6.981 6.981 1.281 0.058 1.689 0.072 4.947 0.072s3.667-0.014 4.947-0.072c4.354-0.204 6.78-2.627 6.981-6.981 0.058-1.281 0.072-1.689 0.072-4.947s-0.014-3.667-0.072-4.947c-0.204-4.354-2.627-6.78-6.981-6.981-1.281-0.058-1.689-0.072-4.947-0.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-0.679 0-1.232 0.552-1.232 1.231 0 0.679 0.552 1.232 1.232 1.232s1.232-0.552 1.232-1.232c0-0.679-0.552-1.231-1.232-1.231z"/></svg>
                             </a>
-                            <a href="https://www.linkedin.com/company/LiberianAstronomicalSociety" target="_blank" class="social-link transition-all duration-300" aria-label="LinkedIn">
+                            <!-- LinkedIn -->
+                            <a href="https://www.linkedin.com/company/LiberianAstronomicalSociety" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="LinkedIn">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm6.32-6.453c-.768-.205-1.583-.312-2.32-.312-1.396 0-2.333.627-2.333 1.488v5.277h-2v-6h2v.913c.478-.517 1.357-1.42 2.857-1.42 2.213 0 3.643 1.442 3.643 4.544v3.132h-2v-2.822c0-1.859-.972-2.333-1.859-2.333z"/></svg>
                             </a>
                         </div>
@@ -783,212 +257,88 @@
                 </div>
             </div>
         </div>
-        <div class="mt-16 text-center text-gray-500">
-            <p>&copy; 2025 Liberian Astronomical Society. All rights reserved.</p>
+        <div class="mt-16 text-center text-gray-500 border-t border-gray-800 pt-8">
+            <p class="text-sm">&copy; 2025 Liberian Astronomical Society. All rights reserved. | Built with space and passion.</p>
         </div>
     </footer>
 
-    <!-- Simple Message Box for form submissions -->
+    <!-- Custom Message Box (Replaces alert/confirm) -->
     <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center p-4 z-[99]">
-        <div class="bg-gray-800 p-8 rounded-xl max-w-sm text-center shadow-lg border border-gray-700">
+        <div class="bg-gray-800 p-8 rounded-xl max-w-sm text-center shadow-2xl border border-indigo-500/50">
             <p id="message-text" class="text-white text-lg font-semibold mb-4"></p>
             <button id="close-message-box" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300">Close</button>
         </div>
     </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
+    <!-- Web3Forms Client Script -->
+    <script src="https://web3forms.com/client/script.js" async defer></script>
 
-        // --- 1. Manual/Automatic Project Carousel (For 'Our Work in Action' section) ---
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('#carousel-items .carousel-item');
-        const totalSlides = slides.length;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const contactForm = document.getElementById('contact-form');
+            const messageBox = document.getElementById('message-box');
+            const messageText = document.getElementById('message-text');
+            const closeMessageBox = document.getElementById('close-message-box');
 
-        function showSlide(index) {
-            if (totalSlides === 0) return;
+            // 1. Smooth Scrolling for Navigation Links & Mobile Menu Close
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    // Check if the link targets a section on the same page
+                    if (this.getAttribute('href').length > 1) { 
+                        e.preventDefault();
 
-            // Calculate the new index, ensuring it loops
-            if (index >= totalSlides) {
-                currentSlide = 0;
-            } else if (index < 0) {
-                currentSlide = totalSlides - 1;
-            } else {
-                currentSlide = index;
-            }
+                        // Close mobile menu on click
+                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                           mobileMenu.classList.add('hidden');
+                        }
 
-            // Hide all slides (stacked using absolute position)
-            slides.forEach(slide => {
-                slide.classList.remove('active');
-                slide.style.position = 'absolute';
-                slide.style.opacity = '0';
-                slide.style.pointerEvents = 'none';
+                        const targetElement = document.querySelector(this.getAttribute('href'));
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
             });
 
-            // Show the active slide
-            slides[currentSlide].classList.add('active');
-            slides[currentSlide].style.position = 'relative';
-            slides[currentSlide].style.opacity = '1';
-            slides[currentSlide].style.pointerEvents = 'auto';
-        }
-
-        // Function called by Prev/Next buttons (manual control)
-        function changeSlide(direction) {
-            showSlide(currentSlide + direction);
-        }
-        
-        // Expose changeSlide function globally for the HTML buttons
-        window.changeSlide = changeSlide;
-
-        // Initialize and start automatic cycling
-        if (totalSlides > 0) {
-            showSlide(currentSlide);
-            // AUTO-SLIDE: Change the slide every 5 seconds (5000ms)
-            setInterval(() => changeSlide(1), 5000); 
-        }
-
-        // ----------------------------------------------------------------------
-        // --- 2. Manual/Automatic News/Blog Carousel ---
-        // ----------------------------------------------------------------------
-        let currentNewsSlide = 0;
-        const newsSlides = document.querySelectorAll('#news-carousel-items .carousel-item');
-        const totalNewsSlides = newsSlides.length;
-
-        function showNewsSlide(index) {
-            if (totalNewsSlides === 0) return;
-
-            // Calculate the new index, ensuring it loops
-            if (index >= totalNewsSlides) {
-                currentNewsSlide = 0;
-            } else if (index < 0) {
-                currentNewsSlide = totalNewsSlides - 1;
-            } else {
-                currentNewsSlide = index;
-            }
-
-            // Hide all news slides
-            newsSlides.forEach(slide => {
-                slide.classList.remove('active');
-                slide.style.position = 'absolute';
-                slide.style.opacity = '0';
-                slide.style.pointerEvents = 'none';
-            });
-
-            // Show the active news slide
-            newsSlides[currentNewsSlide].classList.add('active');
-            newsSlides[currentNewsSlide].style.position = 'relative';
-            newsSlides[currentNewsSlide].style.opacity = '1';
-            newsSlides[currentNewsSlide].style.pointerEvents = 'auto';
-        }
-
-        // Function called by Prev/Next buttons (manual control)
-        function changeNewsSlide(direction) {
-            showNewsSlide(currentNewsSlide + direction);
-        }
-        
-        // Expose changeNewsSlide globally for the HTML buttons
-        window.changeNewsSlide = changeNewsSlide;
-
-        // Initialize and start automatic cycling
-        if (totalNewsSlides > 0) {
-            showNewsSlide(currentNewsSlide);
-            // AUTO-SLIDE: Change the news slide every 5 seconds (5000ms)
-            setInterval(() => changeNewsSlide(1), 5000); 
-        }
-        // ----------------------------------------------------------------------
-        
-        // --- 3. Smooth Scrolling for Navigation Links ---
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                     mobileMenu.classList.add('hidden');
-                }
-
-                e.preventDefault();
-                const targetElement = document.querySelector(this.getAttribute('href'));
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // --- 4. Mobile Menu Toggle ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-
-        // --- 5. Close mobile menu on link click ---
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-             link.addEventListener('click', () => {
-                 if (mobileMenu) {
-                     mobileMenu.classList.add('hidden');
-                 }
-             });
-        });
-        
-        // --- 6. Simple Message Box Functionality (for Contact Form) ---
-        const contactForm = document.getElementById('contact-form');
-        const messageBox = document.getElementById('message-box');
-        const messageText = document.getElementById('message-text');
-        const closeMessageBox = document.getElementById('close-message-box');
-
-        if (contactForm && messageBox && messageText && closeMessageBox) {
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+            // 2. Mobile Menu Toggle
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
                 
-                messageText.textContent = 'Thank you for your message! We will get back to you soon.';
-                messageBox.classList.remove('hidden');
-                messageBox.classList.add('flex');
-                contactForm.reset();
-            });
+                // Close menu if a link is clicked
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
 
-            closeMessageBox.addEventListener('click', () => {
-                messageBox.classList.add('hidden');
-                messageBox.classList.remove('flex');
-            });
-        }
-    });
-</script>
-<script src="https://web3forms.com/client/script.js" async defer></script>
+            // 3. Simple Message Box Functionality (for Contact Form submission feedback)
+            if (contactForm && messageBox && messageText && closeMessageBox) {
+                contactForm.addEventListener('submit', function(e) {
+                    // Prevent default submission for demonstration purposes.
+                    // If you want to use Web3Forms, remove this line:
+                    e.preventDefault();
+                    
+                    messageText.textContent = 'Thank you for your message! We will get back to you soon.';
+                    messageBox.classList.remove('hidden');
+                    messageBox.classList.add('flex');
+                    
+                    // Only reset the form if it was a successful (simulated) submission
+                    contactForm.reset(); 
+                });
+
+                closeMessageBox.addEventListener('click', () => {
+                    messageBox.classList.add('hidden');
+                    messageBox.classList.remove('flex');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
