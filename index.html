@@ -126,6 +126,13 @@
             25% { opacity: 0; }
             100% { opacity: 0; }
         }
+     /* Add this to your <style> block for both carousels to maintain vertical stability */
+#carousel-items,
+#news-carousel-items {
+    min-height: 550px; /* Adjust this value based on the tallest card's content */
+    /* If you prefer Tailwind units, h-96 is 24rem (384px), h-128 is 32rem (512px) */
+    /* 550px is a good starting point for content with an image and text. */
+}
 </style>
     <!-- Google Font - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -330,24 +337,21 @@
     
     <!-- Our Works Section -->
     <section id="portfolio" class="section-padding">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-white mb-12">Our Work in Action</h2>
-            <!-- CAROUSEL CONTAINER -->
-            <div id="carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
+    <div class="container mx-auto text-center">
+        <h2 class="text-4xl font-bold text-white mb-12">Our Work in Action</h2>
+        <div id="carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
 
-                <!-- Navigation Buttons -->
-                <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                </button>
+            <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
 
-                <div id="carousel-items" class="relative overflow-hidden">        
-                
-                <!-- Project Card 1: Campus Astronomy Class -->
+            <div id="carousel-items" class="relative overflow-hidden"> 
+            
                 <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                   <div class="certificate-carousel">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus 1" class="w-full h-56 object-cover">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%201.jpg" alt="LAS President teaching on campus 2" class="w-full h-56 object-cover">
-                    </div>     
+                    <div class="certificate-carousel">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus 1" class="w-full h-56 object-cover">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%201.jpg" alt="LAS President teaching on campus 2" class="w-full h-56 object-cover">
+                    </div>      
                     <div class="p-6">
                         <h3 class="text-xl font-semibold text-indigo-400 mb-2">Campus Astronomy Class</h3>
                         <p class="text-gray-300 text-sm">
@@ -356,9 +360,7 @@
                     </div>
                 </div>
 
-                <!-- Project Card 2: IASC Certificates (with Carousel) -->
                 <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <!-- Class changed to fade-carousel for automatic cycling -->
                     <div class="certificate-carousel">
                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
@@ -375,9 +377,7 @@
                     </div>
                 </div>
                 
-                <!-- Project Card 3: Astrophotography Projects (with Carousel) -->
                 <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <!-- Class changed to fade-carousel for automatic cycling -->
                     <div class="certificate-carousel">
                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/BARNARD%2033_2.png" alt="Horsehead Nebula" class="w-full h-full">
                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Lagoon%20Galaxy.png" alt="Lagoon Nebula" class="w-full h-full">
@@ -393,9 +393,8 @@
                         </p>
                     </div>
                 </div>
-                <!-- Project Card 3: Outreach in Kakata (with Carousel) -->
+
                 <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                    <!-- Class changed to fade-carousel for automatic cycling -->
                     <div class="certificate-carousel">
                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_2301996913642555.jpeg" alt="Picture 1" class="w-full h-full">
                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_829395132782547.jpeg" alt="Picture 2" class="w-full h-full">
@@ -407,17 +406,20 @@
                         <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Kakata</h3>
                         <p class="text-gray-400 text-sm mb-4">Date: Oct 20, 2025</p>
                         <p class="text-gray-300 text-sm">
-                           Our outreach expanded to Kakata, Margibi County, where we engage students at Booker Washington Institute (BWI), inspiring the next generation of Liberian scientists. 🚀
+                            Our outreach expanded to Kakata, Margibi County, where we engage students at Booker Washington Institute (BWI), inspiring the next generation of Liberian scientists. 🚀
                         </p>
                     </div>
-                 <div>   
+                </div>
+                
             </div>
-                <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                </button>
+            <button onclick="changeSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            
         </div>
-    </section>
-
+        </div>
+</section>
+    
     <!-- Key Faces Section -->
     <section id="team" class="py-20">
         <div class="container mx-auto px-4">
@@ -538,72 +540,75 @@
         <p class="text-lg text-gray-300 max-w-3xl mx-auto mb-16">
             Stay up-to-date with our latest projects, astronomical discoveries, and community events.
         </p>
-            <!-- CAROUSEL CONTAINER -->
-            <div id="carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
+        
+        <div id="news-carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
 
-                <!-- Navigation Buttons -->
-                <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                </button>
+            <button onclick="changeNewsSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
 
-        <div id="carousel-items" class="relative">
-            <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" alt="Asteroids Hunting Session Flyer" class="w-full h-56 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">1st Asteroids Hunting Session</h3>
-                    <p class="text-gray-400 text-sm mb-4">Date: September 20, 2025</p>
-                    <p class="text-gray-300 text-sm">
-                        Join the Liberian Astronomical Society for our first Asteroids Hunting Session as part of the Pan-African Citizen Science Asteroids Campaign! This is a unique opportunity to contribute to real-world astronomical research.
-                    </p>
-                    <a href="https://forms.gle/KYT6Vp4K5iWn4Gcx7" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Register & Learn More →</a>
+            <div id="news-carousel-items" class="relative overflow-hidden">
+                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" alt="Asteroids Hunting Session Flyer" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">1st Asteroids Hunting Session</h3>
+                        <p class="text-gray-400 text-sm mb-4">Date: September 20, 2025</p>
+                        <p class="text-gray-300 text-sm">
+                            Join the Liberian Astronomical Society for our first Asteroids Hunting Session as part of the Pan-African Citizen Science Asteroids Campaign! This is a unique opportunity to contribute to real-world astronomical research.
+                        </p>
+                        <a href="https://forms.gle/KYT6Vp4K5iWn4Gcx7" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Register & Learn More →</a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                <iframe class="w-full h-56" src="https://www.youtube.com/embed/TNNGe-AGqYA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Liberian Astronomical Society & African Space Leaders</h3>
-                    <p class="text-gray-400 text-sm mb-4">Date: September 18, 2025</p>
-                    <p class="text-gray-300 text-sm">
-                        Watch a presentation from the Liberian Astronomical Society and African Space Leaders focusing on astrophotography and image processing using software like FITS Liberator and GIMP. The video also highlights how they engage the public and inspire the next generation through their work, including a showcase of their Astro Album.
-                    </p>
-                    <a href="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Watch on YouTube →</a>
+                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
+                    <iframe class="w-full h-56" src="https://www.youtube.com/embed/TNNGe-AGqYA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Liberian Astronomical Society & African Space Leaders</h3>
+                        <p class="text-gray-400 text-sm mb-4">Date: September 18, 2025</p>
+                        <p class="text-gray-300 text-sm">
+                            Watch a presentation from the Liberian Astronomical Society and African Space Leaders focusing on astrophotography and image processing using software like FITS Liberator and GIMP. The video also highlights how they engage the public and inspire the next generation through their work, including a showcase of their Astro Album.
+                        </p>
+                        <a href="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Watch on YouTube →</a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                <div class="certificate-carousel">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
+                    <div class="certificate-carousel">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" alt="Sadaya Davis's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" alt="Garmondyu George's Certificate" class="w-full h-full">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
+                        <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
+                        <p class="text-gray-300 text-sm">
+                            Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) on our first asteroid hunting campaign attempt.
+                        </p>
+                        <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
-                    <p class="text-gray-400 text-sm mb-4">Date: May 19, 2025</p>
-                    <p class="text-gray-300 text-sm">
-                        Proudly showcasing the certificates earned by our members for their valuable contributions to the International Astronomical Search Collaboration (IASC) on our first asteroid hunting campaign attempt.
-                    </p>
-                    <a href="#" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">View Our Achievements →</a>
+                
+                <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" alt="Outreach Flyer" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-indigo-400 mb-2">Bringing the Stars to Liberia: Astronomy Outreach 🌌</h3>
+                        <p class="text-gray-400 text-sm mb-4">Date: November 1 - 26, 2025</p>
+                        <p class="text-gray-300 text-sm">
+                            We're thrilled to announce the "Diversity in Astronomy within Liberia" Outreach program, set to ignite curiosity and inspire the next generation of scientists! The universe belongs to everyone, and this initiative aims to promote diversity and equal access to science education in Liberia. We are bringing engaging, hands-on learning about the cosmos directly to communities in Bong County and Grand Bassa County. Join us as we explore the wonders above from November 1 to 26. Follow our journey as we prove that the next great astronomer can come from any corner of Liberia! Let’s inspire a passion for science, one stargazing session at a time. ✨
+                        </p>
+                        <a href="#Get in touch" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Learn More →</a>
+                    </div>
                 </div>
+                
             </div>
-            <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" alt="Outreach Flyer" class="w-full h-56 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Bringing the Stars to Liberia: Astronomy Outreach 🌌</h3>
-                    <p class="text-gray-400 text-sm mb-4">Date: November 1 - 26, 2025</p>
-                    <p class="text-gray-300 text-sm">
-                        We're thrilled to announce the "Diversity in Astronomy within Liberia" Outreach program, set to ignite curiosity and inspire the next generation of scientists! The universe belongs to everyone, and this initiative aims to promote diversity and equal access to science education in Liberia. We are bringing engaging, hands-on learning about the cosmos directly to communities in Bong County and Grand Bassa County. Join us as we explore the wonders above from November 1 to 26. Follow our journey as we prove that the next great astronomer can come from any corner of Liberia! Let’s inspire a passion for science, one stargazing session at a time. ✨
-                    </p>
-                    <a href="#Get in touch" target="_blank" class="mt-4 inline-block text-indigo-400 font-semibold hover:underline">Learn More →</a>
-                </div>
-            </div>
+            <button onclick="changeNewsSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            
         </div>
-                <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                </button>
-    </div>
+        </div>
 </section>
     <!-- Membership Section -->
     <section id="membership" class="bg-gray-800 section-padding py-24">
@@ -793,7 +798,6 @@
 
         // --- 1. Manual Project Carousel (For 'Our Work in Action' section) ---
         let currentSlide = 0;
-        // Select all carousel items (your project cards)
         const slides = document.querySelectorAll('#carousel-items .carousel-item');
         const totalSlides = slides.length;
 
@@ -834,16 +838,72 @@
             showSlide(currentSlide + direction);
         }
         
-        // Expose changeSlide function globally so it can be called from the HTML buttons (onclick)
+        // Expose changeSlide function globally for the 'Our Work' buttons
         window.changeSlide = changeSlide;
 
-        // Initialize the carousel to show the first slide on page load
+        // Initialize the 'Our Work' carousel to show the first slide on page load
         if (totalSlides > 0) {
             showSlide(currentSlide);
         }
 
+        // ----------------------------------------------------------------------
+        // --- 2. News/Blog Carousel (For 'Our Latest News & Blog' section) ---
+        // ----------------------------------------------------------------------
+        let currentNewsSlide = 0;
+        // Target the new ID: #news-carousel-items
+        const newsSlides = document.querySelectorAll('#news-carousel-items .carousel-item');
+        const totalNewsSlides = newsSlides.length;
 
-        // --- 2. Smooth Scrolling for Navigation Links ---
+        /**
+         * Controls the visibility of a single slide in the news carousel.
+         */
+        function showNewsSlide(index) {
+            if (totalNewsSlides === 0) return;
+
+            // Calculate the new index, ensuring it loops
+            if (index >= totalNewsSlides) {
+                currentNewsSlide = 0;
+            } else if (index < 0) {
+                currentNewsSlide = totalNewsSlides - 1;
+            } else {
+                currentNewsSlide = index;
+            }
+
+            // Hide all news slides
+            newsSlides.forEach(slide => {
+                slide.classList.remove('active');
+                slide.style.position = 'absolute';
+                slide.style.opacity = '0';
+                slide.style.pointerEvents = 'none';
+            });
+
+            // Show the active news slide
+            newsSlides[currentNewsSlide].classList.add('active');
+            newsSlides[currentNewsSlide].style.position = 'relative';
+            newsSlides[currentNewsSlide].style.opacity = '1';
+            newsSlides[currentNewsSlide].style.pointerEvents = 'auto';
+        }
+
+        /**
+         * Function called by the Prev/Next buttons in the News HTML.
+         */
+        function changeNewsSlide(direction) {
+            showNewsSlide(currentNewsSlide + direction);
+        }
+        
+        // Expose changeNewsSlide globally for the 'News/Blog' buttons
+        window.changeNewsSlide = changeNewsSlide;
+
+        // Initialize the News carousel to show the first slide on page load
+        if (totalNewsSlides > 0) {
+            showNewsSlide(currentNewsSlide);
+        }
+
+
+        // --- 3. Smooth Scrolling for Navigation Links ---
+        // Note: mobileMenu is defined later, but accessed here. This is fine since it's inside the DOMContentLoaded block.
+        const mobileMenu = document.getElementById('mobile-menu');
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 // Hide mobile menu on anchor click for better UX
@@ -861,18 +921,17 @@
             });
         });
 
-        // --- 3. Mobile Menu Toggle ---
+        // --- 4. Mobile Menu Toggle ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
+        // mobileMenu is already defined above
+
         if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
         }
 
-        // --- 4. Close mobile menu on link click (Consolidated with smooth scroll above) ---
-        // (The logic is already included in the smooth scroll listener, but we'll keep a direct listener for non-anchor links if needed)
+        // --- 5. Close mobile menu on link click (Redundant listener for robustness) ---
         document.querySelectorAll('#mobile-menu a').forEach(link => {
              link.addEventListener('click', () => {
                  if (mobileMenu) {
@@ -881,7 +940,7 @@
              });
         });
         
-        // --- 5. Simple Message Box Functionality (for Contact Form) ---
+        // --- 6. Simple Message Box Functionality (for Contact Form) ---
         const contactForm = document.getElementById('contact-form');
         const messageBox = document.getElementById('message-box');
         const messageText = document.getElementById('message-text');
@@ -909,6 +968,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
