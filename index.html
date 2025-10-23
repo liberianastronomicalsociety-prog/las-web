@@ -340,9 +340,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                 </button>
 
-                <div id="carousel-items" class="relative">            
-            <!-- Grid container for all project cards -->
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div id="carousel-items" class="relative overflow-hidden">        
                 
                 <!-- Project Card 1: Campus Astronomy Class -->
                 <div class="carousel-item bg-gray-900 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
@@ -414,6 +412,9 @@
                     </div>
                  <div>   
             </div>
+                <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
         </div>
     </section>
 
@@ -599,6 +600,9 @@
                 </div>
             </div>
         </div>
+                <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
     </div>
 </section>
     <!-- Membership Section -->
@@ -786,44 +790,67 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // --- Carousel Initialization ---
+
+        // --- 1. Manual Project Carousel (For 'Our Work in Action' section) ---
+        let currentSlide = 0;
+        // Select all carousel items (your project cards)
+        const slides = document.querySelectorAll('#carousel-items .carousel-item');
+        const totalSlides = slides.length;
+
         /**
-         * Initializes automatic cycling for all elements with the 'fade-carousel' class.
-         * Images now 'blink' instantly every 1.5 seconds.
+         * Controls the visibility of a single slide in the main project carousel.
          */
-        function initCarousels() {
-            // Find all carousel containers
-            document.querySelectorAll('.fade-carousel').forEach(carousel => {
-                const images = carousel.querySelectorAll('img');
-                if (images.length === 0) return; // Skip if no images are found
+        function showSlide(index) {
+            if (totalSlides === 0) return;
 
-                let currentImageIndex = 0;
+            // Calculate the new index, ensuring it loops
+            if (index >= totalSlides) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = totalSlides - 1;
+            } else {
+                currentSlide = index;
+            }
 
-                // 1. Start by making the first image active/visible
-                images[0].classList.add('active');
-
-                // 2. Function to handle the transition logic
-                function cycleImage() {
-                    // Hide the current active image
-                    images[currentImageIndex].classList.remove('active');
-
-                    // Move to the next index (using modulo to loop back to 0)
-                    currentImageIndex = (currentImageIndex + 1) % images.length;
-
-                    // Show the next image
-                    images[currentImageIndex].classList.add('active');
-                }
-
-                // 3. Cycle the image every 1.5 seconds (1500 milliseconds) for a rapid 'blink' effect
-                setInterval(cycleImage, 1500);
+            // Hide all slides (stacked using absolute position)
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                slide.style.position = 'absolute';
+                slide.style.opacity = '0';
+                slide.style.pointerEvents = 'none';
             });
+
+            // Show the active slide (setting to 'relative' to bring it back into the flow)
+            slides[currentSlide].classList.add('active');
+            slides[currentSlide].style.position = 'relative';
+            slides[currentSlide].style.opacity = '1';
+            slides[currentSlide].style.pointerEvents = 'auto';
         }
-        initCarousels(); // Run immediately after DOM is ready
+
+        /**
+         * Function called by the Prev/Next buttons in the HTML.
+         */
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
         
-        // --- Smooth Scrolling for Navigation Links ---
+        // Expose changeSlide function globally so it can be called from the HTML buttons (onclick)
+        window.changeSlide = changeSlide;
+
+        // Initialize the carousel to show the first slide on page load
+        if (totalSlides > 0) {
+            showSlide(currentSlide);
+        }
+
+
+        // --- 2. Smooth Scrolling for Navigation Links ---
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
+                // Hide mobile menu on anchor click for better UX
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                     mobileMenu.classList.add('hidden');
+                }
+
                 e.preventDefault();
                 const targetElement = document.querySelector(this.getAttribute('href'));
                 if (targetElement) {
@@ -834,27 +861,27 @@
             });
         });
 
-        // --- Mobile Menu Toggle ---
+        // --- 3. Mobile Menu Toggle ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         
-        // Check if elements exist (they might be outside the scope of this file)
-        if (mobileMenuButton && mobileMenu) { 
+        if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
         }
 
-        // --- Close mobile menu on link click ---
+        // --- 4. Close mobile menu on link click (Consolidated with smooth scroll above) ---
+        // (The logic is already included in the smooth scroll listener, but we'll keep a direct listener for non-anchor links if needed)
         document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (mobileMenu) {
-                    mobileMenu.classList.add('hidden');
-                }
-            });
+             link.addEventListener('click', () => {
+                 if (mobileMenu) {
+                     mobileMenu.classList.add('hidden');
+                 }
+             });
         });
-
-        // --- Simple Message Box Functionality (Replaces alert()) ---
+        
+        // --- 5. Simple Message Box Functionality (for Contact Form) ---
         const contactForm = document.getElementById('contact-form');
         const messageBox = document.getElementById('message-box');
         const messageText = document.getElementById('message-text');
@@ -864,8 +891,8 @@
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // This is a dummy submission, you'd implement actual form submission here.
-
+                // Placeholder for actual form submission logic
+                
                 messageText.textContent = 'Thank you for your message! We will get back to you soon.';
                 messageBox.classList.remove('hidden');
                 messageBox.classList.add('flex');
@@ -882,6 +909,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
