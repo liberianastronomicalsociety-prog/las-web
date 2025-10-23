@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberian Astronomical Society (LAS) - Our Vision, Mission & Values</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Global Layout & Typography --- */
+        body {
+            background-color: #111827; /* Dark theme background */
+            font-family: 'Inter', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        /* --- Navigation Styles --- */
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #a5b4fc; /* Tailwind's indigo-300 */
+        }
+        
+        /* --- Card & Hover Effects --- */
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+        }
+
+        /* The carousel styles are included for consistency, even if no carousel is on this page */
+        .carousel-item {
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            border-color: #6366f1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header / Navigation Bar (Updated for Multi-Page) -->
+    <header>
+        <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
+            <div class="container mx-auto flex justify-between items-center px-4">
+                <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto">
+                    <span>LAS</span>
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop Navigation (Links updated for Multi-Page) -->
+                <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
+                    <li><a href="index.html" class="nav-link">Home</a></li> 
+                    <li><a href="about.html" class="nav-link text-indigo-400 font-bold">About Us</a></li> 
+                    <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
+                    <li><a href="index.html#team" class="nav-link">Our Team</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="index.html#author" class="nav-link">About the President</a></li>
+                    <li><a href="index.html#get-involved" class="nav-link">Get Involved</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- Mobile Menu (Links updated for Multi-Page) -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
+                <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link text-indigo-400 font-bold">About Us</a></li>
+                    <li><a href="portfolio.html" class="nav-link">Activities</a></li>
+                    <li><a href="index.html#team" class="nav-link">Our Team</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="index.html#author" class="nav-link">About the President</a></li>
+                    <li><a href="index.html#get-involved" class="nav-link">Get Involved</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- About Section (User Provided Content) -->
+        <section id="about" class="bg-gray-800 section-padding">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-white mb-12">Our Vision & Mission</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Vision & Mission Section -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300">
+                        <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Vision</h3>
+                        <p class="text-gray-300 mb-6">
+                            To spread astronomy education across Liberia.
+                        </p>
+                        <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Mission</h3>
+                        <p class="text-gray-300 mb-6">Our mission is to make astronomy accessible to everyone in Liberia. We are dedicated to achieving this through the following key objectives:</p>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Introduce astronomy to the public and spark curiosity about the universe.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Engage and empower young Liberians through hands-on astronomy activities and community outreach.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Advocate for astronomy to be offered as a degree course at all universities in Liberia.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Establish and foster partnerships with university science clubs to promote astronomical education.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Core Values Section -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all duration-300 lg:col-span-2">
+                        <h3 class="text-2xl font-bold text-indigo-400 mb-4">Core Values</h3>
+                        <div class="grid sm:grid-cols-2 gap-6 text-gray-300">
+                            <div class="flex items-start space-x-3">
+                                <span class="text-3xl mt-1">🔭</span>
+                                <p><strong>CURIOSITY & DISCOVERY:</strong> We nurture a culture of curiosity, inspiring Liberians to look up, ask questions, and explore the universe.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-3xl mt-1">📚</span>
+                                <p><strong>ACCESSIBLE EDUCATION:</strong> We are dedicated to providing astronomy education to schools, communities, and individuals across Liberia.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-3xl mt-1">🤝</span>
+                                <p><strong>INCLUSIVENESS & COMMUNITY:</strong> We believe astronomy belongs to everyone, and we strive to build a diverse and welcoming space for all.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-3xl mt-1">📈</span>
+                                <p><strong>COLLABORATION & GROWTH:</strong> We promote teamwork among scientists, educators, and international partners.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-3xl mt-1">🔬</span>
+                                <p><strong>SCIENTIFIC INTEGRITY:</strong> We uphold truth, transparency, and the highest standards of scientific inquiry.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-3xl mt-1">🚀</span>
+                                <p><strong>INNOVATION & OPPORTUNITY:</strong> We use creative approaches to overcome local challenges and open new paths for research, careers, and inspiration in astronomy.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-700">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex justify-center space-x-4 mb-4">
+                <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition">Home</a>
+                <span class="text-gray-600">|</span>
+                <a href="about.html" class="text-indigo-400 font-bold transition">About Us</a>
+                <span class="text-gray-600">|</span>
+                <a href="portfolio.html" class="text-gray-400 hover:text-indigo-400 transition">Activities</a>
+                <span class="text-gray-600">|</span>
+                <a href="blog.html" class="text-gray-400 hover:text-indigo-400 transition">Blog</a>
+                <span class="text-gray-600">|</span>
+                <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition">Contact</a>
+            </div>
+            <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // --- 1. Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // --- 2. Close mobile menu on link click ---
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                 link.addEventListener('click', () => {
+                     if (mobileMenu) {
+                         mobileMenu.classList.add('hidden');
+                     }
+                 });
+            });
+        });
+    </script>
+</body>
+</html>
