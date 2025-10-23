@@ -799,14 +799,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // --- 1. Manual Project Carousel (For 'Our Work in Action' section) ---
+        // --- 1. Manual/Automatic Project Carousel (For 'Our Work in Action' section) ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('#carousel-items .carousel-item');
         const totalSlides = slides.length;
 
-        /**
-         * Controls the visibility of a single slide in the main project carousel.
-         */
         function showSlide(index) {
             if (totalSlides === 0) return;
 
@@ -827,39 +824,35 @@
                 slide.style.pointerEvents = 'none';
             });
 
-            // Show the active slide (setting to 'relative' to bring it back into the flow)
+            // Show the active slide
             slides[currentSlide].classList.add('active');
             slides[currentSlide].style.position = 'relative';
             slides[currentSlide].style.opacity = '1';
             slides[currentSlide].style.pointerEvents = 'auto';
         }
 
-        /**
-         * Function called by the Prev/Next buttons in the HTML.
-         */
+        // Function called by Prev/Next buttons (manual control)
         function changeSlide(direction) {
             showSlide(currentSlide + direction);
         }
         
-        // Expose changeSlide function globally for the 'Our Work' buttons
+        // Expose changeSlide function globally for the HTML buttons
         window.changeSlide = changeSlide;
 
-        // Initialize the 'Our Work' carousel to show the first slide on page load
+        // Initialize and start automatic cycling
         if (totalSlides > 0) {
             showSlide(currentSlide);
+            // AUTO-SLIDE: Change the slide every 5 seconds (5000ms)
+            setInterval(() => changeSlide(1), 5000); 
         }
 
         // ----------------------------------------------------------------------
-        // --- 2. News/Blog Carousel (For 'Our Latest News & Blog' section) ---
+        // --- 2. Manual/Automatic News/Blog Carousel ---
         // ----------------------------------------------------------------------
         let currentNewsSlide = 0;
-        // Target the new ID: #news-carousel-items
         const newsSlides = document.querySelectorAll('#news-carousel-items .carousel-item');
         const totalNewsSlides = newsSlides.length;
 
-        /**
-         * Controls the visibility of a single slide in the news carousel.
-         */
         function showNewsSlide(index) {
             if (totalNewsSlides === 0) return;
 
@@ -887,29 +880,27 @@
             newsSlides[currentNewsSlide].style.pointerEvents = 'auto';
         }
 
-        /**
-         * Function called by the Prev/Next buttons in the News HTML.
-         */
+        // Function called by Prev/Next buttons (manual control)
         function changeNewsSlide(direction) {
             showNewsSlide(currentNewsSlide + direction);
         }
         
-        // Expose changeNewsSlide globally for the 'News/Blog' buttons
+        // Expose changeNewsSlide globally for the HTML buttons
         window.changeNewsSlide = changeNewsSlide;
 
-        // Initialize the News carousel to show the first slide on page load
+        // Initialize and start automatic cycling
         if (totalNewsSlides > 0) {
             showNewsSlide(currentNewsSlide);
+            // AUTO-SLIDE: Change the news slide every 5 seconds (5000ms)
+            setInterval(() => changeNewsSlide(1), 5000); 
         }
-
-
+        // ----------------------------------------------------------------------
+        
         // --- 3. Smooth Scrolling for Navigation Links ---
-        // Note: mobileMenu is defined later, but accessed here. This is fine since it's inside the DOMContentLoaded block.
         const mobileMenu = document.getElementById('mobile-menu');
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                // Hide mobile menu on anchor click for better UX
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
                      mobileMenu.classList.add('hidden');
                 }
@@ -926,7 +917,6 @@
 
         // --- 4. Mobile Menu Toggle ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
-        // mobileMenu is already defined above
 
         if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', () => {
@@ -934,7 +924,7 @@
             });
         }
 
-        // --- 5. Close mobile menu on link click (Redundant listener for robustness) ---
+        // --- 5. Close mobile menu on link click ---
         document.querySelectorAll('#mobile-menu a').forEach(link => {
              link.addEventListener('click', () => {
                  if (mobileMenu) {
@@ -953,8 +943,6 @@
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Placeholder for actual form submission logic
-                
                 messageText.textContent = 'Thank you for your message! We will get back to you soon.';
                 messageBox.classList.remove('hidden');
                 messageBox.classList.add('flex');
@@ -971,6 +959,7 @@
 <script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
+
 
 
 
