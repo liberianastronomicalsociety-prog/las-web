@@ -7,6 +7,7 @@
     <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- Global Layout & Typography --- */
         body {
@@ -35,9 +36,8 @@
             box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
         }
 
-        /* --- Carousel Styles --- */
+        /* --- Main Carousel Slides (Horizontal Stack) --- */
         .carousel-item {
-            /* Position absolute is key for stacking slides */
             opacity: 0;
             position: absolute;
             top: 0;
@@ -48,7 +48,6 @@
         }
 
         .carousel-item.active {
-            /* Only the active slide is visible and takes up space */
             opacity: 1;
             position: relative;
             z-index: 10;
@@ -56,6 +55,23 @@
             border-color: #6366f1;
         }
         
+        /* --- Inner Image Carousel Styles --- */
+        .inner-image {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.5s ease-in-out; /* Simple fade transition for "flipping" */
+            object-fit: cover;
+        }
+
+        .inner-image.inner-active {
+            opacity: 1;
+            z-index: 5;
+        }
+
         /* Style for the carousel buttons */
         .carousel-btn {
             background-color: #4f46e5; /* indigo-600 */
@@ -73,7 +89,7 @@
         <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
             <div class="container mx-auto flex justify-between items-center px-4">
                 <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto">
+                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto rounded-full ring-2 ring-indigo-500">
                     <span>LAS</span>
                 </a>
                 
@@ -185,7 +201,7 @@
                 <h2 class="text-4xl font-bold text-white mb-12">Our Work in Action</h2>
                 <div id="carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
 
-                    <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                    <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white hover:ring-indigo-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                     </button>
 
@@ -193,10 +209,17 @@
                     
                         <!-- Slide 1: Campus Astronomy Class -->
                         <div class="carousel-item bg-gray-800 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                            <div class="certificate-carousel relative h-72 w-full overflow-hidden">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" alt="LAS President teaching on campus" class="w-full h-full object-cover">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%201.jpg" alt="LAS President teaching on campus" class="w-full h-full object-cover">
-                            </div>     
+                            <!-- Inner Slideshow Container (Fades/Flips) -->
+                            <div class="relative h-72 w-full overflow-hidden">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%202.jpg" 
+                                     onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Image+1+Missing';"
+                                     alt="LAS President teaching on campus (1)" 
+                                     class="inner-image inner-active w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ex%201.jpg" 
+                                     onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Image+2+Missing';"
+                                     alt="LAS President teaching on campus (2)" 
+                                     class="inner-image w-full h-full object-cover">
+                            </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-semibold text-indigo-400 mb-2">Campus Astronomy Class</h3>
                                 <p class="text-gray-300 text-sm">
@@ -207,8 +230,13 @@
 
                         <!-- Slide 2: IASC Certificates -->
                         <div class="carousel-item bg-gray-800 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                            <div class="certificate-carousel relative h-72 w-full overflow-hidden">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" alt="Daniel Obajemu's Certificate" class="w-full h-full object-contain p-4">
+                            <!-- Inner Slideshow Container (Fades/Flips) -->
+                            <div class="relative h-72 w-full overflow-hidden">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Cert+1+Missing';" alt="Certificate 1" class="inner-image inner-active w-full h-full object-contain p-4">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Cert+2+Missing';" alt="Certificate 2" class="inner-image w-full h-full object-contain p-4">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Cert+3+Missing';" alt="Certificate 3" class="inner-image w-full h-full object-contain p-4">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C4.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Cert+4+Missing';" alt="Certificate 4" class="inner-image w-full h-full object-contain p-4">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/C5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Cert+5+Missing';" alt="Certificate 5" class="inner-image w-full h-full object-contain p-4">
                             </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our IASC Certificates</h3>
@@ -221,8 +249,13 @@
                         
                         <!-- Slide 3: Astrophotography Projects -->
                         <div class="carousel-item bg-gray-800 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                            <div class="certificate-carousel relative h-72 w-full overflow-hidden">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/BARNARD%2033_2.png" alt="Horsehead Nebula Astrophoto" class="w-full h-full object-cover">
+                            <!-- Inner Slideshow Container (Fades/Flips) -->
+                            <div class="relative h-72 w-full overflow-hidden">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/BARNARD%2033_2.png" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Astro+1+Missing';" alt="Horsehead Nebula Astrophoto" class="inner-image inner-active w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Andonmara%20Galaxy.png" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Astro+2+Missing';" alt="Andromeda Galaxy Astrophoto" class="inner-image w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Heart%20Nebulae%202.png" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Astro+3+Missing';" alt="Heart Nebula Astrophoto" class="inner-image w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Lagoon%20Galaxy.png" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Astro+4+Missing';" alt="Lagoon Galaxy Astrophoto" class="inner-image w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/M51_2.png" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Astro+5+Missing';" alt="M51 Galaxy Astrophoto" class="inner-image w-full h-full object-cover">
                             </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-semibold text-indigo-400 mb-2">Our Astrophotography Projects</h3>
@@ -235,12 +268,13 @@
 
                         <!-- Slide 4: Outreach In Kakata -->
                         <div class="carousel-item bg-gray-800 rounded-xl border border-indigo-700 transition-all duration-300 overflow-hidden">
-                            <div class="certificate-carousel relative h-72 w-full overflow-hidden">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_2301996913642555.jpeg" alt="Outreach in Kakata" class="w-full h-full object-cover">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_829395132782547.jpeg" alt="Outreach in Kakata" class="w-full h-full object-cover">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_835182659055931.jpeg" alt="Outreach in Kakata" class="w-full h-full object-cover">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_24782856664668488.jpeg" alt="Outreach in Kakata" class="w-full h-full object-cover">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_1894301934767661.jpeg" alt="Outreach in Kakata" class="w-full h-full object-cover">
+                            <!-- Inner Slideshow Container (Fades/Flips) -->
+                            <div class="relative h-72 w-full overflow-hidden">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_2301996913642555.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Outreach+1+Missing';" alt="Outreach in Kakata (1)" class="inner-image inner-active w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_829395132782547.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Outreach+2+Missing';" alt="Outreach in Kakata (2)" class="inner-image w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_835182659055931.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Outreach+3+Missing';" alt="Outreach in Kakata (3)" class="inner-image w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_24782856664668488.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Outreach+4+Missing';" alt="Outreach in Kakata (4)" class="inner-image w-full h-full object-cover">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/received_1894301934767661.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Outreach+5+Missing';" alt="Outreach in Kakata (5)" class="inner-image w-full h-full object-cover">
                             </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Kakata</h3>
@@ -252,7 +286,7 @@
                         </div>
                         
                     </div>
-                    <button onclick="changeSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white">
+                    <button onclick="changeSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white hover:ring-indigo-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </button>
                     
@@ -281,11 +315,120 @@
     </footer>
 
     <script>
+        // Global state for main carousel
+        let currentSlide = 0;
+        const INNER_TRANSITION_INTERVAL = 3000; // 3 seconds per inner image "flip"
+        const INNER_IMAGE_TRANSITION_DURATION = 500; // Must be same as CSS transition
+        const innerCarouselTimers = []; // To hold all setInterval IDs
+
+        // --- CORE CAROUSEL LOGIC ---
+
+        /**
+         * Clears all running inner carousel timers.
+         */
+        function stopInnerCarousels() {
+            innerCarouselTimers.forEach(clearInterval);
+            innerCarouselTimers.length = 0;
+        }
+
+        /**
+         * Cycles the images within a single carousel item.
+         * Automatically advances the main slide when the last image is shown.
+         * @param {HTMLElement} slideElement - The active main carousel slide.
+         */
+        function startInnerCarousel(slideElement) {
+            const innerImages = slideElement.querySelectorAll('.inner-image');
+            
+            // If there's 1 or fewer images, no cycling needed
+            if (innerImages.length <= 1) {
+                // Ensure the single image is active if present
+                if (innerImages.length === 1) innerImages[0].classList.add('inner-active');
+                return;
+            }
+
+            // Initialize state for this specific inner carousel
+            let innerIndex = 0;
+
+            // Stop any timers that might be leftover from the last cycle, just in case
+            innerImages.forEach((img, i) => {
+                img.classList.remove('inner-active');
+            });
+            innerImages[0].classList.add('inner-active');
+
+            const timer = setInterval(() => {
+                // 1. Hide current image
+                innerImages[innerIndex].classList.remove('inner-active');
+
+                innerIndex++;
+
+                if (innerIndex >= innerImages.length) {
+                    // 2. We reached the end of the inner slideshow, advance the main slide
+                    changeSlide(1); 
+                    
+                    // CRITICAL: Stop the interval immediately to prevent multiple calls
+                    stopInnerCarousels(); 
+                    
+                    // Reset the inner index to 0 for when this slide cycles back around
+                    innerIndex = 0;
+
+                } else {
+                    // 3. Show the next image
+                    innerImages[innerIndex].classList.add('inner-active');
+                }
+
+            }, INNER_TRANSITION_INTERVAL);
+
+            // Save timer for later stopping
+            innerCarouselTimers.push(timer);
+        }
+
+        /**
+         * Updates the visibility of the main carousel slides and manages inner carousels.
+         * @param {number} index - The index of the slide to display.
+         */
+        function showSlide(index) {
+            const carouselItems = document.querySelectorAll('#carousel-items .carousel-item');
+            if (carouselItems.length === 0) return;
+
+            // 1. Handle wrapping (looping)
+            if (index >= carouselItems.length) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = carouselItems.length - 1;
+            } else {
+                currentSlide = index;
+            }
+
+            // 2. Stop all existing inner carousels and reset their state
+            stopInnerCarousels();
+
+            // 3. Update classes to show the current slide and hide others
+            carouselItems.forEach((item, i) => {
+                if (i === currentSlide) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // 4. Start the inner carousel for the new active slide AFTER the main transition completes
+            // We delay slightly longer than the main carousel CSS transition (0.5s)
+            setTimeout(() => {
+                startInnerCarousel(carouselItems[currentSlide]);
+            }, 600); 
+        }
+
+        // Function callable from HTML buttons (window global scope)
+        window.changeSlide = function(n) {
+            showSlide(currentSlide + n);
+        }
+
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // --- 1. Mobile Menu Toggle ---
+            // 1. Mobile Menu Toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             
@@ -295,7 +438,7 @@
                 });
             }
 
-            // --- 2. Close mobile menu on link click ---
+            // 2. Close mobile menu on link click
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                  link.addEventListener('click', () => {
                      if (mobileMenu) {
@@ -304,40 +447,8 @@
                  });
             });
 
-            // --- 3. Portfolio Carousel Logic (NEW) ---
+            // 3. Initialize the carousel to the first slide on load
             const carouselItems = document.querySelectorAll('#carousel-items .carousel-item');
-            let currentSlide = 0;
-
-            /**
-             * Updates the visibility of the carousel slides.
-             * @param {number} index - The index of the slide to display.
-             */
-            function showSlide(index) {
-                // Handle wrapping (looping)
-                if (index >= carouselItems.length) {
-                    currentSlide = 0;
-                } else if (index < 0) {
-                    currentSlide = carouselItems.length - 1;
-                } else {
-                    currentSlide = index;
-                }
-
-                // Update classes to show the current slide and hide others
-                carouselItems.forEach((item, i) => {
-                    if (i === currentSlide) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-            }
-
-            // Function callable from HTML buttons (window global scope)
-            window.changeSlide = function(n) {
-                showSlide(currentSlide + n);
-            }
-
-            // Initialize the carousel to the first slide on load
             if (carouselItems.length > 0) {
                 showSlide(currentSlide);
             }
