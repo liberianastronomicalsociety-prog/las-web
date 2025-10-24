@@ -241,28 +241,26 @@
         /**
          * Initializes mobile menu toggle functionality.
          */
-        function initializeMobileMenu() {
-            // Use const inside the function to limit scope
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // 1. Mobile Menu Toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-
+            
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', () => {
-                    // Toggles 'hidden' class and checks the new state
-                    const isHidden = mobileMenu.classList.toggle('hidden');
-                    // Updates aria-expanded state for accessibility
-                    mobileMenuButton.setAttribute('aria-expanded', !isHidden); 
-                });
-                
-                // Close menu when a link is clicked
-                mobileMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.add('hidden');
-                        mobileMenuButton.setAttribute('aria-expanded', 'false'); 
-                    });
+                    mobileMenu.classList.toggle('hidden');
                 });
             }
-        }
+
+            // 2. Close mobile menu on link click
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                 link.addEventListener('click', () => {
+                     if (mobileMenu) {
+                         mobileMenu.classList.add('hidden');
+                     }
+                 });
+            });
 
         /**
          * Updates the copyright year in the footer.
