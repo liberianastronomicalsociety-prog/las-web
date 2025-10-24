@@ -281,12 +281,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Set current year in footer
-            const yearElement = document.getElementById('current-year');
-            if (yearElement) {
-                yearElement.textContent = new Date().getFullYear();
-            }
+            document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // --- Mobile Menu Toggle ---
+            // 1. Mobile Menu Toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             
@@ -296,13 +293,13 @@
                 });
             }
 
-            // --- Close mobile menu on link click ---
+            // 2. Close mobile menu on link click
             document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (mobileMenu) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
+                 link.addEventListener('click', () => {
+                     if (mobileMenu) {
+                         mobileMenu.classList.add('hidden');
+                     }
+                 });
             });
         });
     </script>
