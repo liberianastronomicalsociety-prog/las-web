@@ -9,14 +9,22 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Configure the 'Inter' font and general dark theme */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        /* --- Global Layout & Typography --- */
         body {
-            background-color: #111827; /* Dark theme background */
+            /* FIX: Wallpaper is now the fixed background for the entire page */
+            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+            background-size: cover;
+            background-attachment: fixed; /* Keeps the background image fixed during scroll */
+            background-position: center;
+            background-color: #111827; /* Fallback color */
             font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
         }
         .nav-link { 
             transition: color 0.3s ease; 
