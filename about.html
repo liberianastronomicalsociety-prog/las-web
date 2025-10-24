@@ -10,7 +10,12 @@
     <style>
         /* --- Global Layout & Typography --- */
         body {
-            background-color: #0f172a; /* Tailwind slate-900 or similar dark color for body */
+            /* FIX: Wallpaper is now the fixed background for the entire page */
+            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+            background-size: cover;
+            background-attachment: fixed; /* Keeps the background image fixed during scroll */
+            background-position: center;
+            background-color: #111827; /* Fallback color */
             font-family: 'Inter', sans-serif;
         }
         html {
@@ -28,17 +33,7 @@
         .nav-link:hover {
             color: #a5b4fc; /* Tailwind's indigo-300 */
         }
-
-        /* --- Hero Background (Incorporates the Wallpaper) --- */
-        .hero-bg-image {
-            /* The image URL provided by the user is correctly set here */
-            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            background-attachment: fixed; /* Ensures the background stays put */
-        }
+        
         /* Dark overlay for better text readability */
         .hero-bg-image::before {
             content: '';
