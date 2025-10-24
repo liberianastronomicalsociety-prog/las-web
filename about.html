@@ -205,7 +205,7 @@
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // --- 1. Mobile Menu Toggle ---
+            // 1. Mobile Menu Toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             
@@ -215,7 +215,7 @@
                 });
             }
 
-            // --- 2. Close mobile menu on link click ---
+            // 2. Close mobile menu on link click
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                  link.addEventListener('click', () => {
                      if (mobileMenu) {
