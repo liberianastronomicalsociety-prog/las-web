@@ -11,7 +11,12 @@
     <style>
         /* --- Global Layout & Typography --- */
         body {
-            background-color: #111827; /* Dark theme background */
+            /* FIX: Wallpaper is now the fixed background for the entire page */
+            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+            background-size: cover;
+            background-attachment: fixed; /* Keeps the background image fixed during scroll */
+            background-position: center;
+            background-color: #111827; /* Fallback color */
             font-family: 'Inter', sans-serif;
         }
         html {
