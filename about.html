@@ -39,25 +39,6 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
         }
-
-        /* The carousel styles are included for consistency, even if no carousel is on this page */
-        .carousel-item {
-            transition: opacity 0.5s ease-in-out;
-            opacity: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-        }
-
-        .carousel-item.active {
-            opacity: 1;
-            position: relative;
-            z-index: 10;
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
-            border-color: #6366f1;
-        }
     </style>
 </head>
 <body class="antialiased">
@@ -83,7 +64,7 @@
                 <!-- Desktop Navigation (Links updated for Multi-Page) -->
                 <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
                     <li><a href="index.html" class="nav-link">Home</a></li> 
-                    <li><a href="about.html" class="nav-link text-indigo-400 font-bold">About Us</a></li> 
+                    <li><a href="about.html" class="nav-link text-indigo-400 font-bold">About Us</a></li> <!-- Highlighted -->
                     <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
                     <li><a href="team.html" class="nav-link">Our Team</a></li>
                     <li><a href="blog.html" class="nav-link">Blog</a></li>
@@ -95,19 +76,24 @@
                 </ul>
             </div>
             
-            <!-- Mobile Menu (Links updated for Multi-Page) -->
-            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
-                <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
-                    <li><a href="index.html" class="nav-link">Home</a></li> 
-                    <li><a href="about.html" class="nav-link text-indigo-400 font-bold">About Us</a></li> 
-                    <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
-                    <li><a href="team.html" class="nav-link">Our Team</a></li>
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="president.html" class="nav-link">About the President</a></li>
-                    <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+            <!-- Mobile Menu Content -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm px-4 pt-2 pb-4">
+                <!-- FIX: Removed 'hidden md:flex' from this UL and added mobile-friendly classes -->
+                <ul class="flex flex-col space-y-2 text-gray-400">
+                    <li><a href="index.html" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">Home</a></li> 
+                    <li><a href="about.html" class="nav-link text-indigo-400 font-bold block py-2 px-3 hover:bg-gray-800 rounded-lg bg-indigo-900/30">About Us</a></li> <!-- Highlighted -->
+                    <li><a href="portfolio.html" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">Activities</a></li> 
+                    <li><a href="team.html" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">Our Team</a></li>
+                    <li><a href="blog.html" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">Blog</a></li>
+                    <li><a href="president.html" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">About the President</a></li>
+                    <li><a href="getinvolve.html" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">Get Involved</a></li>
+                    <li><a href="index.html#contact" class="nav-link block py-2 px-3 hover:bg-gray-800 rounded-lg">Contact</a></li>
+                    <li class="pt-4 mt-2 border-t border-gray-700/50">
+                        <a href="login.html" class="block text-center text-indigo-400 border-2 border-indigo-400 px-4 py-2 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a>
+                    </li>
+                    <li>
+                        <a href="signup.html" class="block text-center text-white bg-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -116,7 +102,7 @@
     <main>
         <!-- About Section (User Provided Content) -->
         <section id="about" class="bg-gray-800 section-padding">
-            <div class="container mx-auto">
+            <div class="container mx-auto px-4">
                 <h2 class="text-4xl font-bold text-center text-white mb-12">Our Vision & Mission</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                     <!-- Vision & Mission Section -->
@@ -205,24 +191,28 @@
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // 1. Mobile Menu Toggle
+            // --- Mobile Menu Toggle Logic ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             
             if (mobileMenuButton && mobileMenu) {
+                // 1. Toggle the menu visibility on button click
                 mobileMenuButton.addEventListener('click', () => {
                     mobileMenu.classList.toggle('hidden');
                 });
-            }
 
-            // 2. Close mobile menu on link click
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                 link.addEventListener('click', () => {
-                     if (mobileMenu) {
-                         mobileMenu.classList.add('hidden');
-                     }
-                 });
-            });
+                // 2. Close mobile menu on link click (to ensure smooth navigation)
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                     link.addEventListener('click', () => {
+                         // Check if the menu is currently visible before attempting to hide it
+                         if (!mobileMenu.classList.contains('hidden')) {
+                             mobileMenu.classList.add('hidden');
+                         }
+                     });
+                });
+            } else {
+                 console.error("Mobile menu elements not found. Check IDs.");
+            }
         });
     </script>
 </body>
