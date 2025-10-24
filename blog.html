@@ -13,17 +13,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Base Styles --- */
+        /* --- Global Layout & Typography --- */
         body {
-            background-color: #111827; /* gray-900 */
+            /* FIX: Wallpaper is now the fixed background for the entire page */
+            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+            background-size: cover;
+            background-attachment: fixed; /* Keeps the background image fixed during scroll */
+            background-position: center;
+            background-color: #111827; /* Fallback color */
             font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: #d1d5db; /* gray-300 */
         }
         html {
             scroll-behavior: smooth;
+        }
+        .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
         }
 
         /* --- Navigation Link Hover Effect --- */
