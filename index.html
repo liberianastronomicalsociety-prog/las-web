@@ -157,7 +157,7 @@
         </div>
     </header>
 
-    <!-- LAS Vision & President's Statement Section (NEWLY ADDED) -->
+    <!-- LAS Vision & President's Statement Section -->
     <section id="vision" class="section-padding bg-gray-950">
         <div class="container mx-auto px-4 max-w-5xl">
             <div class="bg-gray-900 p-8 md:p-12 rounded-2xl shadow-2xl border border-indigo-700/50">
@@ -180,6 +180,58 @@
                     <p class="text-lg text-indigo-400">President, Liberian Astronomical Society (LAS)</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- LAS Impact Statistics Section with Counting Animation (NEW) -->
+    <section id="las-impact-stats" class="section-padding bg-gray-900">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white text-center mb-16">
+                Our Direct Impact: LAS By the Numbers
+            </h2>
+            
+            <!-- Statistics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Stat Card 1: Registered Members -->
+                <div class="stat-card bg-gray-950 p-8 rounded-xl shadow-2xl shadow-indigo-900/50 border border-indigo-700/50 hover:shadow-indigo-900 transition duration-300 transform hover:scale-[1.02] cursor-default">
+                    <!-- data-target holds the final number -->
+                    <p class="count-up text-5xl font-extrabold text-indigo-400 mb-2" data-target="10">
+                        0+
+                    </p>
+                    <p class="text-lg text-gray-300 font-medium">
+                        Registered LAS Members
+                    </p>
+                </div>
+
+                <!-- Stat Card 2: Core Initiatives -->
+                <div class="stat-card bg-gray-950 p-8 rounded-xl shadow-2xl shadow-indigo-900/50 border border-indigo-700/50 hover:shadow-indigo-900 transition duration-300 transform hover:scale-[1.02] cursor-default">
+                    <!-- data-target holds the final number -->
+                    <p class="count-up text-5xl font-extrabold text-indigo-400 mb-2" data-target="5">
+                        0+
+                    </p>
+                    <p class="text-lg text-gray-300 font-medium">
+                        Core Educational Initiatives
+                    </p>
+                </div>
+
+                <!-- Stat Card 3: Liberian Counties Reached -->
+                <div class="stat-card bg-gray-950 p-8 rounded-xl shadow-2xl shadow-indigo-900/50 border border-indigo-700/50 hover:shadow-indigo-900 transition duration-300 transform hover:scale-[1.02] cursor-default">
+                    <!-- data-target holds the final number -->
+                    <p class="count-up text-5xl font-extrabold text-indigo-400 mb-2" data-target="4">
+                        0+
+                    </p>
+                    <p class="text-lg text-gray-300 font-medium">
+                        Liberian Counties with Outreach
+                    </p>
+                </div>
+                
+            </div>
+            
+            <!-- Disclaimer for the plus signs -->
+            <p class="text-center mt-12 text-sm text-gray-500 italic">
+                *All figures represent the current minimum number and continue to grow.*
+            </p>
         </div>
     </section>
 
@@ -363,10 +415,66 @@
                     messageBox.classList.remove('flex');
                 });
             }
+
+            // 4. LAS Counting Animation Logic (New Feature)
+            const counters = document.querySelectorAll('.count-up');
+            
+            // Function to handle the counting logic
+            const animateCount = (element) => {
+                // Get the target number from the data attribute
+                const target = +element.getAttribute('data-target'); 
+                
+                // Get the current text (should start at 0)
+                let currentCount = 0; 
+                
+                // Duration of the animation (in milliseconds)
+                const duration = 2000; 
+                
+                // Calculate the increment step
+                // Increments the counter over 2 seconds (2000ms / 10ms frame delay = 200 steps)
+                const increment = target / (duration / 10); 
+                
+                const updateCounter = () => {
+                    currentCount += increment;
+                    
+                    if (currentCount < target) {
+                        // Update the element text, rounded down, and include the '+' sign
+                        element.innerText = Math.floor(currentCount) + '+';
+                        
+                        // Keep requesting frames until target is reached
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        // Ensure the final, correct number is displayed with the '+' sign
+                        element.innerText = target + '+';
+                    }
+                };
+                
+                // Start the animation
+                updateCounter();
+            };
+
+            // Set up Intersection Observer to trigger animation when the section scrolls into view
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Start the animation for the visible counter
+                        animateCount(entry.target); 
+                        // Stop observing this element after it has counted once
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                // Threshold of 0.5 means the callback will be executed when 50% of the target is visible
+                threshold: 0.5 
+            });
+
+            // Attach the observer to all counter elements
+            counters.forEach(counter => {
+                // Initialize the text to "0+" before observation starts
+                counter.innerText = '0+';
+                observer.observe(counter);
+            });
         });
     </script>
 </body>
 </html>
-
-
-
