@@ -3,136 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LAS Blog & News - Latest Updates</title>
+    <title>LAS Blog, News & Updates</title>
     <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" type="image/x-icon">
-    <!-- Tailwind CSS -->
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
+    <!-- Load Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Global Styles --- */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        /* --- Base Styles --- */
         body {
-            background-color: #111827; /* Dark theme background */
+            background-color: #111827; /* gray-900 */
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            color: #d1d5db; /* Default text color (gray-300) */
+            color: #d1d5db; /* gray-300 */
         }
         html {
             scroll-behavior: smooth;
         }
 
-        /* --- Navigation Styles --- */
+        /* --- Navigation Link Hover Effect --- */
         .nav-link { 
             transition: color 0.3s ease; 
         }
         .nav-link:hover { 
-            color: #a5b4fc; /* Tailwind's indigo-300 */
+            color: #a5b4fc; /* indigo-300 */
         }
         
-        /* --- Main Content Section --- */
-        .section-padding { /* Re-added for potential future use, though not used in current structure */
-             padding-top: 5rem;
-             padding-bottom: 5rem;
+        /* --- Content Card Styles --- */
+        .content-card {
+             background-color: #1f2937; /* gray-800 */
+             border: 1px solid #374151; /* gray-700 */
+             border-radius: 0.75rem; /* rounded-xl */
+             overflow: hidden;
+             display: flex;
+             flex-direction: column;
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
+             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
         }
+         .content-card:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 15px 30px rgba(79, 70, 229, 0.4); /* Stronger Indigo shadow */
+         }
+         .card-image {
+             height: 14rem;
+             object-fit: cover;
+             width: 100%;
+             background-color: #000;
+         }
+         
+         .card-content {
+             padding: 1.5rem;
+             flex-grow: 1; /* Allows content to push link to the bottom */
+             display: flex;
+             flex-direction: column;
+         }
+         
+         /* --- Link/Button Style for Cards --- */
+         .card-link {
+            background-color: rgba(79, 70, 229, 0.3); /* indigo-600/30 */
+            color: #a5b4fc; /* indigo-300 */
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s, color 0.3s;
+         }
+         .card-link:hover {
+             background-color: #4f46e5; /* indigo-600 */
+             color: white;
+         }
 
-        /* --- News Carousel Styles --- */
-        #news-carousel-container {
-            overflow: hidden; /* Clips the content outside the container */
-            position: relative; /* Needed for absolute positioning of buttons */
-        }
-        #news-carousel-items {
-            display: flex; /* Lays out slides horizontally */
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth slide transition */
-            white-space: nowrap; /* Prevents items from wrapping */
-        }
-        .carousel-item {
-            width: 100%; /* Each slide takes full container width */
-            flex-shrink: 0; /* Prevents slides from shrinking */
-            white-space: normal; /* Allows text inside to wrap */
-            min-height: 450px; /* Ensures consistent height, adjust as needed */
-            vertical-align: top; 
-            display: inline-block; /* Fallback */
-        }
-         /* Style for carousel navigation buttons */
-        .carousel-btn {
-            background-color: rgba(67, 56, 202, 0.6); /* indigo-700 slightly transparent */
-            backdrop-filter: blur(4px);
-            border-radius: 9999px; /* Fully rounded */
-            padding: 0.75rem; /* p-3 */
-            color: white;
-            position: absolute; /* Position over the carousel */
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 20; /* Ensure buttons are above content */
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .carousel-btn:hover { 
-            background-color: rgba(79, 70, 229, 0.8); /* indigo-600 more opaque */
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); /* Ring effect on hover */
-        }
-        .carousel-btn.prev { left: 1rem; } /* Position left button */
-        .carousel-btn.next { right: 1rem; } /* Position right button */
-
-        /* Style for carousel indicator dots */
-        #carousel-indicators .indicator-dot {
-            width: 0.75rem; /* w-3 */
-            height: 0.75rem; /* h-3 */
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #carousel-indicators .indicator-dot.active {
-             background-color: #818cf8; /* Indigo-400 */
-        }
-         #carousel-indicators .indicator-dot.inactive {
-             background-color: #4b5563; /* Gray-600 */
-        }
-
-
-        /* --- Certificate Marquee Styles (Slide 3 Content) --- */
-        .certificate-marquee-container {
-             height: 14rem; /* h-56 */
-             overflow: hidden; /* Clip the scrolling content */
-             position: relative; /* For potential gradient overlays if desired */
-             background-color: #374151; /* Gray-700 bg for contrast */
-             border-radius: 0.5rem; /* rounded-lg */
-        }
-        .certificate-carousel {
-            display: flex; /* Lay out images horizontally */
-            width: fit-content; /* Let the content define the width */
-             /* Double the animation for seamless looping */
-            animation: scroll-certificates 60s linear infinite; 
-            height: 100%; /* Ensure inner div takes full height */
-        }
-        .certificate-carousel:hover { 
-            animation-play-state: paused; /* Pause on hover */
-        }
-        .certificate-carousel img {
-            height: 100%; /* Make images fill the container height */
-            width: auto; /* Maintain aspect ratio */
-            flex-shrink: 0;
-            margin-right: 1rem; /* Space between images */
-            object-fit: contain; /* Show the whole certificate */
-            padding: 0.5rem; /* Add some padding around images */
-        }
-        @keyframes scroll-certificates {
-             0% { transform: translateX(0); }
-             /* Move one full set of original images to the left */
-             100% { transform: translateX(-50%); } 
-        }
-
-        /* --- Footer Styles --- */
+        /* --- Footer Style: Ensures footer is at the bottom --- */
         footer {
-            margin-top: auto; /* Pushes footer to the bottom */
+            margin-top: auto; 
         }
-
     </style>
 </head>
 <body class="antialiased">
@@ -141,7 +89,7 @@
     <header>
         <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
             <div class="container mx-auto flex justify-between items-center px-4">
-                <!-- Logo and Site Title -->
+                <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
                     <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto">
                     <span>LAS</span>
@@ -149,34 +97,34 @@
                 
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" aria-label="Toggle mobile menu" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
+                    <button id="mobile-menu-button" aria-label="Toggle mobile menu" aria-expanded="false" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
                 
-                <!-- Desktop Navigation Links -->
+                <!-- Desktop Navigation -->
                 <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
                    <li><a href="index.html" class="nav-link">Home</a></li> 
                    <li><a href="about.html" class="nav-link">About Us</a></li> 
                    <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
                    <li><a href="team.html" class="nav-link">Our Team</a></li> 
-                   <li><a href="blog.html" class="nav-link text-indigo-400 font-bold">Blog</a></li>
+                   <li><a href="blog.html" class="nav-link text-indigo-400 font-bold" aria-current="page">Blog</a></li>
                    <li><a href="president.html" class="nav-link">About the President</a></li>
                    <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                   <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-                   <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+                   <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300 text-sm font-medium">Member Login</a></li>
+                   <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300 text-sm font-medium">Join Us</a></li>
                 </ul>
             </div>
             
             <!-- Mobile Menu Panel -->
-            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95 backdrop-blur-sm absolute top-full left-0 w-full shadow-lg">
-                 <ul class="flex flex-col space-y-2 p-4 text-gray-300">
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95 backdrop-blur-sm absolute top-full left-0 w-full shadow-lg z-40">
+                 <ul class="flex flex-col space-y-1 p-4 text-gray-300">
                    <li><a href="index.html" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">Home</a></li> 
                    <li><a href="about.html" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">About Us</a></li> 
                    <li><a href="portfolio.html" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">Activities</a></li> 
                    <li><a href="team.html" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">Our Team</a></li> 
-                   <li><a href="blog.html" class="block py-2 px-3 rounded bg-gray-700 text-indigo-400 font-bold">Blog</a></li> 
+                   <li><a href="blog.html" class="block py-2 px-3 rounded bg-gray-700 text-indigo-400 font-bold" aria-current="page">Blog</a></li> 
                    <li><a href="president.html" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">About the President</a></li>
                    <li><a href="getinvolve.html" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">Get Involved</a></li>
                    <li><a href="index.html#contact" class="block py-2 px-3 rounded hover:bg-gray-700 hover:text-indigo-400 transition">Contact</a></li>
@@ -189,276 +137,122 @@
 
     <!-- Main Content Area -->
     <main class="flex-grow">
-        <!-- Blog Section -->
-        <section id="blog-content" class="py-16 md:py-24 bg-gray-900">
-            <div class="container mx-auto text-center px-4">
+        <!-- Blog/News Grid Section -->
+        <section id="news-feed" aria-labelledby="news-heading" class="py-16 md:py-24 bg-gray-900">
+            <div class="container mx-auto text-center px-4 max-w-6xl">
                 <!-- Section Title -->
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-6 md:mb-12 rounded-lg p-3 bg-gradient-to-r from-indigo-800 to-purple-800 shadow-xl inline-block">
-                    Our Latest News & Blog
+                <h1 id="news-heading" class="text-4xl sm:text-5xl font-extrabold text-white mb-6 md:mb-12 rounded-lg p-3 bg-gradient-to-r from-indigo-800 to-purple-800 shadow-xl inline-block">
+                    Latest News & Updates
                 </h1>
                 <p class="text-lg text-gray-300 max-w-3xl mx-auto mb-12 md:mb-16">
-                    Stay up-to-date with our latest projects, astronomical discoveries, and community events.
+                    Stay up-to-date with our latest projects, astronomical discoveries, and community events in Liberia and beyond.
                 </p>
                 
-                <!-- News Carousel -->
-                <div id="news-carousel-container" class="relative max-w-xl lg:max-w-3xl mx-auto shadow-2xl rounded-2xl border-4 border-indigo-700/50">
-
-                    <!-- Previous Button -->
-                    <button onclick="changeNewsSlide(-1)" aria-label="Previous slide" class="carousel-btn prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                    </button>
-
-                    <!-- Carousel Items Wrapper -->
-                    <div id="news-carousel-items" class="cursor-grab active:cursor-grabbing">
-                        
-                        <!-- Slide 1: Asteroids Hunting Session -->
-                        <div class="carousel-item bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                             <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" 
-                                onerror="this.onerror=null;this.src='https://placehold.co/800x300/1e293b/a5b4fc?text=Event+Flyer+Placeholder'"
-                                alt="Asteroids Hunting Session Flyer" 
-                                class="w-full h-56 object-cover object-center">
-                            <div class="p-6">
-                                <h3 class="text-2xl font-bold text-indigo-400 mb-2">1st Asteroids Hunting Session</h3>
-                                <p class="text-gray-400 text-sm mb-4">Date: September 20, 2025</p>
-                                <p class="text-gray-300 text-base">
-                                    Join the Liberian Astronomical Society for our first Asteroids Hunting Session as part of the Pan-African Citizen Science Asteroids Campaign! This is a unique opportunity to contribute to real-world astronomical research.
-                                </p>
-                                <a href="#" target="_blank" class="mt-4 inline-flex items-center space-x-2 text-indigo-300 font-semibold hover:text-white transition duration-300 bg-indigo-700/30 px-3 py-2 rounded-lg hover:bg-indigo-700">
-                                    <span>Register & Learn More</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                </a>
-                            </div>
+                <!-- News Card Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 text-left">
+                    
+                    <div class="content-card">
+                         <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/800x450/000000/a5b4fc?text=Flyer+Unavailable'"
+                             alt="Asteroids Hunting Session Flyer" 
+                             class="card-image" loading="lazy">
+                        <div class="card-content">
+                            <h3 class="text-2xl font-bold text-indigo-400 mb-2">1st Asteroids Hunting Session</h3>
+                            <p class="text-gray-400 text-sm mb-4">Date: September 20, 2025</p>
+                            <p class="text-gray-300 text-base mb-6 flex-grow">
+                                Join the Liberian Astronomical Society for our first Asteroids Hunting Session as part of the Pan-African Citizen Science Asteroids Campaign! This is a unique opportunity to contribute to real-world astronomical research.
+                            </p>
+                            <a href="#" target="_blank" class="mt-auto inline-flex items-center space-x-2 card-link self-start">
+                                <span>Register & Learn More</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                            </a>
                         </div>
+                    </div>
 
-                         <!-- Slide 2: YouTube Video Embedding -->
-                        <div class="carousel-item bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                        <div class="relative pt-[56.25%] h-0 rounded-t-xl overflow-hidden">
-                                <iframe class="absolute top-0 left-0 w-full h-full" 
-                                    src="https://www.youtube.com/embed/TNNGe-AGqYA" 
-                                    title="LAS & African Space Leaders Astrophotography Presentation" frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                    allowfullscreen loading="lazy">
-                                </iframe>
-                            </div>
-                            <div class="p-6 text-left flex-grow flex flex-col">
-                                <h3 class="text-2xl font-bold text-indigo-400 mb-2">LAS & African Space Leaders Astrophotography</h3>
-                                <p class="text-gray-400 text-sm mb-4">Date: September 18, 2025</p>
-                                <p class="text-gray-300 text-base mb-4 flex-grow">
-                                    Watch a presentation focusing on astrophotography and image processing using software like FITS Liberator and GIMP. The video highlights engagement and inspiration work.
-                                </p>
-                                <a href="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" target="_blank" class="mt-auto inline-flex items-center space-x-2 text-indigo-300 font-semibold hover:text-white transition duration-300 bg-indigo-700/30 px-3 py-2 rounded-lg hover:bg-indigo-700 self-start">
-                                    <span>Watch on YouTube</span> 
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                </a>
-                            </div>
-                        </div>
-                        
-                         <!-- Slide 4: Astronomy Outreach -->
-                        <div class="carousel-item" role="tabpanel" id="slide-content-3" aria-labelledby="slide-tab-3">
-                             <div class="carousel-image-container rounded-t-xl">
-                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" 
-                                    onerror="this.onerror=null;this.src='https://placehold.co/800/000000/a5b4fc?text=Outreach+Unavailable'"
-                                    alt="Outreach Flyer" 
-                                    loading="lazy">
-                             </div>
-                            <div class="p-6 text-left flex-grow flex flex-col">
-                                <h3 class="text-2xl font-bold text-indigo-400 mb-2">Astronomy Outreach 🌌</h3>
-                                <p class="text-gray-400 text-sm mb-4">Date: November 1 - 26, 2025</p>
-                                <p class="text-gray-300 text-base mb-4 flex-grow">
-                                    Announcing the "Diversity in Astronomy within Liberia" Outreach program! Join us in Bong and Grand Bassa Counties. Inspiring science passion, one stargazing session at a time. ✨
-                                </p>
-                                <a href="index.html#contact" target="_blank" class="mt-auto inline-flex items-center space-x-2 text-indigo-300 font-semibold hover:text-white transition duration-300 bg-indigo-700/30 px-3 py-2 rounded-lg hover:bg-indigo-700 self-start">
-                                    <span>Learn More</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="changeNewsSlide(1)" aria-label="Next slide" class="carousel-btn next">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                    </button>
-                     <div id="carousel-indicators" role="tablist" aria-label="News Feed Navigation">
-                     </div>
-                </div>
-            </div>
+                    <div class="content-card">
+                        <img src="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" 
+                             alt="Astrophotography Presentation Thumbnail" 
+                             class="card-image" loading="lazy">
+                        <div class="card-content">
+                            <h3 class="text-2xl font-bold text-indigo-400 mb-2">Astrophotography Presentation Recording</h3>
+                            <p class="text-gray-400 text-sm mb-4">Date: September 18, 2025</p>
+                            <p class="text-gray-300 text-base mb-6 flex-grow">
+                                Catch up on our joint presentation with African Space Leaders, focusing on astrophotography and image processing using software like FITS Liberator and GIMP.
+                            </p>
+                            <a href="https://youtu.be/TNNGe-AGqYA?si=uIqZ3BZldqWFAgmM" target="_blank" class="mt-auto inline-flex items-center space-x-2 card-link self-start">
+                                <span>Watch on YouTube</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="content-card">
+                        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" 
+                            onerror="this.onerror=null;this.src='https://placehold.co/800x450/000000/a5b4fc?text=Outreach+Flyer'"
+                            alt="Astronomy Outreach Program Flyer" 
+                            class="card-image" loading="lazy">
+                        <div class="card-content">
+                            <h3 class="text-2xl font-bold text-indigo-400 mb-2">Astronomy Outreach Program 🌌</h3>
+                            <p class="text-gray-400 text-sm mb-4">Date: November 1 - 26, 2025</p>
+                            <p class="text-gray-300 text-base mb-6 flex-grow">
+                                Announcing the "Diversity in Astronomy within Liberia" Outreach program! Join us in Bong and Grand Bassa Counties. Inspiring science passion, one stargazing session at a time. ✨
+                            </p>
+                            <a href="index.html#contact" class="mt-auto inline-flex items-center space-x-2 card-link self-start">
+                                <span>Get Involved</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                            </a>
+                        </div>
+                    </div>  
+                </div> 
+            </div>
         </section>
     </main>
 
     <!-- Footer Section -->
-    <footer class="bg-gray-950 border-t border-gray-700 mt-auto"> {/* Changed bg-gray-900 to 950 */}
+    <footer class="bg-gray-950 border-t border-gray-700 mt-auto">
         <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
             <!-- Footer Navigation Links -->
-            <div class="flex justify-center space-x-4 mb-4 flex-wrap">
-                <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">Home</a>
-                <span class="text-gray-600 hidden sm:inline">|</span>
-                <a href="about.html" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">About Us</a>
-                <span class="text-gray-600 hidden sm:inline">|</span>
-                <a href="portfolio.html" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">Activities</a>
-                <span class="text-gray-600 hidden sm:inline">|</span>
-                <a href="blog.html" class="text-indigo-400 font-bold transition mx-2 my-1">Blog</a>
-                <span class="text-gray-600 hidden sm:inline">|</span>
-                <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">Contact</a>
-            </div>
+            <nav aria-label="Footer navigation">
+                <div class="flex justify-center space-x-4 mb-4 flex-wrap">
+                    <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">Home</a>
+                    <span class="text-gray-600 hidden sm:inline" aria-hidden="true">|</span>
+                    <a href="about.html" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">About Us</a>
+                    <span class="text-gray-600 hidden sm:inline" aria-hidden="true">|</span>
+                    <a href="portfolio.html" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">Activities</a>
+                    <span class="text-gray-600 hidden sm:inline" aria-hidden="true">|</span>
+                    <a href="blog.html" class="text-indigo-400 font-bold transition mx-2 my-1" aria-current="page">Blog</a>
+                    <span class="text-gray-600 hidden sm:inline" aria-hidden="true">|</span>
+                    <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition mx-2 my-1">Contact</a>
+                </div>
+            </nav>
             <!-- Copyright Information -->
             <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
         </div>
     </footer>
 
-
     <script>
-        // --- Global Variables for Carousel ---
-        let currentNewsSlide = 0;
-        let newsItems = [];
-        let totalSlides = 0;
-        let autoAdvanceInterval; // Timer ID for auto-advance
-        let touchStartX = 0; // For tracking swipe start position
-        const swipeThreshold = 50; // Min pixels to count as swipe
-
-        // --- DOM Elements (Fetched once on load) ---
-        let carouselContainer = null;
-        let carouselItemsEl = null;
-        let indicatorsContainer = null;
-        let mobileMenuButton = null;
-        let mobileMenu = null;
-        let yearElement = null;
-
-        /**
-         * Updates the carousel display (transform and indicators).
-         */
-        function updateNewsCarousel() {
-            if (!carouselItemsEl) return; // Exit if element not found
-
-            const offset = -currentNewsSlide * 100;
-            carouselItemsEl.style.transform = `translateX(${offset}%)`;
-
-            // Update indicator dots
-            const indicators = document.querySelectorAll('#carousel-indicators .indicator-dot');
-            indicators.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentNewsSlide);
-                dot.classList.toggle('inactive', index !== currentNewsSlide);
-            });
-
-            // Restart auto-advance timer on interaction or update
-            startAutoAdvance(); 
-        }
-
-        /**
-         * Changes the slide index by n steps (handles wrapping).
-         * @param {number} n - Step (-1 for prev, 1 for next).
-         */
-        function changeNewsSlide(n) {
-            if (totalSlides === 0) return; // Prevent errors if no slides
-            // Calculate next index with wrapping
-            currentNewsSlide = (currentNewsSlide + n + totalSlides) % totalSlides; 
-            updateNewsCarousel();
-        }
-
-        /**
-         * Jumps directly to a specific slide index.
-         * @param {number} index - The target slide index.
-         */
-         function goToSlide(index) {
-             if (totalSlides === 0 || index < 0 || index >= totalSlides) return; // Basic validation
-             currentNewsSlide = index;
-             updateNewsCarousel();
-         }
-
-        /**
-         * Starts or restarts the auto-advance timer.
-         */
-         function startAutoAdvance() {
-             clearInterval(autoAdvanceInterval); // Clear previous timer
-             autoAdvanceInterval = setInterval(() => {
-                 changeNewsSlide(1); // Advance to the next slide
-             }, 8000); // 8 seconds interval
-         }
-
-
-        /**
-         * Creates indicator dots based on the number of slides.
-         */
-        function createIndicators() {
-            if (!indicatorsContainer || totalSlides === 0) return;
-
-            indicatorsContainer.innerHTML = ''; // Clear previous dots
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('span');
-                dot.className = 'indicator-dot inactive'; // Start as inactive
-                dot.setAttribute('data-slide-to', i);
-                 // Add click listener to navigate to the specific slide
-                dot.onclick = () => goToSlide(i); 
-                indicatorsContainer.appendChild(dot);
-            }
-        }
         
-        /**
-         * Initializes the carousel functionality.
-         */
-        function initializeCarousel() {
-            // Find necessary elements
-            carouselContainer = document.getElementById('news-carousel-container');
-            carouselItemsEl = document.getElementById('news-carousel-items');
-            indicatorsContainer = document.getElementById('carousel-indicators');
-            
-            if (!carouselItemsEl) {
-                console.error("Carousel items container (#news-carousel-items) not found.");
-                return; // Stop if core element is missing
-            }
-
-            newsItems = carouselItemsEl.querySelectorAll('.carousel-item');
-            totalSlides = newsItems.length;
-            
-            if (totalSlides === 0) return; // No slides to manage
-
-            createIndicators(); // Create the dots
-            setupTouchEvents(); // Add swipe listeners
-            updateNewsCarousel(); // Set initial state (highlight first dot)
-            startAutoAdvance(); // Start the timer
-        }
-
-        /**
-         * Sets up touch event listeners for swipe navigation.
-         */
-        function setupTouchEvents() {
-             if (!carouselContainer) return;
-
-             carouselContainer.addEventListener('touchstart', (e) => {
-                 touchStartX = e.touches[0].clientX;
-                 clearInterval(autoAdvanceInterval); // Pause auto-play on touch
-             }, { passive: true }); 
-
-             carouselContainer.addEventListener('touchend', (e) => {
-                 const touchEndX = e.changedTouches[0].clientX;
-                 const diffX = touchStartX - touchEndX; 
-
-                 if (Math.abs(diffX) > swipeThreshold) {
-                     // Determine swipe direction and change slide
-                     changeNewsSlide(diffX > 0 ? 1 : -1); 
-                 } else {
-                      // If it wasn't a valid swipe, restart the timer immediately
-                     startAutoAdvance();
-                 }
-                 // Note: updateNewsCarousel inside changeNewsSlide already restarts the timer
-             }, { passive: true });
-        }
-
         /**
          * Initializes mobile menu toggle functionality.
          */
         function initializeMobileMenu() {
-            mobileMenuButton = document.getElementById('mobile-menu-button');
-            mobileMenu = document.getElementById('mobile-menu');
+            // Use const inside the function to limit scope
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
+                    // Toggles 'hidden' class and checks the new state
+                    const isHidden = mobileMenu.classList.toggle('hidden');
+                    // Updates aria-expanded state for accessibility
+                    mobileMenuButton.setAttribute('aria-expanded', !isHidden); 
                 });
                 
-                // Add listener to close menu when a link inside it is clicked
+                // Close menu when a link is clicked
                 mobileMenu.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
                         mobileMenu.classList.add('hidden');
+                        mobileMenuButton.setAttribute('aria-expanded', 'false'); 
                     });
                 });
             }
@@ -468,20 +262,18 @@
          * Updates the copyright year in the footer.
          */
         function updateFooterYear() {
-            yearElement = document.getElementById('current-year');
+            const yearElement = document.getElementById('current-year');
             if (yearElement) {
                 yearElement.textContent = new Date().getFullYear();
             }
         }
 
         // --- Main Execution ---
-        // Waits for the HTML document to be fully loaded and parsed
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize components after the DOM is ready
             updateFooterYear();
             initializeMobileMenu();
-            initializeCarousel(); // Set up the carousel last
         });
     </script>
 </body>
 </html>
-
