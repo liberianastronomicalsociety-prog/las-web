@@ -14,62 +14,62 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        /* --- Global Layout & Typography --- */
-        body {
-            background-color: #0f172a; /* Tailwind slate-900 or similar dark color for body */
-            font-family: 'Inter', sans-serif;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        .section-padding {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
+<style>
+/* --- Global Layout & Typography --- */
+html {
+    scroll-behavior: smooth;
+}
 
-        /* --- Navigation Styles --- */
-        .nav-link {
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #a5b4fc; /* Tailwind's indigo-300 */
-        }
+body {
+    background-color: #0f172a; /* slate-900 */
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
 
-        /* --- Hero Background (Incorporates the Wallpaper) --- */
-        .hero-bg-image {
-            /* The image URL provided by the user is correctly set here */
-            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            background-attachment: fixed; /* Ensures the background stays put */
-        }
-        /* Dark overlay for better text readability */
-        .hero-bg-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for contrast */
-            z-index: 1;
-        }
-        
-        /* Partner Card Hover Effect */
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(167, 139, 250, 0.3), 0 4px 6px -2px rgba(167, 139, 250, 0.1);
-        }
-        
-        /* Form Button styling */
-        .btn-primary:focus {
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
-        }
-    </style>
+.section-padding {
+    padding: 5rem 0;
+}
+
+/* --- Navigation Styles --- */
+.nav-link {
+    transition: color 200ms ease-in-out;
+    will-change: color;
+}
+
+.nav-link:hover {
+    color: #a5b4fc; /* indigo-300 */
+}
+
+/* --- Hero Background with Optimizations --- */
+.hero-bg-image {
+    background: 
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+        url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
+        center/cover no-repeat fixed;
+    position: relative;
+}
+
+/* Removed pseudo-element overlay because gradient background is cheaper to render */
+
+/* --- Partner Card Hover Effect --- */
+.card-hover {
+    transition: transform 250ms ease, box-shadow 250ms ease;
+    will-change: transform, box-shadow;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 10px 15px -3px rgba(167, 139, 250, 0.3),
+        0 4px 6px -2px rgba(167, 139, 250, 0.1);
+}
+
+/* --- Button Focus Styling --- */
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
+}
+</style>  
 </head>
 <body class="bg-gray-950 text-gray-200">
 
@@ -475,250 +475,272 @@
     <!-- Web3Forms Client Script -->
     <script src="https://web3forms.com/client/script.js" async defer></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const contactForm = document.getElementById('contact-form');
-            const messageBox = document.getElementById('message-box');
-            const messageText = document.getElementById('message-text');
-            const closeMessageBox = document.getElementById('close-message-box');
+<script>
+/* -------------------------------------------
+   Highly-optimized carousel + counters + UI
+   - Place this script at the end of the <body>
+   - Uses rAF for animations, passive listeners,
+     lazy-loading, will-change hints, and cached DOM.
+   ------------------------------------------- */
 
-            // 1. Smooth Scrolling for Navigation Links & Mobile Menu Close
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    // Check if the link targets a section on the same page
-                    if (this.getAttribute('href').length > 1) { 
-                        e.preventDefault();
+(function () {
+  'use strict';
 
-                        // Close mobile menu on click
-                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                           mobileMenu.classList.add('hidden');
-                        }
+  /* CONFIG */
+  const INNER_TRANSITION_INTERVAL = 3000; // ms between inner-image flips
+  const INNER_IMAGE_TRANSITION_DURATION = 500; // must match CSS transition
+  const COUNTER_ANIM_DURATION = 2000; // ms
 
-                        const targetElement = document.querySelector(this.getAttribute('href'));
-                        if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
-            });
+  /* Cached DOM references (obtained once at init) */
+  let mobileMenu, mobileMenuButton, contactForm, messageBox, messageText, closeMessageBox;
+  let carouselContainer, carouselItems; // will be Array
+  let activeInnerRAF = null;    // current requestAnimationFrame id for inner carousel
+  let innerState = { index: 0, lastTime: 0, imgs: [] }; // state for inner carousel
 
-            // 2. Mobile Menu Toggle
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-                
-                // Close menu if a link is clicked
-                document.querySelectorAll('#mobile-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.add('hidden');
-                    });
-                });
-            }
+  /* Utility: addEvent with options */
+  function on(node, event, handler, opts = {}) {
+    // default 'passive' true for non-canceling events (touchstart/wheel), false for clicks where preventDefault may be used
+    node.addEventListener(event, handler, opts);
+    return () => node.removeEventListener(event, handler, opts);
+  }
 
-            // 3. Simple Message Box Functionality (for Contact Form submission feedback)
-            if (contactForm && messageBox && messageText && closeMessageBox) {
-                contactForm.addEventListener('submit', function(e) {
-                    // Prevent default submission for demonstration purposes.
-                    // If you want to use Web3Forms, remove this line:
-                    e.preventDefault();
-                    
-                    messageText.textContent = 'Thank you for your message! We will get back to you soon.';
-                    messageBox.classList.remove('hidden');
-                    messageBox.classList.add('flex');
-                    
-                    // Only reset the form if it was a successful (simulated) submission
-                    contactForm.reset(); 
-                });
+  /* DOMContentLoaded safety — script recommended to be loaded at end of body */
+  document.addEventListener('DOMContentLoaded', init, { once: true });
 
-                closeMessageBox.addEventListener('click', () => {
-                    messageBox.classList.add('hidden');
-                    messageBox.classList.remove('flex');
-                });
-            }
+  function init() {
+    // Cache DOM nodes
+    mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton = document.getElementById('mobile-menu-button');
+    contactForm = document.getElementById('contact-form');
+    messageBox = document.getElementById('message-box');
+    messageText = document.getElementById('message-text');
+    closeMessageBox = document.getElementById('close-message-box');
 
-            // 4. LAS Counting Animation Logic (New Feature)
-            const counters = document.querySelectorAll('.count-up');
-            
-            // Function to handle the counting logic
-            const animateCount = (element) => {
-                // Get the target number from the data attribute
-                const target = +element.getAttribute('data-target'); 
-                
-                // Get the current text (should start at 0)
-                let currentCount = 0; 
-                
-                // Duration of the animation (in milliseconds)
-                const duration = 2000; 
-                
-                // Calculate the increment step
-                // Increments the counter over 2 seconds (2000ms / 10ms frame delay = 200 steps)
-                const increment = target / (duration / 10); 
-                
-                const updateCounter = () => {
-                    currentCount += increment;
-                    
-                    if (currentCount < target) {
-                        // Update the element text, rounded down, and include the '+' sign
-                        element.innerText = Math.floor(currentCount) + '+';
-                        
-                        // Keep requesting frames until target is reached
-                        requestAnimationFrame(updateCounter);
-                    } else {
-                        // Ensure the final, correct number is displayed with the '+' sign
-                        element.innerText = target + '+';
-                    }
-                };
-                
-                // Start the animation
-                updateCounter();
-            };
+    carouselContainer = document.getElementById('carousel-items');
+    carouselItems = carouselContainer ? Array.from(carouselContainer.querySelectorAll('.carousel-item')) : [];
 
-            // Set up Intersection Observer to trigger animation when the section scrolls into view
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Start the animation for the visible counter
-                        animateCount(entry.target); 
-                        // Stop observing this element after it has counted once
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                // Threshold of 0.5 means the callback will be executed when 50% of the target is visible
-                threshold: 0.5 
-            });
+    // Apply lazy loading to images inside carousel (and generally)
+    document.querySelectorAll('img').forEach(img => {
+      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+    });
 
-            // Attach the observer to all counter elements
-            counters.forEach(counter => {
-                // Initialize the text to "0+" before observation starts
-                counter.innerText = '0+';
-                observer.observe(counter);
-            });
-        });
-        
-        // Global state for main carousel
-        let currentSlide = 0;
-        const INNER_TRANSITION_INTERVAL = 3000; // 3 seconds per inner image "flip"
-        const INNER_IMAGE_TRANSITION_DURATION = 500; // Must be same as CSS transition
-        const innerCarouselTimers = []; // To hold all setInterval IDs
+    // Smooth scrolling handled by CSS; attach click handlers (non-passive because we call preventDefault)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      on(anchor, 'click', handleAnchorClick, { passive: false });
+    });
 
-        // --- CORE CAROUSEL LOGIC ---
+    // Mobile menu toggle & auto-close
+    if (mobileMenuButton && mobileMenu) {
+      on(mobileMenuButton, 'click', () => mobileMenu.classList.toggle('hidden'), { passive: true });
+      mobileMenu.querySelectorAll('a').forEach(link => on(link, 'click', () => mobileMenu.classList.add('hidden'), { passive: true }));
+    }
 
-        /**
-         * Clears all running inner carousel timers.
-         */
-        function stopInnerCarousels() {
-            innerCarouselTimers.forEach(clearInterval);
-            innerCarouselTimers.length = 0;
+    // Contact form handling (demo - preventDefault kept)
+    if (contactForm && messageBox && messageText && closeMessageBox) {
+      on(contactForm, 'submit', (e) => {
+        e.preventDefault();
+        messageText.textContent = 'Thank you for your message! We will get back to you soon.';
+        messageBox.classList.remove('hidden');
+        messageBox.classList.add('flex');
+        contactForm.reset();
+      });
+
+      // Do NOT use { once: true } here since user may open/close many times.
+      on(closeMessageBox, 'click', () => {
+        messageBox.classList.add('hidden');
+        messageBox.classList.remove('flex');
+      }, { passive: true });
+    }
+
+    // Initialize counters with IntersectionObserver using rootMargin (trigger earlier, less recalculation)
+    initCounters();
+
+    // Initialize carousel (show first)
+    initCarousel();
+  }
+
+  /* ----------------------
+     Counters (rAF-based for smoothness)
+     ---------------------- */
+  function initCounters() {
+    const counters = Array.from(document.querySelectorAll('.count-up'));
+    if (counters.length === 0) return;
+
+    // Initialize display
+    counters.forEach(c => c.textContent = '0+');
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCount(entry.target, +entry.target.getAttribute('data-target') || 0, COUNTER_ANIM_DURATION);
+          obs.unobserve(entry.target);
         }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -20% 0px',
+      threshold: 0
+    });
 
-        /**
-         * Cycles the images within a single carousel item.
-         * Automatically advances the main slide when the last image is shown.
-         * @param {HTMLElement} slideElement - The active main carousel slide.
-         */
-        function startInnerCarousel(slideElement) {
-            const innerImages = slideElement.querySelectorAll('.inner-image');
-            
-            // If there's 1 or fewer images, no cycling needed
-            if (innerImages.length <= 1) {
-                // Ensure the single image is active if present
-                if (innerImages.length === 1) innerImages[0].classList.add('inner-active');
-                return;
-            }
+    counters.forEach(c => observer.observe(c));
+  }
 
-            // Initialize state for this specific inner carousel
-            let innerIndex = 0;
+  function animateCount(element, target, duration) {
+    let start = null;
+    const initial = 0;
 
-            // Stop any timers that might be leftover from the last cycle, just in case
-            innerImages.forEach((img, i) => {
-                img.classList.remove('inner-active');
-            });
-            innerImages[0].classList.add('inner-active');
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = easeOutCubic(progress);
+      const current = Math.floor(initial + (target - initial) * ease);
+      element.textContent = `${current}+`;
 
-            const timer = setInterval(() => {
-                // 1. Hide current image
-                innerImages[innerIndex].classList.remove('inner-active');
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        element.textContent = `${target}+`;
+      }
+    }
 
-                innerIndex++;
+    requestAnimationFrame(step);
+  }
 
-                if (innerIndex >= innerImages.length) {
-                    // 2. We reached the end of the inner slideshow, advance the main slide
-                    changeSlide(1); 
-                    
-                    // CRITICAL: Stop the interval immediately to prevent multiple calls
-                    stopInnerCarousels(); 
-                    
-                    // Reset the inner index to 0 for when this slide cycles back around
-                    innerIndex = 0;
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
-                } else {
-                    // 3. Show the next image
-                    innerImages[innerIndex].classList.add('inner-active');
-                }
+  /* ----------------------
+     Carousel: rAF-based inner carousel
+     ---------------------- */
 
-            }, INNER_TRANSITION_INTERVAL);
+  function initCarousel() {
+    // If no items, nothing to do
+    if (!carouselItems || carouselItems.length === 0) return;
 
-            // Save timer for later stopping
-            innerCarouselTimers.push(timer);
-        }
+    // Ensure slides have 'active' class set properly
+    carouselItems.forEach((it, i) => it.classList.toggle('active', i === 0));
 
-        /**
-         * Updates the visibility of the main carousel slides and manages inner carousels.
-         * @param {number} index - The index of the slide to display.
-         */
-        function showSlide(index) {
-            const carouselItems = document.querySelectorAll('#carousel-items .carousel-item');
-            if (carouselItems.length === 0) return;
+    // Start inner carousel for the first slide after a short delay matching CSS transition
+    // Use a tiny timeout to allow initial layout; we use rAF-based handler below so no setInterval
+    setTimeout(() => startInnerCarouselForIndex(0), 600);
 
-            // 1. Handle wrapping (looping)
-            if (index >= carouselItems.length) {
-                currentSlide = 0;
-            } else if (index < 0) {
-                currentSlide = carouselItems.length - 1;
-            } else {
-                currentSlide = index;
-            }
+    // Expose changeSlide globally for HTML buttons if they call window.changeSlide(n)
+    window.changeSlide = function (n) {
+      const currentIdx = carouselItems.findIndex(it => it.classList.contains('active'));
+      const nextIdx = wrapIndex(currentIdx + n, carouselItems.length);
+      showSlide(nextIdx);
+    };
+  }
 
-            // 2. Stop all existing inner carousels and reset their state
-            stopInnerCarousels();
+  function wrapIndex(i, len) {
+    if (i >= len) return 0;
+    if (i < 0) return len - 1;
+    return i;
+  }
 
-            // 3. Update classes to show the current slide and hide others
-            carouselItems.forEach((item, i) => {
-                if (i === currentSlide) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
+  function showSlide(index) {
+    // Stop any running inner animation
+    stopActiveInnerCarousel();
 
-            // 4. Start the inner carousel for the new active slide AFTER the main transition completes
-            // We delay slightly longer than the main carousel CSS transition (0.5s)
-            setTimeout(() => {
-                startInnerCarousel(carouselItems[currentSlide]);
-            }, 600); 
-        }
+    // Update active class
+    carouselItems.forEach((item, i) => item.classList.toggle('active', i === index));
 
-        // Function callable from HTML buttons (window global scope)
-        window.changeSlide = function(n) {
-            showSlide(currentSlide + n);
-        }
+    // Start inner carousel for the shown slide after CSS transition finishes
+    setTimeout(() => startInnerCarouselForIndex(index), 600);
+  }
 
-        // --- INITIALIZATION ---
-            // 3. Initialize the carousel to the first slide on load
-            const carouselItems = document.querySelectorAll('#carousel-items .carousel-item');
-            if (carouselItems.length > 0) {
-                showSlide(currentSlide);
-            }
-        });
-    </script>
+  function startInnerCarouselForIndex(index) {
+    stopActiveInnerCarousel();
+
+    const slide = carouselItems[index];
+    if (!slide) return;
+
+    const imgs = Array.from(slide.querySelectorAll('.inner-image'));
+    // Immediately reset classes
+    imgs.forEach(img => img.classList.remove('inner-active'));
+
+    if (imgs.length === 0) return;
+    if (imgs.length === 1) {
+      imgs[0].classList.add('inner-active');
+      return;
+    }
+
+    // Ensure images are lazy-loaded too (if <img> inside .inner-image)
+    imgs.forEach(imgEl => {
+      const imgTag = imgEl.tagName.toLowerCase() === 'img' ? imgEl : imgEl.querySelector('img');
+      if (imgTag && !imgTag.hasAttribute('loading')) imgTag.setAttribute('loading', 'lazy');
+    });
+
+    // Initialize state
+    innerState.index = 0;
+    innerState.lastTime = performance.now();
+    innerState.imgs = imgs;
+
+    // Activate first
+    imgs[0].classList.add('inner-active');
+
+    // Start rAF loop
+    activeInnerRAF = requestAnimationFrame(innerCarouselStep);
+  }
+
+  function innerCarouselStep(timestamp) {
+    if (!innerState.imgs || innerState.imgs.length <= 1) {
+      activeInnerRAF = null;
+      return;
+    }
+
+    const elapsed = timestamp - innerState.lastTime;
+    if (elapsed >= INNER_TRANSITION_INTERVAL) {
+      // hide current
+      innerState.imgs[innerState.index].classList.remove('inner-active');
+
+      innerState.index += 1;
+
+      if (innerState.index >= innerState.imgs.length) {
+        // We reached the end -> advance main slide
+        // Advance main slide (wrap automatically)
+        const currentIdx = carouselItems.findIndex(it => it.classList.contains('active'));
+        const nextIdx = wrapIndex(currentIdx + 1, carouselItems.length);
+        // Stop this rAF loop and trigger main change
+        stopActiveInnerCarousel();
+        showSlide(nextIdx);
+        return; // do not request another frame from this loop
+      } else {
+        // show next
+        innerState.imgs[innerState.index].classList.add('inner-active');
+        innerState.lastTime = timestamp;
+      }
+    }
+    activeInnerRAF = requestAnimationFrame(innerCarouselStep);
+  }
+
+  function stopActiveInnerCarousel() {
+    if (activeInnerRAF !== null) {
+      cancelAnimationFrame(activeInnerRAF);
+      activeInnerRAF = null;
+    }
+    // clear innerState imgs active classes too
+    if (innerState.imgs && innerState.imgs.length) {
+      innerState.imgs.forEach(img => img.classList.remove('inner-active'));
+    }
+    innerState.imgs = [];
+    innerState.index = 0;
+    innerState.lastTime = 0;
+  }
+
+  /* ----------------------
+     Optional: expose a teardown for SPA navigation or hot reload
+     ---------------------- */
+  window.__LAS_opt_teardown = function () {
+    stopActiveInnerCarousel();
+    // (Could remove listeners if we kept references to them; modern pages usually reload whole JS)
+  };
+
+})();
+</script>
 </body>
 </html>
+
 
 
 
