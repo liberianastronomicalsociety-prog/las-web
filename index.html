@@ -46,15 +46,17 @@ body {
         linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
         url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
         center/cover no-repeat fixed;
+    aspect-ratio: 16 / 9;
     position: relative;
 }
 
 /* Removed pseudo-element overlay because gradient background is cheaper to render */
 
 /* --- Partner Card Hover Effect --- */
-.card-hover {
-    transition: transform 250ms ease, box-shadow 250ms ease;
-    will-change: transform, box-shadow;
+    
+    .card-hover {
+    will-change: transform;
+    transition: transform .25s ease, box-shadow .25s ease;
 }
 
 .card-hover:hover {
@@ -78,6 +80,10 @@ body {
 
 .inner-image.inner-active {
     opacity: 1;
+}
+    .section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
 }
 </style>  
 </head>
@@ -371,7 +377,7 @@ body {
                             </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Grand Bassa</h3>
-                                <p class="text-gray-400 text-sm mb-4">Date: Oct 20, 2025</p>
+                                <p class="text-gray-400 text-sm mb-4">Date: Nov 25, 2025</p>
                                 <p class="text-gray-300 text-sm">
                                     Our outreach in Buchanan City, Grand Bassa County, where we engage students about astronomy and drive awareness for LAS at Bassa High School System and the W. P. L. Brumskine United Methodist High School,sparking curiosity about our universe.
                                 </p>
@@ -823,6 +829,7 @@ document.querySelectorAll(".carousel-item").forEach(container => {
 </script>
 </body>
 </html>
+
 
 
 
