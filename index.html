@@ -18,52 +18,69 @@
 /* --- Global Layout & Typography --- */
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
-    background-color: #0f172a; /* slate-900 */
+    background-color: #0f172a;
     font-family: 'Inter', sans-serif;
     margin: 0;
 }
 
+/* Section padding */
 .section-padding {
     padding: 5rem 0;
+}
+
+/* Reduce padding on mobile */
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 3rem 0;
+  }
 }
 
 /* --- Navigation Styles --- */
 .nav-link {
     transition: color 200ms ease-in-out;
-    will-change: color;
 }
-
 .nav-link:hover {
-    color: #a5b4fc; /* indigo-300 */
+    color: #a5b4fc;
 }
 
-/* --- Hero Background with Optimizations --- */
+/* --- Hero Background --- */
 .hero-bg-image {
-    background: 
-        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-        url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
-        center/cover no-repeat fixed;
-    aspect-ratio: 16 / 9;
+    background:
+      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+      url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
+      center/cover no-repeat;
+    min-height: 70vh; /* mobile height */
     position: relative;
 }
 
-/* Removed pseudo-element overlay because gradient background is cheaper to render */
-
-/* --- Partner Card Hover Effect --- */
-    
-    .card-hover {
-    will-change: transform;
-    transition: transform .25s ease, box-shadow .25s ease;
+/* Desktop: restore aspect ratio + allow parallax */
+@media (min-width: 768px) {
+  .hero-bg-image {
+    aspect-ratio: 16 / 9;
+    background-attachment: fixed;
+  }
 }
 
+/* Force scroll background on mobile to prevent layout bugs */
+@media (max-width: 768px) {
+  .hero-bg-image {
+    background-attachment: scroll !important;
+  }
+}
+
+/* --- Partner Card Hover Effect --- */
+.card-hover {
+    transition: transform .25s ease, box-shadow .25s ease;
+}
 .card-hover:hover {
     transform: translateY(-5px);
     box-shadow:
-        0 10px 15px -3px rgba(167, 139, 250, 0.3),
-        0 4px 6px -2px rgba(167, 139, 250, 0.1);
+      0 10px 15px -3px rgba(167, 139, 250, 0.3),
+      0 4px 6px -2px rgba(167, 139, 250, 0.1);
 }
 
 /* --- Button Focus Styling --- */
@@ -71,19 +88,62 @@ body {
     outline: none;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
 }
-    .inner-image {
+
+/* Image fade animation */
+.inner-image {
     position: absolute;
     inset: 0;
     opacity: 0;
     transition: opacity 1s ease-in-out;
 }
-
 .inner-image.inner-active {
     opacity: 1;
 }
-    .section {
+
+/* Section rendering optimization */
+.section {
     content-visibility: auto;
     contain-intrinsic-size: 1000px;
+}
+    
+/* Fix oversized images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Fix hero text shrinking */
+@media(max-width: 640px) {
+    h1 {
+        font-size: 2.25rem !important; /* text-4xl */
+    }
+    p {
+        font-size: 1rem !important;
+    }
+}
+
+/* Fix carousel width */
+#carousel-container {
+    width: 100%;
+}
+
+/* Force inner images to not overflow */
+.inner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+}
+
+/* Remove overflow on stat cards */
+.stat-card {
+    width: 100%;
+}
+
+/* Make sections breathe on mobile */
+.section-padding {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
 }
 </style>  
 </head>
@@ -829,6 +889,7 @@ document.querySelectorAll(".carousel-item").forEach(container => {
 </script>
 </body>
 </html>
+
 
 
 
