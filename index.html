@@ -69,6 +69,16 @@ body {
     outline: none;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
 }
+    .inner-image {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.inner-image.inner-active {
+    opacity: 1;
+}
 </style>  
 </head>
 <body class="bg-gray-950 text-gray-200">
@@ -360,7 +370,7 @@ body {
                                 <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/blob/main/IMG_20251125_134046_668%40173174067.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x288/1e293b/9ca3af?text=Outreach+5+Missing';" alt="Outreach in Bassa (13)" class="inner-image w-full h-full object-cover">
                             </div>
                             <div class="p-6">
-                                <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Kakata</h3>
+                                <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Grand Bassa</h3>
                                 <p class="text-gray-400 text-sm mb-4">Date: Oct 20, 2025</p>
                                 <p class="text-gray-300 text-sm">
                                     Our outreach in Buchanan City, Grand Bassa County, where we engage students about astronomy and drive awareness for LAS at Bassa High School System and the W. P. L. Brumskine United Methodist High School,sparking curiosity about our universe.
@@ -737,9 +747,83 @@ body {
   };
 
 })();
+/* ============================================
+   1. COUNT-UP ANIMATION (Optimized + Smooth)
+===============================================*/
+document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll(".count-up");
+
+    const startCount = (entry) => {
+        const el = entry.target;
+        const target = +el.getAttribute("data-target");
+
+        if (entry.isIntersecting) {
+            let num = 0;
+            const step = Math.ceil(target / 60); // smoother 1-second animation
+
+            const update = () => {
+                num += step;
+                if (num >= target) {
+                    el.textContent = target + "+";
+                } else {
+                    el.textContent = num + "+";
+                    requestAnimationFrame(update);
+                }
+            };
+
+            requestAnimationFrame(update);
+            observer.unobserve(el);
+        }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(startCount);
+    }, { threshold: 0.4 });
+
+    counters.forEach(counter => observer.observe(counter));
+});
+
+
+/* ============================================
+   2. MAIN CAROUSEL CONTROLS
+===============================================*/
+let slideIndex = 0;
+const slides = document.querySelectorAll(".carousel-item");
+
+function showSlide(n) {
+    slideIndex = (n + slides.length) % slides.length;
+
+    slides.forEach((s, i) => {
+        s.style.display = i === slideIndex ? "block" : "none";
+    });
+}
+
+function changeSlide(n) {
+    showSlide(slideIndex + n);
+}
+
+showSlide(0);
+
+
+/* ============================================
+   3. INNER IMAGE FADE CAROUSEL
+===============================================*/
+document.querySelectorAll(".carousel-item").forEach(container => {
+    let images = container.querySelectorAll(".inner-image");
+    let idx = 0;
+
+    if (images.length <= 1) return;
+
+    setInterval(() => {
+        images[idx].classList.remove("inner-active");
+        idx = (idx + 1) % images.length;
+        images[idx].classList.add("inner-active");
+    }, 3000);
+});
 </script>
 </body>
 </html>
+
 
 
 
