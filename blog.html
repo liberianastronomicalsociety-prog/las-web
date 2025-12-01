@@ -295,91 +295,64 @@ footer {
         </div>
     </footer>
 
-    <script>
 <script>
-(function() {
-    'use strict';
+/* =====================================================
+   LOADING SCREEN — Smooth Fade-in / Fade-out
+=====================================================*/
+document.addEventListener("DOMContentLoaded", () => {
+    const loader = document.getElementById("loader");
+    const content = document.getElementById("content");
 
-    /* ====================================================================
-       1. HELPER FUNCTIONS
-       ==================================================================== */
+    if (!loader || !content) return;
 
-    /**
-     * Handles the fade-out of the loading screen and the fade-in of the content.
-     */
-    function handleLoadingScreen() {
-        const loader = document.getElementById("loader");
-        const content = document.getElementById("content");
+    const MIN_TIME = 1200; // 1.2s for a smooth experience
 
-        // Exit if the required elements are missing (prevents errors)
-        if (!loader || !content) return;
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            loader.style.opacity = "0";
+            content.style.opacity = "1";
 
-        const MIN_TIME = 1200; // 1.2s for a smooth experience
-
-        requestAnimationFrame(() => {
             setTimeout(() => {
-                // 1. Start the CSS transitions for fade-out/fade-in
-                loader.style.opacity = "0";
-                content.style.opacity = "1";
-
-                // 2. Hide the loader completely after the 600ms transition time
-                setTimeout(() => {
-                    loader.style.display = "none";
-                }, 600);
-            }, MIN_TIME);
-        });
-    }
-
-    /**
-     * Updates the copyright year in the footer.
-     */
-    function updateFooterYear() {
-        const yearElement = document.getElementById('current-year');
-        if (yearElement) {
-            yearElement.textContent = new Date().getFullYear();
-        }
-    }
-
-    /**
-     * Initializes mobile menu toggle and link-closing functionality.
-     */
-    function initializeMobileMenu() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuButton && mobileMenu) {
-            // 1. Toggle the menu visibility on button click
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-
-            // 2. Close mobile menu on link click
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    // Only hide if the menu is visible
-                    if (!mobileMenu.classList.contains('hidden')) {
-                         mobileMenu.classList.add('hidden');
-                    }
-                });
-            });
-        } else {
-            // Optional: Log a warning if the elements are missing
-            console.warn("Mobile menu elements not found. Check IDs.");
-        }
-    }
-
-
-    /* ====================================================================
-       2. MAIN EXECUTION: Run when the DOM is fully loaded
-       ==================================================================== */
-    document.addEventListener('DOMContentLoaded', function() {
-        // Run all initialization functions here
-        handleLoadingScreen();
-        updateFooterYear();
-        initializeMobileMenu();
+                loader.style.display = "none";
+            }, 600); // matches CSS transition
+        }, MIN_TIME);
     });
+});
+        
+/* =====================================================
+   GLOBAL INITIALIZATION & MOBILE MENU LOGIC
+=====================================================*/
+document.addEventListener('DOMContentLoaded', function() {
+    // --- 1. Set current year in footer ---
+    const yearElement = document.getElementById('current-year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
 
-})();
+    // --- 2. Mobile Menu Toggle Logic ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        // A. Toggle the menu visibility on button click
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // B. Close mobile menu on link click (to ensure smooth navigation)
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Check if the menu is currently visible before attempting to hide it
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    } else {
+        console.error("Mobile menu elements not found. Check IDs.");
+    }
+});
+</script>
 </script>
 </body>
 </html>
