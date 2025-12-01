@@ -170,7 +170,7 @@ img {
             <!-- The CSS Spinner element -->
             <div class="loader"></div>
             <!-- Updated text -->
-            <p class="text-white text-lg font-medium">Liberian Astronomical Society (LAS)</p>
+            <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page ....</p>
         </div>
     </div>
     <!-- Navigation Bar -->
@@ -576,6 +576,37 @@ img {
     <script src="https://web3forms.com/client/script.js" async defer></script>
 
 <script>
+        // JavaScript to handle the loading screen functionality
+
+        // 1. Wait for the page structure (DOM) to be loaded. This is more reliable than window.onload.
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
+            
+            // Initially ensure content is hidden
+            if (content) {
+                content.style.opacity = '0';
+            }
+
+            // Set a guaranteed delay (e.g., 1500ms) before hiding the loader.
+            // This ensures the user sees the animation for a moment.
+            const minDisplayTime = 1500; 
+
+            setTimeout(() => {
+                // Check if elements exist before trying to hide
+                if (loader && content) {
+                    // 2. Hide the loader by setting its opacity to 0 (triggering CSS transition)
+                    loader.style.opacity = '0';
+
+                    // 3. After the fade transition is complete (500ms), remove the loader 
+                    // from the document flow and reveal the main content.
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        content.style.opacity = '1';
+                    }, 500); // Must match the CSS transition duration
+                }
+            }, minDisplayTime); 
+        });
 /* -------------------------------------------
    Highly-optimized carousel + counters + UI
    - Place this script at the end of the <body>
@@ -913,6 +944,7 @@ document.querySelectorAll(".carousel-item").forEach(container => {
 </script>
 </body>
 </html>
+
 
 
 
