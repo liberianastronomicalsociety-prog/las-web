@@ -15,6 +15,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+        /* Define the custom CSS for the spinner */
+        .loader {
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid #3498db; /* Blue color for the spinner */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 /* --- Global Layout & Typography --- */
 html {
     scroll-behavior: smooth;
@@ -149,6 +163,16 @@ img {
 </head>
 <body class="bg-gray-950 text-gray-200">
 
+    <!-- 1. THE LOADER OVERLAY -->
+    <!-- This div covers the entire screen and is shown while content loads -->
+    <div id="loader" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50 transition-opacity duration-500">
+        <div class="flex flex-col items-center space-y-4">
+            <!-- The CSS Spinner element -->
+            <div class="loader"></div>
+            <!-- Updated text -->
+            <p class="text-white text-lg font-medium">Liberian Astronomical Society (LAS)</p>
+        </div>
+    </div>
     <!-- Navigation Bar -->
         <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
             <div class="container mx-auto flex justify-between items-center px-4">
@@ -889,6 +913,7 @@ document.querySelectorAll(".carousel-item").forEach(container => {
 </script>
 </body>
 </html>
+
 
 
 
