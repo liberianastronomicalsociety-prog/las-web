@@ -8,41 +8,95 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- Global Layout & Typography --- */
-        body {
-            /* FIX: Wallpaper is now the fixed background for the entire page */
-            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-            background-size: cover;
-            background-attachment: fixed; /* Keeps the background image fixed during scroll */
-            background-position: center;
-            background-color: #111827; /* Fallback color */
-            font-family: 'Inter', sans-serif;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        .section-padding {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
+  <style>
+/* ==================================================================== */
+/* 1. GLOBAL STYLES & LAYOUT */
+/* ==================================================================== */
+body {
+    /* FIX: Wallpaper is now the fixed background for the entire page */
+    background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+    background-size: cover;
+    background-attachment: fixed; /* Keeps the background image fixed during scroll */
+    background-position: center;
+    background-color: #111827; /* Fallback color (Tailwind's gray-900) */
+    font-family: 'Inter', sans-serif;
+}
 
-        /* --- Navigation Styles --- */
-        .nav-link {
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #a5b4fc; /* Tailwind's indigo-300 */
-        }
-        
-        /* --- Card & Hover Effects --- */
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
-        }
-    </style>
+html {
+    scroll-behavior: smooth;
+}
+
+.section-padding {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+/* ==================================================================== */
+/* 2. COMPONENT STYLES */
+/* ==================================================================== */
+
+/* --- Navigation Styles (nav-link) --- */
+.nav-link {
+    transition: color 0.3s ease;
+}
+.nav-link:hover {
+    color: #a5b4fc; /* Tailwind's indigo-300 */
+}
+
+/* --- Card & Hover Effects (card-hover) --- */
+.card-hover:hover {
+    transform: translateY(-4px);
+    /* Custom shadow using primary color (e.g., violet/indigo) */
+    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.5), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+}
+
+/* ==================================================================== */
+/* 3. LOADER & TRANSITION UTILITIES */
+/* ==================================================================== */
+
+/* --- Loader Spinner (Used within #loader) --- */
+.loader {
+    border: 6px solid rgba(255, 255, 255, 0.3);
+    border-top: 6px solid #3498db; /* A distinct color for the spinner */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Content Fade-In (Used to hide content until page is fully loaded) --- */
+#content {
+    opacity: 0;
+    transition-property: opacity;
+    /* Tailwind's default easing: cubic-bezier(0.4, 0, 0.2, 1) */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 1000ms; /* 1 second transition for a smooth fade-in */
+}
+</style>
 </head>
 <body class="antialiased">
 
+     <!-- 1. THE LOADER OVERLAY -->
+    <!-- This div covers the entire screen and is shown while content loads -->
+    <div id="loader" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50 transition-opacity duration-500">
+        <div class="flex flex-col items-center space-y-4">
+            <!-- The CSS Spinner element -->
+            <div class="loader"></div>
+            <!-- Updated text -->
+            <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page ....</p>
+        </div>
+        </div>
+
+    <div id="content">
+
+    <nav class="sticky top-0 z-50 ...">
+    </nav>
+    </div>
     <!-- Header / Navigation Bar (Updated for Multi-Page) -->
     <header>
         <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
@@ -124,7 +178,7 @@
                             </li>
                             <li class="flex items-start">
                                 <span class="text-indigo-400 mr-2">⭐</span>
-                                <p>Establish and foster partnerships with university science clubs to promote astronomical education.</p>
+                                <p>Establish and foster partnerships with university science clubs to promote astronomy education.</p>
                             </li>
                         </ul>
                     </div>
@@ -182,34 +236,89 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
+<script>
+(function() {
+    'use strict';
 
-            // --- Mobile Menu Toggle Logic ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                // 1. Toggle the menu visibility on button click
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
+    /* ====================================================================
+       1. PAGE LOADING & ANIMATIONS
+       ==================================================================== */
 
-                // 2. Close mobile menu on link click (to ensure smooth navigation)
-                document.querySelectorAll('#mobile-menu a').forEach(link => {
-                     link.addEventListener('click', () => {
-                         // Check if the menu is currently visible before attempting to hide it
-                         if (!mobileMenu.classList.contains('hidden')) {
-                             mobileMenu.classList.add('hidden');
-                         }
-                     });
-                });
-            } else {
-                 console.error("Mobile menu elements not found. Check IDs.");
-            }
+    /**
+     * Handles the fade-out of the loading screen and the fade-in of the content.
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+        const loader = document.getElementById("loader");
+        const content = document.getElementById("content");
+
+        // Use a null check on the elements, which is slightly more robust than if (!loader || !content) return;
+        if (!loader || !content) {
+            // If elements are missing, at least ensure the content is visible immediately
+            if (content) content.style.opacity = "1";
+            return;
+        }
+
+        const MIN_TIME = 1200; // 1.2s for a smooth experience
+
+        // Use requestAnimationFrame to ensure smooth visual update before the timeout
+        requestAnimationFrame(() => {
+            // Set a minimum visible time for the loader
+            setTimeout(() => {
+                // Start the CSS transition for fade-out
+                loader.style.opacity = "0";
+                content.style.opacity = "1";
+
+                // After the transition completes (600ms, matching the CSS duration), hide the loader completely
+                setTimeout(() => {
+                    loader.style.display = "none";
+                }, 600);
+            }, MIN_TIME);
         });
-    </script>
+    });
+
+
+    /* ====================================================================
+       2. GLOBAL UTILITIES & INITIALIZATION
+       ==================================================================== */
+
+    /**
+     * Initializes global page elements like the footer year and menu listeners.
+     * Attaches listeners inside the standard DOMContentLoaded handler.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Current Year in Footer ---
+        const currentYearElement = document.getElementById('current-year');
+        if (currentYearElement) {
+            currentYearElement.textContent = new Date().getFullYear();
+        }
+
+        // --- Mobile Menu Toggle Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            // 1. Toggle the menu visibility on button click
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // 2. Close mobile menu on link click (for smooth navigation)
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    // Check if the menu is currently visible before attempting to hide it
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+        } else {
+            console.error("Mobile menu elements not found (mobile-menu-button or mobile-menu).");
+        }
+        
+        // You would place other initialization functions (like carousel setup) here.
+    });
+
+})();
+</script>
 </body>
 </html>
