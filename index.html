@@ -15,28 +15,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-        /* Define the custom CSS for the spinner */
-        .loader {
-            border: 6px solid rgba(255, 255, 255, 0.3);
-            border-top: 6px solid #3498db; /* Blue color for the spinner */
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
+/* --- Loader Spinner --- */
+.loader {
+    border: 6px solid rgba(255, 255, 255, 0.3);
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
-        /* Ensure the body content doesn't flicker before the script runs */
-        #content {
-            opacity: 0;
-            transition-property: opacity;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-            transition-duration: 1000ms;
-        }
+/* Prevent content flash */
+#content {
+    opacity: 0;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 1000ms;
+}
+
 /* --- Global Layout & Typography --- */
 html {
     scroll-behavior: smooth;
@@ -56,9 +57,9 @@ body {
 
 /* Reduce padding on mobile */
 @media (max-width: 768px) {
-  .section-padding {
-    padding: 3rem 0;
-  }
+    .section-padding {
+        padding: 3rem 0;
+    }
 }
 
 /* --- Navigation Styles --- */
@@ -75,23 +76,23 @@ body {
       linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
       url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
       center/cover no-repeat;
-    min-height: 70vh; /* mobile height */
+    min-height: 70vh;
     position: relative;
 }
 
-/* Desktop: restore aspect ratio + allow parallax */
+/* Desktop parallax */
 @media (min-width: 768px) {
-  .hero-bg-image {
-    aspect-ratio: 16 / 9;
-    background-attachment: fixed;
-  }
+    .hero-bg-image {
+        aspect-ratio: 16 / 9;
+        background-attachment: fixed;
+    }
 }
 
-/* Force scroll background on mobile to prevent layout bugs */
+/* Prevent mobile background bugs */
 @media (max-width: 768px) {
-  .hero-bg-image {
-    background-attachment: scroll !important;
-  }
+    .hero-bg-image {
+        background-attachment: scroll !important;
+    }
 }
 
 /* --- Partner Card Hover Effect --- */
@@ -111,13 +112,17 @@ body {
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
 }
 
-/* Image fade animation */
+/* --- Image Fade Animation --- */
 .inner-image {
     position: absolute;
     inset: 0;
     opacity: 0;
     transition: opacity 1s ease-in-out;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
 }
+
 .inner-image.inner-active {
     opacity: 1;
 }
@@ -127,7 +132,7 @@ body {
     content-visibility: auto;
     contain-intrinsic-size: 1000px;
 }
-    
+
 /* Fix oversized images */
 img {
     max-width: 100%;
@@ -137,7 +142,7 @@ img {
 /* Fix hero text shrinking */
 @media(max-width: 640px) {
     h1 {
-        font-size: 2.25rem !important; /* text-4xl */
+        font-size: 2.25rem !important;
     }
     p {
         font-size: 1rem !important;
@@ -149,23 +154,17 @@ img {
     width: 100%;
 }
 
-/* Force inner images to not overflow */
-.inner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain !important;
-}
-
 /* Remove overflow on stat cards */
 .stat-card {
     width: 100%;
 }
 
-/* Make sections breathe on mobile */
-.section-padding {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
-}
+/* Mobile breathing space */
+@media (max-width: 768px) {
+    .section-padding {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
 }
 </style>  
 </head>
@@ -584,375 +583,218 @@ img {
     <script src="https://web3forms.com/client/script.js" async defer></script>
 
 <script>
-        // JavaScript to handle the loading screen functionality
-        
-        // Use a function to hide the loader cleanly
-        function hideLoader() {
-            const loader = document.getElementById('loader');
-            const content = document.getElementById('content');
-
-            if (loader && content) {
-                // 1. Start the fade-out of the loader
-                loader.style.opacity = '0';
-                
-                // 2. Start the fade-in of the content
-                content.style.opacity = '1';
-
-                // 3. Wait for the loader's fade-out transition (500ms) to finish, then hide it completely
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500); 
-            }
-        }
-
-        // 1. Wait for the page structure (DOM) to be fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set a guaranteed minimum display time for the loader (e.g., 1500ms or 1.5 seconds)
-            const minDisplayTime = 1500; 
-
-            // Use requestAnimationFrame to ensure the browser has finished rendering the initial state
-            // and then schedule the hiding function.
-            requestAnimationFrame(() => {
-                 setTimeout(hideLoader, minDisplayTime);
-            });
-        });
-/* -------------------------------------------
-   Highly-optimized carousel + counters + UI
-   - Place this script at the end of the <body>
-   - Uses rAF for animations, passive listeners,
-     lazy-loading, will-change hints, and cached DOM.
-   ------------------------------------------- */
-
-(function () {
-  'use strict';
-
-  /* CONFIG */
-  const INNER_TRANSITION_INTERVAL = 3000; // ms between inner-image flips
-  const INNER_IMAGE_TRANSITION_DURATION = 500; // must match CSS transition
-  const COUNTER_ANIM_DURATION = 2000; // ms
-
-  /* Cached DOM references (obtained once at init) */
-  let mobileMenu, mobileMenuButton, contactForm, messageBox, messageText, closeMessageBox;
-  let carouselContainer, carouselItems; // will be Array
-  let activeInnerRAF = null;    // current requestAnimationFrame id for inner carousel
-  let innerState = { index: 0, lastTime: 0, imgs: [] }; // state for inner carousel
-
-  /* Utility: addEvent with options */
-  function on(node, event, handler, opts = {}) {
-    // default 'passive' true for non-canceling events (touchstart/wheel), false for clicks where preventDefault may be used
-    node.addEventListener(event, handler, opts);
-    return () => node.removeEventListener(event, handler, opts);
-  }
-
-  /* DOMContentLoaded safety — script recommended to be loaded at end of body */
-  document.addEventListener('DOMContentLoaded', init, { once: true });
-
-  function init() {
-    // Cache DOM nodes
-    mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuButton = document.getElementById('mobile-menu-button');
-    contactForm = document.getElementById('contact-form');
-    messageBox = document.getElementById('message-box');
-    messageText = document.getElementById('message-text');
-    closeMessageBox = document.getElementById('close-message-box');
-
-    carouselContainer = document.getElementById('carousel-items');
-    carouselItems = carouselContainer ? Array.from(carouselContainer.querySelectorAll('.carousel-item')) : [];
-
-    // Apply lazy loading to images inside carousel (and generally)
-    document.querySelectorAll('img').forEach(img => {
-      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
-    });
-
-    // Smooth scrolling handled by CSS; attach click handlers (non-passive because we call preventDefault)
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      on(anchor, 'click', handleAnchorClick, { passive: false });
-    });
-
-    // Mobile menu toggle & auto-close
-    if (mobileMenuButton && mobileMenu) {
-      on(mobileMenuButton, 'click', () => mobileMenu.classList.toggle('hidden'), { passive: true });
-      mobileMenu.querySelectorAll('a').forEach(link => on(link, 'click', () => mobileMenu.classList.add('hidden'), { passive: true }));
-    }
-
-    // Contact form handling (demo - preventDefault kept)
-    if (contactForm && messageBox && messageText && closeMessageBox) {
-      on(contactForm, 'submit', (e) => {
-        e.preventDefault();
-        messageText.textContent = 'Thank you for your message! We will get back to you soon.';
-        messageBox.classList.remove('hidden');
-        messageBox.classList.add('flex');
-        contactForm.reset();
-      });
-
-      // Do NOT use { once: true } here since user may open/close many times.
-      on(closeMessageBox, 'click', () => {
-        messageBox.classList.add('hidden');
-        messageBox.classList.remove('flex');
-      }, { passive: true });
-    }
-
-    // Initialize counters with IntersectionObserver using rootMargin (trigger earlier, less recalculation)
-    initCounters();
-
-    // Initialize carousel (show first)
-    initCarousel();
-  }
-
-  /* ----------------------
-     Counters (rAF-based for smoothness)
-     ---------------------- */
-  function initCounters() {
-    const counters = Array.from(document.querySelectorAll('.count-up'));
-    if (counters.length === 0) return;
-
-    // Initialize display
-    counters.forEach(c => c.textContent = '0+');
-
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateCount(entry.target, +entry.target.getAttribute('data-target') || 0, COUNTER_ANIM_DURATION);
-          obs.unobserve(entry.target);
-        }
-      });
-    }, {
-      root: null,
-      rootMargin: '0px 0px -20% 0px',
-      threshold: 0
-    });
-
-    counters.forEach(c => observer.observe(c));
-  }
-
-  function animateCount(element, target, duration) {
-    let start = null;
-    const initial = 0;
-
-    function step(timestamp) {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeOutCubic(progress);
-      const current = Math.floor(initial + (target - initial) * ease);
-      element.textContent = `${current}+`;
-
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
-        element.textContent = `${target}+`;
-      }
-    }
-
-    requestAnimationFrame(step);
-  }
-
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-  /* ----------------------
-     Carousel: rAF-based inner carousel
-     ---------------------- */
-
-  function initCarousel() {
-    // If no items, nothing to do
-    if (!carouselItems || carouselItems.length === 0) return;
-
-    // Ensure slides have 'active' class set properly
-    carouselItems.forEach((it, i) => it.classList.toggle('active', i === 0));
-
-    // Start inner carousel for the first slide after a short delay matching CSS transition
-    // Use a tiny timeout to allow initial layout; we use rAF-based handler below so no setInterval
-    setTimeout(() => startInnerCarouselForIndex(0), 600);
-
-    // Expose changeSlide globally for HTML buttons if they call window.changeSlide(n)
-    window.changeSlide = function (n) {
-      const currentIdx = carouselItems.findIndex(it => it.classList.contains('active'));
-      const nextIdx = wrapIndex(currentIdx + n, carouselItems.length);
-      showSlide(nextIdx);
-    };
-  }
-
-  function wrapIndex(i, len) {
-    if (i >= len) return 0;
-    if (i < 0) return len - 1;
-    return i;
-  }
-
-  function showSlide(index) {
-    // Stop any running inner animation
-    stopActiveInnerCarousel();
-
-    // Update active class
-    carouselItems.forEach((item, i) => item.classList.toggle('active', i === index));
-
-    // Start inner carousel for the shown slide after CSS transition finishes
-    setTimeout(() => startInnerCarouselForIndex(index), 600);
-  }
-
-  function startInnerCarouselForIndex(index) {
-    stopActiveInnerCarousel();
-
-    const slide = carouselItems[index];
-    if (!slide) return;
-
-    const imgs = Array.from(slide.querySelectorAll('.inner-image'));
-    // Immediately reset classes
-    imgs.forEach(img => img.classList.remove('inner-active'));
-
-    if (imgs.length === 0) return;
-    if (imgs.length === 1) {
-      imgs[0].classList.add('inner-active');
-      return;
-    }
-
-    // Ensure images are lazy-loaded too (if <img> inside .inner-image)
-    imgs.forEach(imgEl => {
-      const imgTag = imgEl.tagName.toLowerCase() === 'img' ? imgEl : imgEl.querySelector('img');
-      if (imgTag && !imgTag.hasAttribute('loading')) imgTag.setAttribute('loading', 'lazy');
-    });
-
-    // Initialize state
-    innerState.index = 0;
-    innerState.lastTime = performance.now();
-    innerState.imgs = imgs;
-
-    // Activate first
-    imgs[0].classList.add('inner-active');
-
-    // Start rAF loop
-    activeInnerRAF = requestAnimationFrame(innerCarouselStep);
-  }
-
-  function innerCarouselStep(timestamp) {
-    if (!innerState.imgs || innerState.imgs.length <= 1) {
-      activeInnerRAF = null;
-      return;
-    }
-
-    const elapsed = timestamp - innerState.lastTime;
-    if (elapsed >= INNER_TRANSITION_INTERVAL) {
-      // hide current
-      innerState.imgs[innerState.index].classList.remove('inner-active');
-
-      innerState.index += 1;
-
-      if (innerState.index >= innerState.imgs.length) {
-        // We reached the end -> advance main slide
-        // Advance main slide (wrap automatically)
-        const currentIdx = carouselItems.findIndex(it => it.classList.contains('active'));
-        const nextIdx = wrapIndex(currentIdx + 1, carouselItems.length);
-        // Stop this rAF loop and trigger main change
-        stopActiveInnerCarousel();
-        showSlide(nextIdx);
-        return; // do not request another frame from this loop
-      } else {
-        // show next
-        innerState.imgs[innerState.index].classList.add('inner-active');
-        innerState.lastTime = timestamp;
-      }
-    }
-    activeInnerRAF = requestAnimationFrame(innerCarouselStep);
-  }
-
-  function stopActiveInnerCarousel() {
-    if (activeInnerRAF !== null) {
-      cancelAnimationFrame(activeInnerRAF);
-      activeInnerRAF = null;
-    }
-    // clear innerState imgs active classes too
-    if (innerState.imgs && innerState.imgs.length) {
-      innerState.imgs.forEach(img => img.classList.remove('inner-active'));
-    }
-    innerState.imgs = [];
-    innerState.index = 0;
-    innerState.lastTime = 0;
-  }
-
-  /* ----------------------
-     Optional: expose a teardown for SPA navigation or hot reload
-     ---------------------- */
-  window.__LAS_opt_teardown = function () {
-    stopActiveInnerCarousel();
-    // (Could remove listeners if we kept references to them; modern pages usually reload whole JS)
-  };
-
-})();
-/* ============================================
-   1. COUNT-UP ANIMATION (Optimized + Smooth)
-===============================================*/
+/* =====================================================
+   LOADING SCREEN — Smooth Fade-in / Fade-out (Fixed)
+=====================================================*/
 document.addEventListener("DOMContentLoaded", () => {
-    const counters = document.querySelectorAll(".count-up");
+    const loader = document.getElementById("loader");
+    const content = document.getElementById("content");
 
-    const startCount = (entry) => {
-        const el = entry.target;
-        const target = +el.getAttribute("data-target");
+    if (!loader || !content) return;
 
-        if (entry.isIntersecting) {
-            let num = 0;
-            const step = Math.ceil(target / 60); // smoother 1-second animation
+    const MIN_TIME = 1200; // 1.2s for a smooth experience
 
-            const update = () => {
-                num += step;
-                if (num >= target) {
-                    el.textContent = target + "+";
-                } else {
-                    el.textContent = num + "+";
-                    requestAnimationFrame(update);
-                }
-            };
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            loader.style.opacity = "0";
+            content.style.opacity = "1";
 
-            requestAnimationFrame(update);
-            observer.unobserve(el);
-        }
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(startCount);
-    }, { threshold: 0.4 });
-
-    counters.forEach(counter => observer.observe(counter));
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 600); // matches CSS transition
+        }, MIN_TIME);
+    });
 });
 
 
-/* ============================================
-   2. MAIN CAROUSEL CONTROLS
-===============================================*/
+/* =====================================================
+   GLOBAL UTILITY
+=====================================================*/
+function on(node, event, handler, opts = {}) {
+    node.addEventListener(event, handler, opts);
+    return () => node.removeEventListener(event, handler, opts);
+}
+
+
+/* =====================================================
+   MAIN INITIALIZATION
+=====================================================*/
+document.addEventListener("DOMContentLoaded", init, { once: true });
+
+function init() {
+    setupMobileMenu();
+    setupSmoothScroll();
+    setupContactForm();
+    setupCounters();
+    setupMainCarousel();
+}
+
+
+/* =====================================================
+   MOBILE MENU
+=====================================================*/
+function setupMobileMenu() {
+    const menu = document.getElementById("mobile-menu");
+    const btn = document.getElementById("mobile-menu-button");
+
+    if (!menu || !btn) return;
+
+    on(btn, "click", () => menu.classList.toggle("hidden"));
+
+    // Auto-close on link click
+    menu.querySelectorAll("a").forEach(link =>
+        on(link, "click", () => menu.classList.add("hidden"))
+    );
+}
+
+
+/* =====================================================
+   SMOOTH SCROLL (CSS handles most work)
+=====================================================*/
+function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        on(anchor, "click", (e) => {
+            const id = anchor.getAttribute("href");
+            const el = document.querySelector(id);
+            if (!el) return;
+
+            e.preventDefault();
+            el.scrollIntoView({ behavior: "smooth" });
+        });
+    });
+}
+
+
+/* =====================================================
+   CONTACT FORM MESSAGE POPUP
+=====================================================*/
+function setupContactForm() {
+    const form = document.getElementById("contact-form");
+    const box = document.getElementById("message-box");
+    const text = document.getElementById("message-text");
+    const closeBtn = document.getElementById("close-message-box");
+
+    if (!form || !box || !text || !closeBtn) return;
+
+    on(form, "submit", (e) => {
+        e.preventDefault();
+        text.textContent = "Thank you for your message! We will get back to you soon.";
+        box.classList.remove("hidden");
+        box.classList.add("flex");
+        form.reset();
+    });
+
+    on(closeBtn, "click", () => {
+        box.classList.add("hidden");
+        box.classList.remove("flex");
+    });
+}
+
+
+/* =====================================================
+   COUNTERS — Smooth + Optimized (Fixed)
+=====================================================*/
+function setupCounters() {
+    const counters = document.querySelectorAll(".count-up");
+    if (!counters.length) return;
+
+    counters.forEach(el => el.textContent = "0+");
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.4 });
+
+    counters.forEach(c => observer.observe(c));
+}
+
+function animateCounter(el) {
+    const target = +el.getAttribute("data-target");
+    let current = 0;
+
+    const step = () => {
+        current += Math.ceil(target / 60);
+        if (current >= target) {
+            el.textContent = target + "+";
+        } else {
+            el.textContent = current + "+";
+            requestAnimationFrame(step);
+        }
+    };
+
+    requestAnimationFrame(step);
+}
+
+
+/* =====================================================
+   MAIN CAROUSEL + INNER IMAGE FADE
+=====================================================*/
 let slideIndex = 0;
-const slides = document.querySelectorAll(".carousel-item");
+let innerIntervals = new Map();
+
+function setupMainCarousel() {
+    const slides = document.querySelectorAll(".carousel-item");
+    if (!slides.length) return;
+
+    slides.forEach(s => (s.style.display = "none"));
+    showSlide(0);
+
+    // Start inner-image carousel for first slide
+    startInnerCarousel(slides[0]);
+}
 
 function showSlide(n) {
+    const slides = document.querySelectorAll(".carousel-item");
     slideIndex = (n + slides.length) % slides.length;
 
-    slides.forEach((s, i) => {
-        s.style.display = i === slideIndex ? "block" : "none";
+    // Stop old inner image loops
+    stopAllInnerCarousels();
+
+    slides.forEach((slide, i) => {
+        slide.style.display = i === slideIndex ? "block" : "none";
     });
+
+    startInnerCarousel(slides[slideIndex]);
 }
 
 function changeSlide(n) {
     showSlide(slideIndex + n);
 }
 
-showSlide(0);
+function startInnerCarousel(slide) {
+    if (!slide) return;
 
+    const images = slide.querySelectorAll(".inner-image");
+    if (images.length <= 1) {
+        if (images[0]) images[0].classList.add("inner-active");
+        return;
+    }
 
-/* ============================================
-   3. INNER IMAGE FADE CAROUSEL
-===============================================*/
-document.querySelectorAll(".carousel-item").forEach(container => {
-    let images = container.querySelectorAll(".inner-image");
     let idx = 0;
+    images.forEach(img => img.classList.remove("inner-active"));
+    images[0].classList.add("inner-active");
 
-    if (images.length <= 1) return;
-
-    setInterval(() => {
+    const interval = setInterval(() => {
         images[idx].classList.remove("inner-active");
         idx = (idx + 1) % images.length;
         images[idx].classList.add("inner-active");
     }, 3000);
-});
+
+    innerIntervals.set(slide, interval);
+}
+
+function stopAllInnerCarousels() {
+    innerIntervals.forEach(interval => clearInterval(interval));
+    innerIntervals.clear();
+}
 </script>
 </body>
 </html>
+
 
 
 
