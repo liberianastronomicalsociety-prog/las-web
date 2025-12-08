@@ -1,548 +1,524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Liberian Astronomical Society</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-    <style>
-        /* --- Global Styles --- */
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0d1117;
-            background-image: radial-gradient(circle at 10% 20%, #1e3a8a, #0c4a6e);
-            background-attachment: fixed;
-            color: #d1d5db;
-        }
-        .dashboard-card {
-            background-color: rgba(17, 24, 39, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        /* Style for the acceptance letter section */
-        .acceptance-letter-bg {
-            background: linear-gradient(135deg, rgba(30, 64, 175, 0.8), rgba(67, 56, 202, 0.8));
-            border: 2px solid #3b82f6; /* Blue border */
-        }
-        /* Simple spinner for loading state */
-        .loader {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #3b82f6; /* Blue */
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <title>LAS Dashboard — Profile · Events · Payments · Certificates · Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at 10% 20%, #1e3a8a, #0c4a6e); color: #e5e7eb; min-height:100vh; }
+    .glass { background: rgba(17,24,39,0.45); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.06); }
+    .muted { color: #9ca3af; }
+    .chip { background: rgba(255,255,255,0.03); padding: .25rem .5rem; border-radius: .5rem; font-size: .85rem; }
+  </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="p-6 flex items-start justify-center">
 
-    <div class="dashboard-card p-8 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto transform transition-all duration-300">
-        <div class="flex flex-col items-center mb-6 text-center">
-            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS Logo" class="h-16 w-auto mb-4">
-            <h1 class="text-4xl font-bold text-white mb-2">Welcome Back!</h1>
-            <p class="text-gray-400 text-lg">Your journey through the cosmos awaits.</p>
+  <div class="w-full max-w-6xl space-y-6">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between mb-2">
+      <div class="flex items-center space-x-4">
+        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" class="h-12 rounded-full" alt="LAS">
+        <div>
+          <h1 class="text-2xl font-bold">Liberian Astronomical Society — Dashboard</h1>
+          <p class="muted text-sm">Profile · Events · Payments · Certificates · Admin</p>
+        </div>
+      </div>
+      <div class="space-x-3">
+        <span id="emailBadge" class="chip">Not signed in</span>
+        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white hidden">Logout</button>
+      </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left column: Profile + Membership Status -->
+      <section class="glass p-6 rounded-xl">
+        <h2 class="text-xl font-semibold mb-4">My Profile</h2>
+
+        <div class="space-y-3">
+          <img id="previewPhoto" src="" alt="profile" class="h-24 w-24 rounded-full object-cover border" />
+          <label class="block text-sm">Full name</label>
+          <input id="profileName" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" />
+          <label class="block text-sm mt-2">Role</label>
+          <select id="profileRole" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700">
+            <option>Student</option><option>Volunteer</option><option>Teacher</option><option>Researcher</option><option>Executive</option>
+          </select>
+          <label class="block text-sm mt-2">Photo URL</label>
+          <input id="profilePhoto" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" placeholder="https://..." />
+          <label class="block text-sm mt-2">Short bio</label>
+          <textarea id="profileBio" rows="3" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700"></textarea>
+
+          <div class="flex gap-3 mt-3">
+            <button id="saveProfile" class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Save Profile</button>
+            <button id="downloadID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
+          </div>
+
+          <div class="mt-4">
+            <p class="muted text-sm">Membership Status:</p>
+            <div id="membershipStatus" class="text-lg font-bold">Loading...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Middle column: Events and Payments -->
+      <section class="col-span-1 lg:col-span-1 space-y-6">
+        <!-- Events -->
+        <div class="glass p-6 rounded-xl">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold">Events</h2>
+            <div>
+              <button id="refreshEvents" class="text-sm muted mr-2">Refresh</button>
+              <button id="createEventBtn" class="bg-green-600 px-3 py-1 rounded text-white hidden">Create Event</button>
+            </div>
+          </div>
+
+          <p class="muted text-sm mb-3">Upcoming LAS events. Click <em>Register</em> to join.</p>
+
+          <div id="eventsList" class="space-y-3 max-h-64 overflow-auto"></div>
         </div>
 
-        <div class="mt-8 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
-            <h2 class="text-2xl font-semibold text-white mb-4">Membership Status</h2>
-            <div class="flex items-center space-x-4">
-                <span class="text-gray-400 text-sm">User ID:</span>
-                <span id="userEmailDisplay" class="font-medium text-white">Connecting...</span>
-            </div>
-            <div class="flex items-center space-x-4 mt-2">
-                <span class="text-gray-400 text-sm">Status:</span>
-                <span id="membershipStatus" class="font-bold text-yellow-400">Loading...</span>
-            </div>
-            <p id="pendingMessage" class="mt-4 text-sm text-gray-400 hidden">
-                Your membership is pending approval. Please complete your application:
-            </p>
-            <a id="applicationLink" href="membership_application.html" target="_blank" class="mt-4 hidden inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 transition-all duration-300">
-                Complete Membership Application
-            </a>
+        <!-- Payments -->
+        <div class="glass p-6 rounded-xl">
+          <h2 class="text-xl font-semibold">Payments & Dues</h2>
+          <p class="muted text-sm mb-3">Your payment history and outstanding dues.</p>
+
+          <div id="paymentsSummary" class="text-sm muted mb-3">Loading...</div>
+          <div id="paymentsList" class="space-y-2 max-h-40 overflow-auto"></div>
+
+          <div class="mt-3 flex gap-2">
+            <input id="paymentAmount" type="number" placeholder="Amount (USD)" class="px-3 py-2 rounded bg-gray-900 border border-gray-700 w-full"/>
+            <button id="addPaymentBtn" class="bg-indigo-600 px-4 py-2 rounded">Add Payment</button>
+          </div>
         </div>
-        
-        <div id="acceptanceLetterSection" class="acceptance-letter-bg p-6 rounded-xl shadow-inner mb-6 hidden">
-            <h2 class="text-3xl font-bold text-white mb-4 text-center">🎉 Congratulations! Your Application is Approved! 🎉</h2>
-            <div id="letterContent" class="bg-white/10 p-6 rounded-lg backdrop-blur-sm text-gray-200">
-                <p class="text-xl font-semibold text-white mb-4">
-                    Dear <strong id="memberName" class="text-indigo-300">Member</strong>,
-                </p>
+      </section>
 
-                <p class="mb-6 leading-relaxed">
-                    Congratulations! On behalf of the Liberian Astronomical Society, we are pleased to inform you that you have been officially accepted as a member of our great community. We welcome you to our growing community of astronomy and space science enthusiasts!
-                </p>
-                
-                <p class="font-semibold text-white mt-4 mb-2">As a member, you will have access to:</p>
-                <ul class="list-disc list-inside space-y-2 ml-4 mb-6">
-                    <li>Training programs and workshops (including asteroids hunting and telescope training).</li>
-                    <li>Participation in national and international research projects.</li>
-                    <li>Exclusive updates, resources, and opportunities to contribute to astronomy outreach in Liberia.</li>
-                </ul>
+      <!-- Right column: Certificates & Admin Panel -->
+      <section class="space-y-6">
 
-                <p class="font-semibold text-white mt-6 mb-2">Membership Renewal Fees:</p>
-                <div class="bg-gray-700/50 p-4 rounded-lg space-y-1 text-sm">
-                    <p><strong class="text-indigo-300">Students:</strong> $500 LRD / monthly</p>
-                    <p><strong class="text-indigo-300">Teachers:</strong> $5 USD / monthly</p>
-                    <p><strong class="text-indigo-300">Professors:</strong> $15 USD / monthly</p>
-                </div>
+        <!-- Certificates -->
+        <div class="glass p-6 rounded-xl">
+          <h2 class="text-xl font-semibold">Certificates & Member ID</h2>
+          <p class="muted text-sm mb-3">Issue or download training certificates and your member ID.</p>
 
-                <p class="mt-6 mb-6 leading-relaxed">
-                    We are excited to have you on board and look forward to your active participation in our programs. Together we will inspire curiosity, promote scientific literacy, and build Liberia's presence in the global astronomy community.
-                </p>
-
-                <p class="mt-4 text-sm text-indigo-400">
-                    Once again, welcome to the LAS family.
-                    <br>
-                    — LAS Administrators
-                </p>
-            </div>
-            <div id="confirmationActions" class="mt-6 flex flex-col sm:flex-row gap-3">
-                <button id="downloadLetterButton" class="w-full sm:w-auto bg-gray-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300 flex-shrink-0">
-                    Download Letter (PDF)
-                </button>
-                <button id="acceptButton" class="w-full sm:w-auto bg-green-600 text-white py-2 px-4 rounded-lg font-semibold shadow-md hover:bg-green-700 transition-all duration-300 flex-grow">
-                    Accept Membership
-                </button>
-                <button id="declineButton" class="w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 flex-shrink-0">
-                    Decline Offer
-                </button>
-            </div>
-        </div>
-        
-        <div class="mt-6 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
-            <h2 class="text-2xl font-semibold text-white mb-4">Member-Only Resources</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
-                    <h3 class="text-lg font-semibold text-white mb-2">Celestial Object Finder</h3>
-                    <p class="text-gray-400 text-sm mb-4">Search for planets, stars, and constellations using AI.</p>
-                    <div class="flex space-x-2">
-                        <input type="text" id="objectSearchInput" placeholder="e.g. Jupiter" class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button id="searchButton" class="bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300">
-                            Search
-                        </button>
-                    </div>
-                    <div id="searchResults" class="mt-4 text-gray-300 text-sm leading-relaxed">
-                        Ready to search for a star or planet!
-                    </div>
-                </div>
-
-                <div class="bg-gray-700 p-6 rounded-lg border border-gray-600">
-                    <h3 class="text-lg font-semibold text-white mb-2">Upcoming Events</h3>
-                    <p class="text-gray-400 text-sm">Check back soon for details on our next star-gazing events and workshops!</p>
-                </div>
-            </div>
+          <div id="certificateStatus" class="mb-3 muted">No certificate issued yet.</div>
+          <div class="flex gap-2">
+            <button id="generateCertBtn" class="bg-indigo-600 px-4 py-2 rounded">Generate Certificate</button>
+            <button id="downloadCertBtn" class="bg-gray-600 px-4 py-2 rounded hidden">Download Certificate</button>
+          </div>
         </div>
 
-        <button id="logoutButton" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:focus:ring-offset-gray-900 transition-all duration-300">
-            Log Out
-        </button>
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="glass p-6 rounded-xl hidden">
+          <h2 class="text-xl font-semibold">Admin Panel</h2>
+          <p class="muted text-sm mb-3">Approve members, view payments, create events.</p>
+
+          <div class="mb-3">
+            <h3 class="font-semibold">Pending Members</h3>
+            <div id="pendingMembers" class="space-y-2 max-h-36 overflow-auto"></div>
+          </div>
+
+          <div class="mb-3">
+            <h3 class="font-semibold">Create Event</h3>
+            <input id="eventTitle" placeholder="Event title" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2" />
+            <input id="eventDate" type="datetime-local" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2" />
+            <input id="eventLocation" placeholder="Location" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2" />
+            <textarea id="eventDesc" rows="2" placeholder="Short description" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2"></textarea>
+            <div class="flex gap-2 mt-2">
+              <button id="saveEventBtn" class="bg-green-600 px-4 py-2 rounded">Save Event</button>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-semibold">Payments (Admin View)</h3>
+            <div id="adminPayments" class="space-y-2 max-h-36 overflow-auto"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Message modal -->
+    <div id="msg" class="fixed inset-0 hidden items-center justify-center z-50">
+      <div class="bg-gray-900 p-6 rounded shadow-lg max-w-md w-full">
+        <div id="msgText" class="text-white"></div>
+        <div class="mt-4 text-right">
+          <button id="closeMsg" class="px-4 py-2 rounded bg-indigo-600">Close</button>
+        </div>
+      </div>
     </div>
 
-    <div id="messageBox" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 transition-opacity duration-300" aria-modal="true" role="dialog">
-        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-full border border-gray-700">
-            <h3 id="messageTitle" class="text-xl font-bold text-white mb-3">Message</h3>
-            <p id="messageText" class="text-gray-300 mb-6"></p>
-            <button id="closeMessageBox" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300">Close</button>
-        </div>
-    </div>
-    
-    <div id="signUpForm" class="hidden absolute top-0 left-0">
-        <input type="email" id="signupEmail" placeholder="Email">
-        <input type="password" id="signupPassword" placeholder="Password">
-        <button id="signupButton">Sign Up</button>
-    </div>
+  </div>
 
-    <script type="module">
-        // --- FIREBASE IMPORTS (using required version 11.6.1) ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        // --- API CONFIGURATION ---
-        const apiKey = "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks";
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-        const MAX_RETRIES = 3;
+  <!-- Firebase + App Logic -->
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signOut, signInAnonymously, createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore, collection, doc, setDoc, getDoc, addDoc, onSnapshot, query, where, updateDoc, orderBy, getDocs
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Utility function for exponential backoff
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    // jsPDF
+    const { jsPDF } = window.jspdf;
 
-        // --- FIREBASE INITIALIZATION & GLOBAL VARS ---
-        // ----- START: YOUR FIREBASE CONFIGURATION -----
-        const firebaseConfig = {
-            apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
-            authDomain: "liberian-astro-society.firebaseapp.com",
-            projectId: "liberian-astro-society",
-            storageBucket: "liberian-astro-society.firebasestorage.app",
-            messagingSenderId: "914979035379",
-            appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
-            measurementId: "G-RBC64CGK4J"
-        };
-        // ----- END: YOUR FIREBASE CONFIGURATION -----
+    // Firebase config — keep your existing config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+      authDomain: "liberian-astro-society.firebaseapp.com",
+      projectId: "liberian-astro-society",
+      storageBucket: "liberian-astro-society.firebasestorage.app",
+      messagingSenderId: "914979035379",
+      appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
+    };
 
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        let app;
-        let db;
-        let auth;
-        let currentUserId = null;
-        let currentUserName = "LAS Member"; // Default name
-        let userDocRef; // Reference to the user's status document
+    // Initialize
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        // DOM Elements
-        const userEmailDisplay = document.getElementById('userEmailDisplay');
-        const membershipStatus = document.getElementById('membershipStatus');
-        const pendingMessage = document.getElementById('pendingMessage');
-        const applicationLink = document.getElementById('applicationLink');
-        const acceptanceLetterSection = document.getElementById('acceptanceLetterSection');
-        const memberName = document.getElementById('memberName');
-        const logoutButton = document.getElementById('logoutButton');
-        const downloadLetterButton = document.getElementById('downloadLetterButton');
-        const acceptButton = document.getElementById('acceptButton');
-        const declineButton = document.getElementById('declineButton');
-        const messageBox = document.getElementById('messageBox');
-        const messageTitle = document.getElementById('messageTitle');
-        const messageText = document.getElementById('messageText');
-        const closeMessageBox = document.getElementById('closeMessageBox');
-        const objectSearchInput = document.getElementById('objectSearchInput');
-        const searchButton = document.getElementById('searchButton');
-        const searchResults = document.getElementById('searchResults');
-        
-        // New DOM elements for sign-up form placeholder
-        const signupButton = document.getElementById('signupButton');
-        const signupEmailInput = document.getElementById('signupEmail');
-        const signupPasswordInput = document.getElementById('signupPassword');
-        
-        // ------------------------------------
-        // --- 1. CORE FIREBASE INITIALIZATION ---
-        // ------------------------------------
-        
+    // DOM
+    const emailBadge = document.getElementById('emailBadge');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Profile
+    const profileName = document.getElementById('profileName');
+    const profileRole = document.getElementById('profileRole');
+    const profileBio = document.getElementById('profileBio');
+    const profilePhoto = document.getElementById('profilePhoto');
+    const previewPhoto = document.getElementById('previewPhoto');
+    const saveProfile = document.getElementById('saveProfile');
+    const downloadID = document.getElementById('downloadID');
+    const membershipStatusEl = document.getElementById('membershipStatus');
+
+    // Events
+    const eventsList = document.getElementById('eventsList');
+    const refreshEvents = document.getElementById('refreshEvents');
+    const createEventBtn = document.getElementById('createEventBtn');
+
+    // Payments
+    const paymentsSummary = document.getElementById('paymentsSummary');
+    const paymentsList = document.getElementById('paymentsList');
+    const paymentAmount = document.getElementById('paymentAmount');
+    const addPaymentBtn = document.getElementById('addPaymentBtn');
+
+    // Certificates
+    const generateCertBtn = document.getElementById('generateCertBtn');
+    const downloadCertBtn = document.getElementById('downloadCertBtn');
+    const certificateStatus = document.getElementById('certificateStatus');
+
+    // Admin
+    const adminPanel = document.getElementById('adminPanel');
+    const pendingMembers = document.getElementById('pendingMembers');
+    const saveEventBtn = document.getElementById('saveEventBtn');
+    const eventTitle = document.getElementById('eventTitle');
+    const eventDate = document.getElementById('eventDate');
+    const eventLocation = document.getElementById('eventLocation');
+    const eventDesc = document.getElementById('eventDesc');
+    const adminPayments = document.getElementById('adminPayments');
+
+    // Message
+    const msg = document.getElementById('msg');
+    const msgText = document.getElementById('msgText');
+    const closeMsg = document.getElementById('closeMsg');
+
+    // State
+    let currentUser = null;
+    let userDocRef = null;
+    let isAdmin = false;
+
+    // Helpers
+    function showMsg(text) {
+      msgText.innerText = text;
+      msg.classList.remove('hidden');
+      msg.classList.add('flex');
+    }
+    closeMsg.addEventListener('click', () => { msg.classList.add('hidden'); msg.classList.remove('flex'); });
+
+    // Auth state
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Try anonymous sign-in so users can preview (optional)
         try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            console.log("Firebase App Initialized.");
-        } catch (error) {
-            console.error("Firebase Initialization Error:", error);
-            displayMessage('Error', 'Failed to initialize Firebase. Check your config and network connection.', 'error');
+          await signInAnonymously(auth);
+          return;
+        } catch (e) {
+          emailBadge.textContent = 'Not signed in';
+          return;
         }
+      }
 
-        // ------------------------------------
-        // --- 2. MEMBERSHIP STATUS HANDLERS ---
-        // ------------------------------------
-        
-        const statusToColor = (status) => {
-            switch (status) {
-                case 'Approved':
-                    return 'text-green-400';
-                case 'Pending':
-                    return 'text-yellow-400';
-                case 'Declined':
-                    return 'text-red-500';
-                case 'Accepted': 
-                case 'Incomplete':
-                default:
-                    return 'text-red-400';
-            }
-        };
+      currentUser = user;
+      emailBadge.textContent = user.email || user.uid;
+      logoutBtn.classList.remove('hidden');
 
-        const updateDashboard = (statusKey, displayText, colorClass, name = "Member", isAccepted = false) => {
-            membershipStatus.textContent = displayText;
-            membershipStatus.className = `font-bold ${colorClass}`;
-            memberName.textContent = name;
+      // User doc ref
+      userDocRef = doc(db, 'members', user.uid);
 
-            // Hide everything first
-            pendingMessage.classList.add('hidden');
-            applicationLink.classList.add('hidden');
-            acceptanceLetterSection.classList.add('hidden');
+      // Check admin
+      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+      isAdmin = adminDoc.exists();
+      if (isAdmin) {
+        adminPanel.classList.remove('hidden');
+        createEventBtn.classList.remove('hidden');
+      }
 
-            // Show relevant sections based on status
-            if (statusKey === 'Incomplete') {
-                pendingMessage.classList.remove('hidden');
-                applicationLink.classList.remove('hidden');
-                membershipStatus.textContent = 'Application Incomplete';
-            } else if (statusKey === 'Approved' && !isAccepted) {
-                acceptanceLetterSection.classList.remove('hidden');
-            } else if (statusKey === 'Accepted' || (statusKey === 'Approved' && isAccepted)) {
-                membershipStatus.textContent = 'Active Member';
-                membershipStatus.className = `font-bold text-green-500`;
-            }
-        };
+      // Listen to profile/membership doc
+      onSnapshot(userDocRef, (snap) => {
+        if (!snap.exists()) {
+          // create baseline
+          setDoc(userDocRef, { status: 'Incomplete', name: user.email ? user.email.split('@')[0] : 'Member', email: user.email || '', accepted: false }, { merge: true });
+          membershipStatusEl.textContent = 'Application Incomplete';
+          return;
+        }
+        const data = snap.data();
+        profileName.value = data.name || '';
+        profileRole.value = data.role || 'Student';
+        profileBio.value = data.bio || '';
+        profilePhoto.value = data.photo || '';
+        previewPhoto.src = data.photo || 'https://placehold.co/200x200?text=LAS';
+        membershipStatusEl.textContent = (data.status || 'Pending') + (data.accepted ? ' (Active)' : '');
+        certificateStatus.textContent = data.certificateIssued ? `Certificate issued (${data.memberID || 'ID N/A'})` : 'No certificate issued yet';
+      });
 
-        const handleUserStatusUpdate = (docSnapshot) => {
-            if (!docSnapshot.exists()) {
-                console.warn("User document not found. Setting status to Incomplete.");
-                // Create document with initial status
-                setDoc(userDocRef, {
-                    status: 'Incomplete',
-                    name: currentUserName,
-                    email: currentUserId,
-                    accepted: false
-                }, { merge: true });
-                updateDashboard('Incomplete', 'Application Incomplete', 'text-red-400');
-                return;
-            }
-
-            const userData = docSnapshot.data();
-            const status = userData.status || 'Pending';
-            currentUserName = userData.name || currentUserId.split('@')[0] || "LAS Member";
-            const accepted = userData.accepted || false;
-
-            updateDashboard(status, status, statusToColor(status), currentUserName, accepted);
-        };
-
-        // ------------------------------------
-        // --- 3. AUTHENTICATION & LISTENER ---
-        // ------------------------------------
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUserId = user.email || user.uid;
-                userEmailDisplay.textContent = currentUserId;
-
-                // Start Firestore Listener
-                userDocRef = doc(db, "members", user.uid);
-                
-                onSnapshot(userDocRef, handleUserStatusUpdate, (error) => {
-                    console.error("Firestore Listener Error:", error);
-                    updateDashboard('Error', 'Connection Error', 'text-red-500');
-                    displayMessage('Database Error', 'Could not fetch real-time membership status.', 'error');
-                });
-                
-            } else if (initialAuthToken) {
-                // Sign in with custom token (e.g., from a server)
-                try {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } catch (error) {
-                    console.error("Custom Token Sign-In Failed:", error);
-                    userEmailDisplay.textContent = 'Token expired/invalid. Signing in anonymously...';
-                    await signInAnonymously(auth); 
-                }
-            } else {
-                // Fallback: Sign in anonymously for basic dashboard access
-                try {
-                    await signInAnonymously(auth);
-                    userEmailDisplay.textContent = 'Guest User (Anonymous)';
-                } catch (error) {
-                    console.error("Anonymous Sign-In Failed:", error);
-                    userEmailDisplay.textContent = 'Login Failed';
-                    membershipStatus.textContent = 'Not Logged In';
-                    membershipStatus.className = 'font-bold text-red-500';
-                }
-            }
+      // Listen to events collection
+      const q = query(collection(db, 'events'), orderBy('date', 'desc'));
+      onSnapshot(q, (snap) => {
+        eventsList.innerHTML = '';
+        snap.forEach(docSnap => {
+          const e = docSnap.data();
+          const id = docSnap.id;
+          const node = document.createElement('div');
+          node.className = 'p-3 bg-gray-900 rounded border border-gray-700';
+          node.innerHTML = `<div class="flex justify-between"><div>
+                              <div class="font-semibold">${e.title}</div>
+                              <div class="muted text-sm">${new Date(e.date).toLocaleString()}</div>
+                              <div class="muted text-sm">${e.location || ''}</div>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                              <button data-id="${id}" class="registerBtn bg-indigo-600 px-3 py-1 rounded text-sm">Register</button>
+                              ${isAdmin ? `<button data-id="${id}" class="viewRegBtn bg-gray-600 px-3 py-1 rounded text-sm">View regs</button>` : ''}
+                            </div></div>
+                            <div class="text-sm muted mt-2">${e.description || ''}</div>`;
+          eventsList.appendChild(node);
         });
 
-        // ------------------------------------
-        // --- 4. NEW: USER SIGN-UP HANDLER ---
-        // ------------------------------------
-
-        /**
-         * Creates a new user in Firebase Auth and immediately sets their
-         * membership status to 'Incomplete' in Firestore.
-         */
-        async function handleNewUserSignUp(email, password) {
-            if (!auth || !db) {
-                displayMessage('Error', 'System not initialized. Please try reloading the page.', 'error');
-                return;
-            }
-
-            try {
-                // 1. Create the user with Firebase Authentication
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                // 2. *** CRITICAL STEP: Create the initial membership document ***
-                if (user) {
-                    const userDocRef = doc(db, "members", user.uid);
-                    await setDoc(userDocRef, {
-                        // Set the initial status to 'Incomplete'
-                        status: 'Incomplete', 
-                        name: user.email.split('@')[0] || "New Member", 
-                        email: user.email,
-                        accepted: false
-                    }, { merge: true });
-
-                    // 3. Success Feedback and Redirection
-                    console.log(`User ${user.email} created and status set to Incomplete.`);
-                    window.location.href = 'dashboard.html'; // Redirect to dashboard
-                }
-
-            } catch (error) {
-                let errorMessage = "An unknown error occurred during sign up.";
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'The email address is already in use by another account.';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'The email address is not valid.';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'The password must be at least 6 characters long.';
-                }
-                
-                console.error("Sign up failed:", error);
-                displayMessage('Sign Up Failed', errorMessage, 'error');
-            }
-        }
-        
-        // ------------------------------------
-        // --- 5. DASHBOARD ACTION HANDLERS ---
-        // ------------------------------------
-        
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                displayMessage('Logout Error', 'An error occurred during sign out.', 'error');
-            }
+        // bind register buttons
+        document.querySelectorAll('.registerBtn').forEach(b => {
+          b.addEventListener('click', async (ev) => {
+            const eventId = ev.currentTarget.dataset.id;
+            if (!currentUser) return showMsg('You must be logged in to register.');
+            const regRef = doc(db, 'members', currentUser.uid, 'registrations', eventId);
+            await setDoc(regRef, { registeredAt: Date.now() }, { merge: true });
+            showMsg('Registered for event!');
+          });
         });
 
-        // Placeholder Listener for the hypothetical Sign-Up button
-        if (signupButton) {
-            signupButton.addEventListener('click', () => {
-                const email = signupEmailInput.value;
-                const password = signupPasswordInput.value;
-                
-                if (email && password) {
-                    handleNewUserSignUp(email, password);
-                } else {
-                    displayMessage('Error', 'Please enter a valid email and password.', 'error');
-                }
+        // admin view registrations
+        document.querySelectorAll('.viewRegBtn').forEach(b => {
+          b.addEventListener('click', async (ev) => {
+            const eventId = ev.currentTarget.dataset.id;
+            // fetch registrations across members where registration exists - simple approach: query members subcollections isn't directly possible; instead keep eventRegistrations collection for admin (recommended)
+            showMsg('Admin view: for full registration list create an eventRegistrations collection or query members/*/registrations using Cloud Functions. (Quick demo omitted)');
+          });
+        });
+      });
+
+      // Listen payments for this member
+      const paymentsQ = query(collection(db, 'members', user.uid, 'payments'), orderBy('timestamp', 'desc'));
+      onSnapshot(paymentsQ, (snap) => {
+        paymentsList.innerHTML = '';
+        let totalDue = 0;
+        snap.forEach(s => {
+          const p = s.data();
+          const node = document.createElement('div');
+          node.className = 'p-2 bg-gray-900 rounded border border-gray-700 flex justify-between items-center';
+          node.innerHTML = `<div><div class="font-semibold">${p.purpose || 'Membership dues'}</div><div class="muted text-sm">${p.status || 'pending'} · ${new Date(p.timestamp||0).toLocaleString()}</div></div><div><div class="text-sm">$${p.amount}</div></div>`;
+          paymentsList.appendChild(node);
+          if (p.status !== 'paid') totalDue += Number(p.amount || 0);
+        });
+        paymentsSummary.textContent = `Outstanding: $${totalDue.toFixed(2)}`;
+      });
+
+      // Admin payments view (all)
+      if (isAdmin) {
+        const allPaymentsQ = query(collection(db, 'payments'), orderBy('timestamp', 'desc'));
+        onSnapshot(allPaymentsQ, (snap) => {
+          adminPayments.innerHTML = '';
+          snap.forEach(s => {
+            const p = s.data();
+            const node = document.createElement('div');
+            node.className = 'p-2 bg-gray-900 rounded border border-gray-700 flex justify-between items-center';
+            node.innerHTML = `<div>${p.purpose} · ${p.memberEmail || '—'} <div class="muted text-sm">${new Date(p.timestamp||0).toLocaleString()}</div></div>
+                              <div><div class="text-sm">$${p.amount}</div><button data-id="${s.id}" class="markPaidBtn ml-2 bg-green-600 px-2 py-1 rounded text-sm">Mark paid</button></div>`;
+            adminPayments.appendChild(node);
+          });
+
+          document.querySelectorAll('.markPaidBtn').forEach(btn => {
+            btn.addEventListener('click', async (ev) => {
+              const id = ev.currentTarget.dataset.id;
+              const pRef = doc(db, 'payments', id);
+              await updateDoc(pRef, { status: 'paid' });
+              showMsg('Marked payment as paid.');
             });
-        }
-
-        acceptButton.addEventListener('click', async () => {
-            if (!userDocRef) return displayMessage('Error', 'User data not loaded yet.', 'error');
-            
-            try {
-                await updateDoc(userDocRef, {
-                    accepted: true,
-                    status: 'Accepted'
-                });
-                displayMessage('Success!', 'Welcome to LAS! Your membership is now active.', 'success');
-            } catch (error) {
-                displayMessage('Error', 'Failed to update membership status. Please check Firestore rules.', 'error');
-            }
+          });
         });
+      }
 
-        declineButton.addEventListener('click', async () => {
-            if (!userDocRef) return displayMessage('Error', 'User data not loaded yet.', 'error');
-            
-            try {
-                await updateDoc(userDocRef, { status: 'Declined' });
-                displayMessage('Offer Declined', 'You have declined the membership offer.', 'info');
-                await signOut(auth);
-                window.location.reload();
-            } catch (error) {
-                displayMessage('Error', 'Failed to update status.', 'error');
-            }
-        });
+      // Pending members (admin)
+      if (isAdmin) {
+        const pendingQ = query(collection(db, 'members'), where('status', 'in', ['Incomplete','Pending']));
+        onSnapshot(pendingQ, (snap) => {
+          pendingMembers.innerHTML = '';
+          snap.forEach(s => {
+            const d = s.data();
+            const node = document.createElement('div');
+            node.className = 'p-2 bg-gray-900 rounded border border-gray-700 flex justify-between items-center';
+            node.innerHTML = `<div><div class="font-semibold">${d.name||s.id}</div><div class="muted text-sm">${d.email||'n/a'}</div></div>
+                              <div><button data-id="${s.id}" class="approveBtn bg-green-600 px-2 py-1 rounded text-sm mr-2">Approve</button>
+                              <button data-id="${s.id}" class="declineBtn bg-red-600 px-2 py-1 rounded text-sm">Decline</button></div>`;
+            pendingMembers.appendChild(node);
+          });
 
-       // Download Letter (PDF generation)
-        downloadLetterButton.addEventListener('click', () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4'); // Initialize with standard size
-
-            const element = document.getElementById('letterContent');
-            
-            // Use the recommended html() method for modern jsPDF
-            doc.html(element, {
-                callback: function (doc) {
-                    doc.save('LAS_Acceptance_Letter.pdf');
-                },
-                x: 10,
-                y: 10,
-                html2canvas: { 
-                    scale: 0.5 // Scale down content to fit A4 well
-                } 
+          document.querySelectorAll('.approveBtn').forEach(btn => {
+            btn.addEventListener('click', async (ev) => {
+              const id = ev.currentTarget.dataset.id;
+              await updateDoc(doc(db, 'members', id), { status: 'Approved', accepted: false });
+              showMsg('Member Approved (still needs to Accept).');
             });
+          });
+          document.querySelectorAll('.declineBtn').forEach(btn => {
+            btn.addEventListener('click', async (ev) => {
+              const id = ev.currentTarget.dataset.id;
+              await updateDoc(doc(db, 'members', id), { status: 'Declined' });
+              showMsg('Member Declined.');
+            });
+          });
         });
+      }
+    });
 
+    // Logout
+    logoutBtn.addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.reload();
+    });
 
-        // ------------------------------------
-        // --- 6. UTILITY FUNCTIONS (Messaging) ---
-        // ------------------------------------
+    // Save profile
+    saveProfile.addEventListener('click', async () => {
+      if (!currentUser) return showMsg('Not signed in');
+      const payload = {
+        name: profileName.value,
+        role: profileRole.value,
+        bio: profileBio.value,
+        photo: profilePhoto.value
+      };
+      await setDoc(doc(db, 'members', currentUser.uid), payload, { merge: true });
+      showMsg('Profile saved');
+    });
 
-        function displayMessage(title, text, type = 'info') {
-            messageTitle.textContent = title;
-            messageText.textContent = text;
-            
-            let color = 'text-white';
-            if (type === 'error') color = 'text-red-400';
-            if (type === 'success') color = 'text-green-400';
-            messageTitle.className = `text-xl font-bold mb-3 ${color}`;
-            
-            messageBox.classList.remove('hidden');
-            messageBox.classList.add('flex');
-        }
+    // Download Member ID (simple PDF)
+    downloadID.addEventListener('click', async () => {
+      if (!currentUser) return showMsg('Not signed in');
+      const snap = await getDoc(doc(db, 'members', currentUser.uid));
+      const data = snap.exists() ? snap.data() : {};
+      const docPDF = new jsPDF();
+      docPDF.setFontSize(16);
+      docPDF.text('Liberian Astronomical Society', 20, 30);
+      docPDF.setFontSize(12);
+      docPDF.text(`Name: ${data.name || ''}`, 20, 50);
+      docPDF.text(`Role: ${data.role || ''}`, 20, 60);
+      docPDF.text(`Member ID: ${data.memberID || 'N/A'}`, 20, 70);
+      docPDF.save('LAS_Member_ID.pdf');
+    });
 
-        closeMessageBox.addEventListener('click', () => {
-            messageBox.classList.add('hidden');
-            messageBox.classList.remove('flex');
-        });
-        
-        // ------------------------------------
-        // --- 7. GEMINI API (Celestial Search) ---
-        // ------------------------------------
-        
-        searchButton.addEventListener('click', async () => {
-            const query = objectSearchInput.value.trim();
-            if (!query) {
-                searchResults.textContent = "Please enter an astronomical object to search.";
-                return;
-            }
+    // Add payment (member)
+    addPaymentBtn.addEventListener('click', async () => {
+      if (!currentUser) return showMsg('Not signed in');
+      const amt = Number(paymentAmount.value || 0);
+      if (!amt || amt <= 0) return showMsg('Enter a valid amount');
+      const pRef = await addDoc(collection(db, 'members', currentUser.uid, 'payments'), {
+        amount: amt, purpose: 'Membership dues', status: 'pending', timestamp: Date.now()
+      });
+      // also create admin-level record for easier admin view
+      await addDoc(collection(db, 'payments'), { amount: amt, purpose: 'Membership dues', status: 'pending', timestamp: Date.now(), memberId: currentUser.uid, memberEmail: currentUser.email || '' });
+      paymentAmount.value = '';
+      showMsg('Payment created (pending verification).');
+    });
 
-            searchResults.innerHTML = '<div class="loader inline-block mr-2"></div> Searching...';
+    // Generate Certificate (member -> creates certificate record and PDF)
+    generateCertBtn.addEventListener('click', async () => {
+      if (!currentUser) return showMsg('Not signed in');
+      // ask admin verification normally; here we allow user to generate demo certificate and record it
+      const snap = await getDoc(doc(db, 'members', currentUser.uid));
+      const data = snap.exists() ? snap.data() : {};
+      // Issue memberID if missing
+      let memberID = data.memberID;
+      if (!memberID) {
+        memberID = `LAS-${(Math.floor(Math.random()*9000)+1000)}`;
+        await updateDoc(doc(db, 'members', currentUser.uid), { memberID, certificateIssued: true });
+      } else {
+        await updateDoc(doc(db, 'members', currentUser.uid), { certificateIssued: true });
+      }
+      // Create PDF
+      const pdf = new jsPDF('p','mm','a4');
+      pdf.setFontSize(18);
+      pdf.text('Liberian Astronomical Society', 20, 30);
+      pdf.setFontSize(14);
+      pdf.text(`Certificate of Membership`, 20, 50);
+      pdf.setFontSize(12);
+      pdf.text(`This certifies that ${data.name || 'Member'} is a registered member of the Liberian Astronomical Society (LAS).`, 20, 70);
+      pdf.text(`Member ID: ${memberID}`, 20, 90);
+      pdf.text(`Issued: ${new Date().toLocaleDateString()}`, 20, 110);
+      pdf.save(`LAS_Certificate_${memberID}.pdf`);
+      downloadCertBtn.classList.remove('hidden');
+      certificateStatus.textContent = `Certificate issued (${memberID})`;
+      showMsg('Certificate generated and recorded.');
+    });
 
-            const prompt = `You are an expert astronomer for the Liberian Astronomical Society. Provide a brief, engaging, and informative description (max 100 words) of the celestial object: "${query}". Include one interesting fact about it.`;
-            
-            let result = "Could not connect to the astronomical database (API error).";
+    // Download Certificate button (simply informs since we saved as file earlier)
+    downloadCertBtn.addEventListener('click', () => {
+      showMsg('Your certificate was generated in-browser. Check your downloads. (Server storage for certificates can be added later.)');
+    });
 
-            for (let i = 0; i < MAX_RETRIES; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ role: "user", parts: [{ text: prompt }] }],
-                            config: { temperature: 0.7, maxOutputTokens: 200 }
-                        })
-                    });
+    // Create event (admin)
+    saveEventBtn.addEventListener('click', async () => {
+      if (!isAdmin) return showMsg('Admin only');
+      const payload = {
+        title: eventTitle.value || 'Untitled',
+        description: eventDesc.value || '',
+        date: eventDate.value ? new Date(eventDate.value).toISOString() : new Date().toISOString(),
+        location: eventLocation.value || ''
+      };
+      await addDoc(collection(db, 'events'), payload);
+      eventTitle.value = eventDesc.value = eventLocation.value = '';
+      eventDate.value = '';
+      showMsg('Event created');
+    });
 
-                    if (!response.ok) {
-                        if (response.status === 429) { // Rate limit error
-                            await delay(Math.pow(2, i) * 1000); // Exponential backoff
-                            continue;
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+    // Refresh events
+    refreshEvents.addEventListener('click', () => { showMsg('Events list refreshed automatically.'); });
 
-                    const data = await response.json();
-                    
-                    if (data.candidates && data.candidates.length > 0) {
-                        result = data.candidates[0].content.parts[0].text;
-                    } else {
-                        result = "The search produced an empty result. Try a different object name.";
-                    }
-                    break; 
+    // Simple sign-up helper (if you want to create accounts from front-end)
+    // Note: For production, use secure server or invite flow
+    async function quickSignUp(email, password) {
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        // create member doc
+        await setDoc(doc(db, 'members', cred.user.uid), { name: email.split('@')[0], email, status: 'Incomplete', accepted: false });
+        showMsg('Account created; please check your dashboard.');
+      } catch (e) {
+        showMsg('Error creating account: ' + e.message);
+      }
+    }
 
-                } catch (error) {
-                    result = `Search failed: ${error.message}`;
-                    if (i < MAX_RETRIES - 1) { await delay(Math.pow(2, i) * 1000); }
-                }
-            }
-
-            searchResults.innerHTML = result.replace(/\*\*/g, '<strong>').replace(/\n/g, '<br>');
-        });
-        
-    </script>
+    // END
+  </script>
 </body>
 </html>
