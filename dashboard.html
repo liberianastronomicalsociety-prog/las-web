@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>LAS Dashboard — Profile · Events · Payments · Certificates · Admin</title>
+  <title>LAS Dashboard — Profile · Events · Payments</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +13,6 @@
     .glass { background: rgba(17,24,39,0.45); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.06); }
     .muted { color: #9ca3af; }
     .chip { background: rgba(255,255,255,0.03); padding: .25rem .5rem; border-radius: .5rem; font-size: .85rem; }
-    .hidden-section { display: none; }
   </style>
 </head>
 <body class="p-6 flex items-start justify-center">
@@ -26,7 +25,7 @@
       <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" class="h-12 rounded-full" alt="LAS">
       <div>
         <h1 class="text-2xl font-bold">Liberian Astronomical Society — Dashboard</h1>
-        <p class="muted text-sm">Profile · Events · Payments · Certificates · Admin</p>
+        <p class="muted text-sm">Profile · Events · Payments</p>
       </div>
     </div>
     <div class="space-x-3">
@@ -46,7 +45,11 @@
         <input id="profileName" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" />
         <label class="block text-sm mt-2">Role</label>
         <select id="profileRole" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700">
-          <option>Student</option><option>Volunteer</option><option>Teacher</option><option>Researcher</option><option>Executive</option>
+          <option>Student</option>
+          <option>Volunteer</option>
+          <option>Teacher</option>
+          <option>Researcher</option>
+          <option>Executive</option>
         </select>
         <label class="block text-sm mt-2">Photo URL</label>
         <input id="profilePhoto" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" placeholder="https://..." />
@@ -71,10 +74,7 @@
       <div class="glass p-6 rounded-xl">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-semibold">Events</h2>
-          <div>
-            <button id="refreshEvents" class="text-sm muted mr-2">Refresh</button>
-            <button id="createEventBtn" class="bg-green-600 px-3 py-1 rounded text-white hidden">Create Event</button>
-          </div>
+          <button id="refreshEvents" class="text-sm muted">Refresh</button>
         </div>
         <p class="muted text-sm mb-3">Upcoming LAS events. Click <em>Register</em> to join.</p>
         <div id="eventsList" class="space-y-3 max-h-64 overflow-auto"></div>
@@ -93,28 +93,17 @@
       </div>
     </section>
 
-    <!-- Right column: Certificates & Admin Panel -->
-    <section class="space-y-6" id="certAdminSection">
-
-      <!-- Certificates -->
-      <div class="glass p-6 rounded-xl">
-        <h2 class="text-xl font-semibold">Certificates & Member ID</h2>
-        <p class="muted text-sm mb-3">Issue or download training certificates and your member ID.</p>
-        <div id="certificateStatus" class="mb-3 muted">No certificate issued yet.</div>
-        <div class="flex gap-2">
-          <button id="generateCertBtn" class="bg-indigo-600 px-4 py-2 rounded">Generate Certificate</button>
-          <button id="downloadCertBtn" class="bg-gray-600 px-4 py-2 rounded hidden">Download Certificate</button>
+    <!-- Right column: Member ID -->
+    <section class="space-y-6">
+      <div id="memberIDSection" class="glass p-6 rounded-xl">
+        <h2 class="text-xl font-semibold">My Member ID</h2>
+        <p class="muted text-sm mb-3">View and download your membership ID.</p>
+        <div id="memberIDDisplay" class="mb-3">
+          <p id="memberName" class="font-semibold"></p>
+          <p id="memberRole" class="muted"></p>
+          <p id="memberNumber" class="muted"></p>
         </div>
-      </div>
-
-      <!-- Admin Panel -->
-      <div id="adminPanel" class="glass p-6 rounded-xl hidden">
-        <h2 class="text-xl font-semibold">Admin Panel</h2>
-        <p class="muted text-sm mb-3">Approve members, view payments, create events.</p>
-        <div class="mb-3">
-          <h3 class="font-semibold">Pending Members</h3>
-          <div id="pendingMembers" class="space-y-2 max-h-36 overflow-auto"></div>
-        </div>
+        <button id="downloadID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
       </div>
     </section>
 
@@ -129,90 +118,111 @@
 
   </main>
 
-  <!-- Message modal -->
-  <div id="msg" class="fixed inset-0 hidden items-center justify-center z-50">
-    <div class="bg-gray-900 p-6 rounded shadow-lg max-w-md w-full">
-      <div id="msgText" class="text-white"></div>
-      <div class="mt-4 text-right">
-        <button id="closeMsg" class="px-4 py-2 rounded bg-indigo-600">Close</button>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
-    authDomain: "liberian-astro-society.firebaseapp.com",
-    projectId: "liberian-astro-society",
-    storageBucket: "liberian-astro-society.firebasestorage.app",
-    messagingSenderId: "914979035379",
-    appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+  authDomain: "liberian-astro-society.firebaseapp.com",
+  projectId: "liberian-astro-society",
+  storageBucket: "liberian-astro-society.firebasestorage.app",
+  messagingSenderId: "914979035379",
+  appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-  const emailBadge = document.getElementById('emailBadge');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const incompleteSection = document.getElementById('incompleteSection');
-  const profileSection = document.getElementById('profileSection');
-  const eventsPaymentsSection = document.getElementById('eventsPaymentsSection');
-  const certAdminSection = document.getElementById('certAdminSection');
-  const membershipStatusEl = document.getElementById('membershipStatus');
+const emailBadge = document.getElementById('emailBadge');
+const logoutBtn = document.getElementById('logoutBtn');
+const incompleteSection = document.getElementById('incompleteSection');
+const profileSection = document.getElementById('profileSection');
+const eventsPaymentsSection = document.getElementById('eventsPaymentsSection');
+const membershipStatusEl = document.getElementById('membershipStatus');
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) { await signInAnonymously(auth); return; }
+// Member ID elements
+const memberNameEl = document.getElementById('memberName');
+const memberRoleEl = document.getElementById('memberRole');
+const memberNumberEl = document.getElementById('memberNumber');
 
-    emailBadge.textContent = user.email || user.uid;
-    logoutBtn.classList.remove('hidden');
-
-    const userDocRef = doc(db, 'members', user.uid);
-
-    onSnapshot(userDocRef, (snap) => {
-      if (!snap.exists()) {
-        setDoc(userDocRef, {status:'Incomplete', name:user.email?user.email.split('@')[0]:'Member', email:user.email||'', accepted:false},{merge:true});
-        membershipStatusEl.textContent = 'Incomplete';
-        showIncompleteView();
-        return;
-      }
-      const data = snap.data();
-      membershipStatusEl.textContent = data.status || 'Pending';
-
-      if(data.status==='Incomplete' || data.status==='Pending'){
-        showIncompleteView();
-      } else if(data.status==='Admitted' || data.status==='Accepted'){
-        showFullDashboard();
-      }
-    });
-  });
-
-  // LOGOUT — now redirects to signup.html
-  logoutBtn.addEventListener('click', async () => { 
-    await signOut(auth); 
-    window.location.href = "signup.html"; 
-  });
-
-  function showIncompleteView(){
-    incompleteSection.classList.remove('hidden');
-    profileSection.classList.add('hidden');
-    eventsPaymentsSection.classList.add('hidden');
-    certAdminSection.classList.add('hidden');
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    await signInAnonymously(auth);
+    return;
   }
 
-  function showFullDashboard(){
-    incompleteSection.classList.add('hidden');
-    profileSection.classList.remove('hidden');
-    eventsPaymentsSection.classList.remove('hidden');
-    certAdminSection.classList.remove('hidden');
-  }
+  emailBadge.textContent = user.email || user.uid;
+  logoutBtn.classList.remove('hidden');
 
+  const userDocRef = doc(db, 'members', user.uid);
+
+  onSnapshot(userDocRef, (snap) => {
+    if (!snap.exists()) {
+      setDoc(userDocRef, {
+        status: 'Incomplete',
+        name: user.email ? user.email.split('@')[0] : 'Member',
+        email: user.email || '',
+        role: 'Member'
+      }, { merge: true });
+      membershipStatusEl.textContent = 'Incomplete';
+      showIncompleteView();
+      return;
+    }
+
+    const data = snap.data();
+    membershipStatusEl.textContent = data.status || 'Pending';
+
+    // Populate Member ID info
+    memberNameEl.textContent = data.name || 'Member Name';
+    memberRoleEl.textContent = data.role || 'Role';
+    memberNumberEl.textContent = data.memberID || user.uid;
+
+    if (data.status === 'Incomplete' || data.status === 'Pending') {
+      showIncompleteView();
+    } else {
+      showFullDashboard();
+    }
+  });
+});
+
+// LOGOUT
+logoutBtn.addEventListener('click', async () => {
+  await signOut(auth);
+  window.location.href = "signup.html";
+});
+
+function showIncompleteView() {
+  incompleteSection.classList.remove('hidden');
+  profileSection.classList.add('hidden');
+  eventsPaymentsSection.classList.add('hidden');
+}
+
+function showFullDashboard() {
+  incompleteSection.classList.add('hidden');
+  profileSection.classList.remove('hidden');
+  eventsPaymentsSection.classList.remove('hidden');
+}
+
+// Download Member ID as PDF
+document.getElementById('downloadID').addEventListener('click', () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(20);
+  doc.text('Liberian Astronomical Society', 20, 20);
+  doc.setFontSize(14);
+  doc.text(`Name: ${memberNameEl.textContent}`, 20, 40);
+  doc.text(`Role: ${memberRoleEl.textContent}`, 20, 50);
+  doc.text(`Member ID: ${memberNumberEl.textContent}`, 20, 60);
+
+  doc.save('MemberID.pdf');
+});
 </script>
 </body>
 </html>
+
