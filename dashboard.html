@@ -58,7 +58,7 @@
 
         <div class="flex gap-3 mt-3">
           <button id="saveProfile" class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Save Profile</button>
-          <button id="downloadID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
+          <button id="downloadProfileID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
         </div>
 
         <div class="mt-4">
@@ -103,7 +103,7 @@
           <p id="memberRole" class="muted"></p>
           <p id="memberNumber" class="muted"></p>
         </div>
-        <button id="downloadID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
+        <button id="downloadMemberID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
       </div>
     </section>
 
@@ -123,7 +123,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
@@ -145,30 +145,27 @@ const profileSection = document.getElementById('profileSection');
 const eventsPaymentsSection = document.getElementById('eventsPaymentsSection');
 const membershipStatusEl = document.getElementById('membershipStatus');
 
-// Member ID elements
 const memberNameEl = document.getElementById('memberName');
 const memberRoleEl = document.getElementById('memberRole');
 const memberNumberEl = document.getElementById('memberNumber');
 
+// Buttons
+const saveProfileBtn = document.getElementById('saveProfile');
+const downloadProfileIDBtn = document.getElementById('downloadProfileID');
+const downloadMemberIDBtn = document.getElementById('downloadMemberID');
+const addPaymentBtn = document.getElementById('addPaymentBtn');
+const refreshEventsBtn = document.getElementById('refreshEvents');
+
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    await signInAnonymously(auth);
-    return;
-  }
+  if (!user) { await signInAnonymously(auth); return; }
 
   emailBadge.textContent = user.email || user.uid;
   logoutBtn.classList.remove('hidden');
 
   const userDocRef = doc(db, 'members', user.uid);
-
   onSnapshot(userDocRef, (snap) => {
     if (!snap.exists()) {
-      setDoc(userDocRef, {
-        status: 'Incomplete',
-        name: user.email ? user.email.split('@')[0] : 'Member',
-        email: user.email || '',
-        role: 'Member'
-      }, { merge: true });
+      setDoc(userDocRef, { status: 'Incomplete', name: user.email ? user.email.split('@')[0] : 'Member', email: user.email || '', role: 'Member' }, { merge: true });
       membershipStatusEl.textContent = 'Incomplete';
       showIncompleteView();
       return;
@@ -176,11 +173,15 @@ onAuthStateChanged(auth, async (user) => {
 
     const data = snap.data();
     membershipStatusEl.textContent = data.status || 'Pending';
-
-    // Populate Member ID info
     memberNameEl.textContent = data.name || 'Member Name';
     memberRoleEl.textContent = data.role || 'Role';
     memberNumberEl.textContent = data.memberID || user.uid;
+
+    document.getElementById('profileName').value = data.name || '';
+    document.getElementById('profileRole').value = data.role || 'Member';
+    document.getElementById('profilePhoto').value = data.photo || '';
+    document.getElementById('profileBio').value = data.bio || '';
+    document.getElementById('previewPhoto').src = data.photo || '';
 
     if (data.status === 'Incomplete' || data.status === 'Pending') {
       showIncompleteView();
@@ -190,38 +191,112 @@ onAuthStateChanged(auth, async (user) => {
   });
 });
 
-// LOGOUT
-logoutBtn.addEventListener('click', async () => {
-  await signOut(auth);
-  window.location.href = "signup.html";
+logoutBtn.addEventListener('click', async () => { await signOut(auth); window.location.href = "signup.html"; });
+
+function showIncompleteView() { incompleteSection.classList.remove('hidden'); profileSection.classList.add('hidden'); eventsPaymentsSection.classList.add('hidden'); }
+function showFullDashboard() { incompleteSection.classList.add('hidden'); profileSection.classList.remove('hidden'); eventsPaymentsSection.classList.remove('hidden'); }
+
+// Save Profile
+saveProfileBtn.addEventListener('click', async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const userDocRef = doc(db, 'members', user.uid);
+  await setDoc(userDocRef, {
+    name: document.getElementById('profileName').value,
+    role: document.getElementById('profileRole').value,
+    photo: document.getElementById('profilePhoto').value,
+    bio: document.getElementById('profileBio').value,
+    status: 'Active'
+  }, { merge: true });
+
+  document.getElementById('previewPhoto').src = document.getElementById('profilePhoto').value;
+  alert('Profile saved!');
 });
 
-function showIncompleteView() {
-  incompleteSection.classList.remove('hidden');
-  profileSection.classList.add('hidden');
-  eventsPaymentsSection.classList.add('hidden');
-}
-
-function showFullDashboard() {
-  incompleteSection.classList.add('hidden');
-  profileSection.classList.remove('hidden');
-  eventsPaymentsSection.classList.remove('hidden');
-}
-
-// Download Member ID as PDF
-document.getElementById('downloadID').addEventListener('click', () => {
+// Download Member ID
+function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-
   doc.setFontSize(20);
   doc.text('Liberian Astronomical Society', 20, 20);
   doc.setFontSize(14);
   doc.text(`Name: ${memberNameEl.textContent}`, 20, 40);
   doc.text(`Role: ${memberRoleEl.textContent}`, 20, 50);
   doc.text(`Member ID: ${memberNumberEl.textContent}`, 20, 60);
-
   doc.save('MemberID.pdf');
+}
+downloadProfileIDBtn.addEventListener('click', generatePDF);
+downloadMemberIDBtn.addEventListener('click', generatePDF);
+
+// Add Payment
+addPaymentBtn.addEventListener('click', async () => {
+  const amountInput = document.getElementById('paymentAmount');
+  const amount = parseFloat(amountInput.value);
+  if (isNaN(amount) || amount <= 0) return alert('Enter a valid amount');
+
+  const user = auth.currentUser;
+  const paymentsRef = collection(db, 'members', user.uid, 'payments');
+  await addDoc(paymentsRef, { amount, date: new Date() });
+
+  amountInput.value = '';
+  alert('Payment added!');
+  loadPayments();
 });
+
+// Refresh Events
+refreshEventsBtn.addEventListener('click', loadEvents);
+
+// Load Payments
+async function loadPayments() {
+  const user = auth.currentUser;
+  const paymentsListEl = document.getElementById('paymentsList');
+  paymentsListEl.innerHTML = '';
+
+  const paymentsRef = collection(db, 'members', user.uid, 'payments');
+  const snapshot = await getDocs(paymentsRef);
+
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const div = document.createElement('div');
+    div.textContent = `USD ${data.amount} — ${data.date.toDate().toLocaleDateString()}`;
+    paymentsListEl.appendChild(div);
+  });
+}
+
+// Load Events
+async function loadEvents() {
+  const eventsListEl = document.getElementById('eventsList');
+  eventsListEl.innerHTML = '';
+
+  const eventsSnapshot = await getDocs(collection(db, 'events'));
+  eventsSnapshot.forEach(docSnap => {
+    const event = docSnap.data();
+    const div = document.createElement('div');
+    div.classList.add('glass', 'p-2', 'rounded');
+    const btnID = 'register_' + docSnap.id;
+
+    div.innerHTML = `
+      <p class="font-semibold">${event.title}</p>
+      <p class="text-sm muted">${event.date}</p>
+      <button id="${btnID}" class="bg-indigo-600 px-2 py-1 mt-1 rounded text-sm hover:bg-indigo-700">Register</button>
+    `;
+
+    eventsListEl.appendChild(div);
+
+    // Event registration
+    document.getElementById(btnID).addEventListener('click', async () => {
+      const user = auth.currentUser;
+      const regRef = collection(db, 'members', user.uid, 'registrations');
+      await addDoc(regRef, { eventID: docSnap.id, title: event.title, date: new Date() });
+      alert(`Registered for ${event.title}`);
+    });
+  });
+}
+
+// Initial load
+loadEvents();
+loadPayments();
 </script>
 </body>
 </html>
