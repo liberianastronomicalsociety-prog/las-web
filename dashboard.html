@@ -40,7 +40,7 @@
     <section class="glass p-6 rounded-xl" id="profileSection">
       <h2 class="text-xl font-semibold mb-4">My Profile</h2>
       <div class="space-y-3">
-        <img id="previewPhoto" src="" alt="profile" class="h-24 w-24 rounded-full object-cover border" />
+        <img id="previewPhoto" src="https://via.placeholder.com/150" alt="profile" class="h-24 w-24 rounded-full object-cover border" />
         <label class="block text-sm">Full name</label>
         <input id="profileName" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" />
         <label class="block text-sm mt-2">Role</label>
@@ -247,7 +247,7 @@ saveProfileBtn.addEventListener('click', async () => {
     status: 'Active'
   }, { merge: true });
 
-  previewPhoto.src = document.getElementById('profilePhoto').value;
+  previewPhoto.src = document.getElementById('profilePhoto').value || 'https://via.placeholder.com/150';
   alert('Profile saved!');
 });
 
@@ -268,6 +268,7 @@ function generatePDF() {
 
   const logoUrl = 'https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png';
   const img = new Image();
+  img.crossOrigin = "anonymous"; // important for CORS
   img.src = logoUrl;
   img.onload = () => {
     doc.addImage(img, 'PNG', 220, 40, 150, 50);
@@ -309,6 +310,8 @@ addPaymentBtn.addEventListener('click', async () => {
 
 async function loadPayments() {
   const user = auth.currentUser;
+  if (!user) return;
+
   const paymentsListEl = document.getElementById('paymentsList');
   paymentsListEl.innerHTML = '';
 
@@ -348,6 +351,7 @@ async function loadEvents() {
 
     document.getElementById(btnID).addEventListener('click', async () => {
       const user = auth.currentUser;
+      if (!user) return;
       const regRef = collection(db, 'members', user.uid, 'registrations');
       await addDoc(regRef, { eventID: docSnap.id, title: event.title, date: new Date() });
       alert(`Registered for ${event.title}`);
