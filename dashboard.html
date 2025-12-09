@@ -157,15 +157,26 @@ const addPaymentBtn = document.getElementById('addPaymentBtn');
 const refreshEventsBtn = document.getElementById('refreshEvents');
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) { await signInAnonymously(auth); return; }
+  if (!user) { 
+    await signInAnonymously(auth); 
+    return; 
+  }
 
   emailBadge.textContent = user.email || user.uid;
   logoutBtn.classList.remove('hidden');
 
   const userDocRef = doc(db, 'members', user.uid);
+  
   onSnapshot(userDocRef, (snap) => {
     if (!snap.exists()) {
-      setDoc(userDocRef, { status: 'Incomplete', name: user.email ? user.email.split('@')[0] : 'Member', email: user.email || '', role: 'Member' }, { merge: true });
+      // First-time user: automatically set status to "Incomplete"
+      setDoc(userDocRef, { 
+        status: 'Incomplete', 
+        name: user.email ? user.email.split('@')[0] : 'Member', 
+        email: user.email || '', 
+        role: 'Member' 
+      }, { merge: true });
+
       membershipStatusEl.textContent = 'Incomplete';
       showIncompleteView();
       return;
@@ -173,25 +184,43 @@ onAuthStateChanged(auth, async (user) => {
 
     const data = snap.data();
     membershipStatusEl.textContent = data.status || 'Pending';
-    memberNameEl.textContent = data.name || 'Member Name';
-    memberRoleEl.textContent = data.role || 'Role';
-    memberNumberEl.textContent = data.memberID || user.uid;
 
-    document.getElementById('profileName').value = data.name || '';
-    document.getElementById('profileRole').value = data.role || 'Member';
-    document.getElementById('profilePhoto').value = data.photo || '';
-    document.getElementById('profileBio').value = data.bio || '';
-    document.getElementById('previewPhoto').src = data.photo || '';
-
+    // If status is "Incomplete" or "Pending", show only application link
     if (data.status === 'Incomplete' || data.status === 'Pending') {
       showIncompleteView();
     } else {
       showFullDashboard();
+
+      // Populate profile info
+      memberNameEl.textContent = data.name || 'Member Name';
+      memberRoleEl.textContent = data.role || 'Role';
+      memberNumberEl.textContent = data.memberID || user.uid;
+
+      document.getElementById('profileName').value = data.name || '';
+      document.getElementById('profileRole').value = data.role || 'Member';
+      document.getElementById('profilePhoto').value = data.photo || '';
+      document.getElementById('profileBio').value = data.bio || '';
+      document.getElementById('previewPhoto').src = data.photo || '';
     }
   });
 });
 
-logoutBtn.addEventListener('click', async () => { await signOut(auth); window.location.href = "signup.html"; });
+// Helper functions
+function showIncompleteView() {
+  incompleteSection.classList.remove('hidden');
+  profileSection.classList.add('hidden');
+  eventsPaymentsSection.classList.add('hidden');
+  document.getElementById('memberIDSection').classList.add('hidden');
+}
+
+function showFullDashboard() {
+  incompleteSection.classList.add('hidden');
+  profileSection.classList.remove('hidden');
+  eventsPaymentsSection.classList.remove('hidden');
+  document.getElementById('memberIDSection').classList.remove('hidden');
+}
+
+logoutBtn.addEventListener('click', async () => { await signOut(auth); window.location.href = "login.html"; });
 
 function showIncompleteView() { incompleteSection.classList.remove('hidden'); profileSection.classList.add('hidden'); eventsPaymentsSection.classList.add('hidden'); }
 function showFullDashboard() { incompleteSection.classList.add('hidden'); profileSection.classList.remove('hidden'); eventsPaymentsSection.classList.remove('hidden'); }
@@ -336,4 +365,5 @@ loadPayments();
 </script>
 </body>
 </html>
+
 
