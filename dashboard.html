@@ -13,512 +13,206 @@
     .glass { background: rgba(17,24,39,0.45); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.06); }
     .muted { color: #9ca3af; }
     .chip { background: rgba(255,255,255,0.03); padding: .25rem .5rem; border-radius: .5rem; font-size: .85rem; }
+    .hidden-section { display: none; }
   </style>
 </head>
 <body class="p-6 flex items-start justify-center">
 
-  <div class="w-full max-w-6xl space-y-6">
+<div class="w-full max-w-6xl space-y-6" id="dashboardContainer">
 
-    <!-- Header -->
-    <header class="flex items-center justify-between mb-2">
-      <div class="flex items-center space-x-4">
-        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" class="h-12 rounded-full" alt="LAS">
-        <div>
-          <h1 class="text-2xl font-bold">Liberian Astronomical Society — Dashboard</h1>
-          <p class="muted text-sm">Profile · Events · Payments · Certificates · Admin</p>
-        </div>
-      </div>
-      <div class="space-x-3">
-        <span id="emailBadge" class="chip">Not signed in</span>
-        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white hidden">Logout</button>
-      </div>
-    </header>
-
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-      <!-- Left column: Profile + Membership Status -->
-      <section class="glass p-6 rounded-xl">
-        <h2 class="text-xl font-semibold mb-4">My Profile</h2>
-
-        <div class="space-y-3">
-          <img id="previewPhoto" src="" alt="profile" class="h-24 w-24 rounded-full object-cover border" />
-          <label class="block text-sm">Full name</label>
-          <input id="profileName" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" />
-          <label class="block text-sm mt-2">Role</label>
-          <select id="profileRole" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700">
-            <option>Student</option><option>Volunteer</option><option>Teacher</option><option>Researcher</option><option>Executive</option>
-          </select>
-          <label class="block text-sm mt-2">Photo URL</label>
-          <input id="profilePhoto" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" placeholder="https://..." />
-          <label class="block text-sm mt-2">Short bio</label>
-          <textarea id="profileBio" rows="3" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700"></textarea>
-
-          <div class="flex gap-3 mt-3">
-            <button id="saveProfile" class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Save Profile</button>
-            <button id="downloadID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
-          </div>
-
-          <div class="mt-4">
-            <p class="muted text-sm">Membership Status:</p>
-            <div id="membershipStatus" class="text-lg font-bold">Loading...</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Middle column: Events and Payments -->
-      <section class="col-span-1 lg:col-span-1 space-y-6">
-        <!-- Events -->
-        <div class="glass p-6 rounded-xl">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold">Events</h2>
-            <div>
-              <button id="refreshEvents" class="text-sm muted mr-2">Refresh</button>
-              <button id="createEventBtn" class="bg-green-600 px-3 py-1 rounded text-white hidden">Create Event</button>
-            </div>
-          </div>
-
-          <p class="muted text-sm mb-3">Upcoming LAS events. Click <em>Register</em> to join.</p>
-
-          <div id="eventsList" class="space-y-3 max-h-64 overflow-auto"></div>
-        </div>
-
-        <!-- Payments -->
-        <div class="glass p-6 rounded-xl">
-          <h2 class="text-xl font-semibold">Payments & Dues</h2>
-          <p class="muted text-sm mb-3">Your payment history and outstanding dues.</p>
-
-          <div id="paymentsSummary" class="text-sm muted mb-3">Loading...</div>
-          <div id="paymentsList" class="space-y-2 max-h-40 overflow-auto"></div>
-
-          <div class="mt-3 flex gap-2">
-            <input id="paymentAmount" type="number" placeholder="Amount (USD)" class="px-3 py-2 rounded bg-gray-900 border border-gray-700 w-full"/>
-            <button id="addPaymentBtn" class="bg-indigo-600 px-4 py-2 rounded">Add Payment</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Right column: Certificates & Admin Panel -->
-      <section class="space-y-6">
-
-        <!-- Certificates -->
-        <div class="glass p-6 rounded-xl">
-          <h2 class="text-xl font-semibold">Certificates & Member ID</h2>
-          <p class="muted text-sm mb-3">Issue or download training certificates and your member ID.</p>
-
-          <div id="certificateStatus" class="mb-3 muted">No certificate issued yet.</div>
-          <div class="flex gap-2">
-            <button id="generateCertBtn" class="bg-indigo-600 px-4 py-2 rounded">Generate Certificate</button>
-            <button id="downloadCertBtn" class="bg-gray-600 px-4 py-2 rounded hidden">Download Certificate</button>
-          </div>
-        </div>
-
-        <!-- Admin Panel -->
-        <div id="adminPanel" class="glass p-6 rounded-xl hidden">
-          <h2 class="text-xl font-semibold">Admin Panel</h2>
-          <p class="muted text-sm mb-3">Approve members, view payments, create events.</p>
-
-          <div class="mb-3">
-            <h3 class="font-semibold">Pending Members</h3>
-            <div id="pendingMembers" class="space-y-2 max-h-36 overflow-auto"></div>
-          </div>
-
-          <div class="mb-3">
-            <h3 class="font-semibold">Create Event</h3>
-            <input id="eventTitle" placeholder="Event title" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2" />
-            <input id="eventDate" type="datetime-local" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2" />
-            <input id="eventLocation" placeholder="Location" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2" />
-            <textarea id="eventDesc" rows="2" placeholder="Short description" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700 mt-2"></textarea>
-            <div class="flex gap-2 mt-2">
-              <button id="saveEventBtn" class="bg-green-600 px-4 py-2 rounded">Save Event</button>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="font-semibold">Payments (Admin View)</h3>
-            <div id="adminPayments" class="space-y-2 max-h-36 overflow-auto"></div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Message modal -->
-    <div id="msg" class="fixed inset-0 hidden items-center justify-center z-50">
-      <div class="bg-gray-900 p-6 rounded shadow-lg max-w-md w-full">
-        <div id="msgText" class="text-white"></div>
-        <div class="mt-4 text-right">
-          <button id="closeMsg" class="px-4 py-2 rounded bg-indigo-600">Close</button>
-        </div>
+  <!-- Header -->
+  <header class="flex items-center justify-between mb-2">
+    <div class="flex items-center space-x-4">
+      <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" class="h-12 rounded-full" alt="LAS">
+      <div>
+        <h1 class="text-2xl font-bold">Liberian Astronomical Society — Dashboard</h1>
+        <p class="muted text-sm">Profile · Events · Payments · Certificates · Admin</p>
       </div>
     </div>
+    <div class="space-x-3">
+      <span id="emailBadge" class="chip">Not signed in</span>
+      <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white hidden">Logout</button>
+    </div>
+  </header>
 
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Left column: Profile + Membership Status -->
+    <section class="glass p-6 rounded-xl" id="profileSection">
+      <h2 class="text-xl font-semibold mb-4">My Profile</h2>
+      <div class="space-y-3">
+        <img id="previewPhoto" src="" alt="profile" class="h-24 w-24 rounded-full object-cover border" />
+        <label class="block text-sm">Full name</label>
+        <input id="profileName" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" />
+        <label class="block text-sm mt-2">Role</label>
+        <select id="profileRole" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700">
+          <option>Student</option><option>Volunteer</option><option>Teacher</option><option>Researcher</option><option>Executive</option>
+        </select>
+        <label class="block text-sm mt-2">Photo URL</label>
+        <input id="profilePhoto" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700" placeholder="https://..." />
+        <label class="block text-sm mt-2">Short bio</label>
+        <textarea id="profileBio" rows="3" class="w-full px-3 py-2 rounded bg-gray-900 border border-gray-700"></textarea>
+
+        <div class="flex gap-3 mt-3">
+          <button id="saveProfile" class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Save Profile</button>
+          <button id="downloadID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
+        </div>
+
+        <div class="mt-4">
+          <p class="muted text-sm">Membership Status:</p>
+          <div id="membershipStatus" class="text-lg font-bold">Loading...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Middle column: Events and Payments -->
+    <section class="col-span-1 lg:col-span-1 space-y-6" id="eventsPaymentsSection">
+      <!-- Events -->
+      <div class="glass p-6 rounded-xl">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold">Events</h2>
+          <div>
+            <button id="refreshEvents" class="text-sm muted mr-2">Refresh</button>
+            <button id="createEventBtn" class="bg-green-600 px-3 py-1 rounded text-white hidden">Create Event</button>
+          </div>
+        </div>
+        <p class="muted text-sm mb-3">Upcoming LAS events. Click <em>Register</em> to join.</p>
+        <div id="eventsList" class="space-y-3 max-h-64 overflow-auto"></div>
+      </div>
+
+      <!-- Payments -->
+      <div class="glass p-6 rounded-xl">
+        <h2 class="text-xl font-semibold">Payments & Dues</h2>
+        <p class="muted text-sm mb-3">Your payment history and outstanding dues.</p>
+        <div id="paymentsSummary" class="text-sm muted mb-3">Loading...</div>
+        <div id="paymentsList" class="space-y-2 max-h-40 overflow-auto"></div>
+        <div class="mt-3 flex gap-2">
+          <input id="paymentAmount" type="number" placeholder="Amount (USD)" class="px-3 py-2 rounded bg-gray-900 border border-gray-700 w-full"/>
+          <button id="addPaymentBtn" class="bg-indigo-600 px-4 py-2 rounded">Add Payment</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right column: Certificates & Admin Panel -->
+    <section class="space-y-6" id="certAdminSection">
+
+      <!-- Certificates -->
+      <div class="glass p-6 rounded-xl">
+        <h2 class="text-xl font-semibold">Certificates & Member ID</h2>
+        <p class="muted text-sm mb-3">Issue or download training certificates and your member ID.</p>
+        <div id="certificateStatus" class="mb-3 muted">No certificate issued yet.</div>
+        <div class="flex gap-2">
+          <button id="generateCertBtn" class="bg-indigo-600 px-4 py-2 rounded">Generate Certificate</button>
+          <button id="downloadCertBtn" class="bg-gray-600 px-4 py-2 rounded hidden">Download Certificate</button>
+        </div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="adminPanel" class="glass p-6 rounded-xl hidden">
+        <h2 class="text-xl font-semibold">Admin Panel</h2>
+        <p class="muted text-sm mb-3">Approve members, view payments, create events.</p>
+        <div class="mb-3">
+          <h3 class="font-semibold">Pending Members</h3>
+          <div id="pendingMembers" class="space-y-2 max-h-36 overflow-auto"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Incomplete / Pending section -->
+    <div id="incompleteSection" class="glass p-6 rounded-xl mt-6 hidden col-span-3">
+      <h2 class="text-xl font-semibold">Complete Your Membership Application</h2>
+      <p class="muted text-sm mb-3">Your membership is not yet fully approved. Please complete your application to access the full dashboard.</p>
+      <a href="membership_application.html">
+        <button class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Go to Application Form</button>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Message modal -->
+  <div id="msg" class="fixed inset-0 hidden items-center justify-center z-50">
+    <div class="bg-gray-900 p-6 rounded shadow-lg max-w-md w-full">
+      <div id="msgText" class="text-white"></div>
+      <div class="mt-4 text-right">
+        <button id="closeMsg" class="px-4 py-2 rounded bg-indigo-600">Close</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Firebase + App Logic -->
-  <script type="module">
-    // Firebase imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import {
-      getAuth, onAuthStateChanged, signOut, signInAnonymously, createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import {
-      getFirestore, collection, doc, setDoc, getDoc, addDoc, onSnapshot, query, where, updateDoc, orderBy, getDocs
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+</div>
 
-    // jsPDF
-    const { jsPDF } = window.jspdf;
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Firebase config — keep your existing config
-    const firebaseConfig = {
-      apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
-      authDomain: "liberian-astro-society.firebaseapp.com",
-      projectId: "liberian-astro-society",
-      storageBucket: "liberian-astro-society.firebasestorage.app",
-      messagingSenderId: "914979035379",
-      appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+    authDomain: "liberian-astro-society.firebaseapp.com",
+    projectId: "liberian-astro-society",
+    storageBucket: "liberian-astro-society.firebasestorage.app",
+    messagingSenderId: "914979035379",
+    appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
+  };
 
-    // Initialize
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    // DOM
-    const emailBadge = document.getElementById('emailBadge');
-    const logoutBtn = document.getElementById('logoutBtn');
+  const emailBadge = document.getElementById('emailBadge');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const incompleteSection = document.getElementById('incompleteSection');
+  const profileSection = document.getElementById('profileSection');
+  const eventsPaymentsSection = document.getElementById('eventsPaymentsSection');
+  const certAdminSection = document.getElementById('certAdminSection');
+  const membershipStatusEl = document.getElementById('membershipStatus');
 
-    // Profile
-    const profileName = document.getElementById('profileName');
-    const profileRole = document.getElementById('profileRole');
-    const profileBio = document.getElementById('profileBio');
-    const profilePhoto = document.getElementById('profilePhoto');
-    const previewPhoto = document.getElementById('previewPhoto');
-    const saveProfile = document.getElementById('saveProfile');
-    const downloadID = document.getElementById('downloadID');
-    const membershipStatusEl = document.getElementById('membershipStatus');
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { await signInAnonymously(auth); return; }
 
-    // Events
-    const eventsList = document.getElementById('eventsList');
-    const refreshEvents = document.getElementById('refreshEvents');
-    const createEventBtn = document.getElementById('createEventBtn');
+    emailBadge.textContent = user.email || user.uid;
+    logoutBtn.classList.remove('hidden');
 
-    // Payments
-    const paymentsSummary = document.getElementById('paymentsSummary');
-    const paymentsList = document.getElementById('paymentsList');
-    const paymentAmount = document.getElementById('paymentAmount');
-    const addPaymentBtn = document.getElementById('addPaymentBtn');
+    const userDocRef = doc(db, 'members', user.uid);
 
-    // Certificates
-    const generateCertBtn = document.getElementById('generateCertBtn');
-    const downloadCertBtn = document.getElementById('downloadCertBtn');
-    const certificateStatus = document.getElementById('certificateStatus');
-
-    // Admin
-    const adminPanel = document.getElementById('adminPanel');
-    const pendingMembers = document.getElementById('pendingMembers');
-    const saveEventBtn = document.getElementById('saveEventBtn');
-    const eventTitle = document.getElementById('eventTitle');
-    const eventDate = document.getElementById('eventDate');
-    const eventLocation = document.getElementById('eventLocation');
-    const eventDesc = document.getElementById('eventDesc');
-    const adminPayments = document.getElementById('adminPayments');
-
-    // Message
-    const msg = document.getElementById('msg');
-    const msgText = document.getElementById('msgText');
-    const closeMsg = document.getElementById('closeMsg');
-
-    // State
-    let currentUser = null;
-    let userDocRef = null;
-    let isAdmin = false;
-
-    // Helpers
-    function showMsg(text) {
-      msgText.innerText = text;
-      msg.classList.remove('hidden');
-      msg.classList.add('flex');
-    }
-    closeMsg.addEventListener('click', () => { msg.classList.add('hidden'); msg.classList.remove('flex'); });
-
-    // Auth state
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        // Try anonymous sign-in so users can preview (optional)
-        try {
-          await signInAnonymously(auth);
-          return;
-        } catch (e) {
-          emailBadge.textContent = 'Not signed in';
-          return;
-        }
+    onSnapshot(userDocRef, (snap) => {
+      if (!snap.exists()) {
+        setDoc(userDocRef, {status:'Incomplete', name:user.email?user.email.split('@')[0]:'Member', email:user.email||'', accepted:false},{merge:true});
+        membershipStatusEl.textContent = 'Incomplete';
+        showIncompleteView();
+        return;
       }
+      const data = snap.data();
+      membershipStatusEl.textContent = data.status || 'Pending';
 
-      currentUser = user;
-      emailBadge.textContent = user.email || user.uid;
-      logoutBtn.classList.remove('hidden');
-
-      // User doc ref
-      userDocRef = doc(db, 'members', user.uid);
-
-      // Check admin
-      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
-      isAdmin = adminDoc.exists();
-      if (isAdmin) {
-        adminPanel.classList.remove('hidden');
-        createEventBtn.classList.remove('hidden');
-      }
-
-      // Listen to profile/membership doc
-      onSnapshot(userDocRef, (snap) => {
-        if (!snap.exists()) {
-          // create baseline
-          setDoc(userDocRef, { status: 'Incomplete', name: user.email ? user.email.split('@')[0] : 'Member', email: user.email || '', accepted: false }, { merge: true });
-          membershipStatusEl.textContent = 'Application Incomplete';
-          return;
-        }
-        const data = snap.data();
-        profileName.value = data.name || '';
-        profileRole.value = data.role || 'Student';
-        profileBio.value = data.bio || '';
-        profilePhoto.value = data.photo || '';
-        previewPhoto.src = data.photo || 'https://placehold.co/200x200?text=LAS';
-        membershipStatusEl.textContent = (data.status || 'Pending') + (data.accepted ? ' (Active)' : '');
-        certificateStatus.textContent = data.certificateIssued ? `Certificate issued (${data.memberID || 'ID N/A'})` : 'No certificate issued yet';
-      });
-
-      // Listen to events collection
-      const q = query(collection(db, 'events'), orderBy('date', 'desc'));
-      onSnapshot(q, (snap) => {
-        eventsList.innerHTML = '';
-        snap.forEach(docSnap => {
-          const e = docSnap.data();
-          const id = docSnap.id;
-          const node = document.createElement('div');
-          node.className = 'p-3 bg-gray-900 rounded border border-gray-700';
-          node.innerHTML = `<div class="flex justify-between"><div>
-                              <div class="font-semibold">${e.title}</div>
-                              <div class="muted text-sm">${new Date(e.date).toLocaleString()}</div>
-                              <div class="muted text-sm">${e.location || ''}</div>
-                            </div>
-                            <div class="flex flex-col items-end gap-2">
-                              <button data-id="${id}" class="registerBtn bg-indigo-600 px-3 py-1 rounded text-sm">Register</button>
-                              ${isAdmin ? `<button data-id="${id}" class="viewRegBtn bg-gray-600 px-3 py-1 rounded text-sm">View regs</button>` : ''}
-                            </div></div>
-                            <div class="text-sm muted mt-2">${e.description || ''}</div>`;
-          eventsList.appendChild(node);
-        });
-
-        // bind register buttons
-        document.querySelectorAll('.registerBtn').forEach(b => {
-          b.addEventListener('click', async (ev) => {
-            const eventId = ev.currentTarget.dataset.id;
-            if (!currentUser) return showMsg('You must be logged in to register.');
-            const regRef = doc(db, 'members', currentUser.uid, 'registrations', eventId);
-            await setDoc(regRef, { registeredAt: Date.now() }, { merge: true });
-            showMsg('Registered for event!');
-          });
-        });
-
-        // admin view registrations
-        document.querySelectorAll('.viewRegBtn').forEach(b => {
-          b.addEventListener('click', async (ev) => {
-            const eventId = ev.currentTarget.dataset.id;
-            // fetch registrations across members where registration exists - simple approach: query members subcollections isn't directly possible; instead keep eventRegistrations collection for admin (recommended)
-            showMsg('Admin view: for full registration list create an eventRegistrations collection or query members/*/registrations using Cloud Functions. (Quick demo omitted)');
-          });
-        });
-      });
-
-      // Listen payments for this member
-      const paymentsQ = query(collection(db, 'members', user.uid, 'payments'), orderBy('timestamp', 'desc'));
-      onSnapshot(paymentsQ, (snap) => {
-        paymentsList.innerHTML = '';
-        let totalDue = 0;
-        snap.forEach(s => {
-          const p = s.data();
-          const node = document.createElement('div');
-          node.className = 'p-2 bg-gray-900 rounded border border-gray-700 flex justify-between items-center';
-          node.innerHTML = `<div><div class="font-semibold">${p.purpose || 'Membership dues'}</div><div class="muted text-sm">${p.status || 'pending'} · ${new Date(p.timestamp||0).toLocaleString()}</div></div><div><div class="text-sm">$${p.amount}</div></div>`;
-          paymentsList.appendChild(node);
-          if (p.status !== 'paid') totalDue += Number(p.amount || 0);
-        });
-        paymentsSummary.textContent = `Outstanding: $${totalDue.toFixed(2)}`;
-      });
-
-      // Admin payments view (all)
-      if (isAdmin) {
-        const allPaymentsQ = query(collection(db, 'payments'), orderBy('timestamp', 'desc'));
-        onSnapshot(allPaymentsQ, (snap) => {
-          adminPayments.innerHTML = '';
-          snap.forEach(s => {
-            const p = s.data();
-            const node = document.createElement('div');
-            node.className = 'p-2 bg-gray-900 rounded border border-gray-700 flex justify-between items-center';
-            node.innerHTML = `<div>${p.purpose} · ${p.memberEmail || '—'} <div class="muted text-sm">${new Date(p.timestamp||0).toLocaleString()}</div></div>
-                              <div><div class="text-sm">$${p.amount}</div><button data-id="${s.id}" class="markPaidBtn ml-2 bg-green-600 px-2 py-1 rounded text-sm">Mark paid</button></div>`;
-            adminPayments.appendChild(node);
-          });
-
-          document.querySelectorAll('.markPaidBtn').forEach(btn => {
-            btn.addEventListener('click', async (ev) => {
-              const id = ev.currentTarget.dataset.id;
-              const pRef = doc(db, 'payments', id);
-              await updateDoc(pRef, { status: 'paid' });
-              showMsg('Marked payment as paid.');
-            });
-          });
-        });
-      }
-
-      // Pending members (admin)
-      if (isAdmin) {
-        const pendingQ = query(collection(db, 'members'), where('status', 'in', ['Incomplete','Pending']));
-        onSnapshot(pendingQ, (snap) => {
-          pendingMembers.innerHTML = '';
-          snap.forEach(s => {
-            const d = s.data();
-            const node = document.createElement('div');
-            node.className = 'p-2 bg-gray-900 rounded border border-gray-700 flex justify-between items-center';
-            node.innerHTML = `<div><div class="font-semibold">${d.name||s.id}</div><div class="muted text-sm">${d.email||'n/a'}</div></div>
-                              <div><button data-id="${s.id}" class="approveBtn bg-green-600 px-2 py-1 rounded text-sm mr-2">Approve</button>
-                              <button data-id="${s.id}" class="declineBtn bg-red-600 px-2 py-1 rounded text-sm">Decline</button></div>`;
-            pendingMembers.appendChild(node);
-          });
-
-          document.querySelectorAll('.approveBtn').forEach(btn => {
-            btn.addEventListener('click', async (ev) => {
-              const id = ev.currentTarget.dataset.id;
-              await updateDoc(doc(db, 'members', id), { status: 'Approved', accepted: false });
-              showMsg('Member Approved (still needs to Accept).');
-            });
-          });
-          document.querySelectorAll('.declineBtn').forEach(btn => {
-            btn.addEventListener('click', async (ev) => {
-              const id = ev.currentTarget.dataset.id;
-              await updateDoc(doc(db, 'members', id), { status: 'Declined' });
-              showMsg('Member Declined.');
-            });
-          });
-        });
+      if(data.status==='Incomplete' || data.status==='Pending'){
+        showIncompleteView();
+      } else if(data.status==='Admitted' || data.status==='Accepted'){
+        showFullDashboard();
       }
     });
+  });
 
-    // Logout
-    logoutBtn.addEventListener('click', async () => {
-      await signOut(auth);
-      window.location.reload();
-    });
+  // LOGOUT — now redirects to signup.html
+  logoutBtn.addEventListener('click', async () => { 
+    await signOut(auth); 
+    window.location.href = "signup.html"; 
+  });
 
-    // Save profile
-    saveProfile.addEventListener('click', async () => {
-      if (!currentUser) return showMsg('Not signed in');
-      const payload = {
-        name: profileName.value,
-        role: profileRole.value,
-        bio: profileBio.value,
-        photo: profilePhoto.value
-      };
-      await setDoc(doc(db, 'members', currentUser.uid), payload, { merge: true });
-      showMsg('Profile saved');
-    });
+  function showIncompleteView(){
+    incompleteSection.classList.remove('hidden');
+    profileSection.classList.add('hidden');
+    eventsPaymentsSection.classList.add('hidden');
+    certAdminSection.classList.add('hidden');
+  }
 
-    // Download Member ID (simple PDF)
-    downloadID.addEventListener('click', async () => {
-      if (!currentUser) return showMsg('Not signed in');
-      const snap = await getDoc(doc(db, 'members', currentUser.uid));
-      const data = snap.exists() ? snap.data() : {};
-      const docPDF = new jsPDF();
-      docPDF.setFontSize(16);
-      docPDF.text('Liberian Astronomical Society', 20, 30);
-      docPDF.setFontSize(12);
-      docPDF.text(`Name: ${data.name || ''}`, 20, 50);
-      docPDF.text(`Role: ${data.role || ''}`, 20, 60);
-      docPDF.text(`Member ID: ${data.memberID || 'N/A'}`, 20, 70);
-      docPDF.save('LAS_Member_ID.pdf');
-    });
+  function showFullDashboard(){
+    incompleteSection.classList.add('hidden');
+    profileSection.classList.remove('hidden');
+    eventsPaymentsSection.classList.remove('hidden');
+    certAdminSection.classList.remove('hidden');
+  }
 
-    // Add payment (member)
-    addPaymentBtn.addEventListener('click', async () => {
-      if (!currentUser) return showMsg('Not signed in');
-      const amt = Number(paymentAmount.value || 0);
-      if (!amt || amt <= 0) return showMsg('Enter a valid amount');
-      const pRef = await addDoc(collection(db, 'members', currentUser.uid, 'payments'), {
-        amount: amt, purpose: 'Membership dues', status: 'pending', timestamp: Date.now()
-      });
-      // also create admin-level record for easier admin view
-      await addDoc(collection(db, 'payments'), { amount: amt, purpose: 'Membership dues', status: 'pending', timestamp: Date.now(), memberId: currentUser.uid, memberEmail: currentUser.email || '' });
-      paymentAmount.value = '';
-      showMsg('Payment created (pending verification).');
-    });
-
-    // Generate Certificate (member -> creates certificate record and PDF)
-    generateCertBtn.addEventListener('click', async () => {
-      if (!currentUser) return showMsg('Not signed in');
-      // ask admin verification normally; here we allow user to generate demo certificate and record it
-      const snap = await getDoc(doc(db, 'members', currentUser.uid));
-      const data = snap.exists() ? snap.data() : {};
-      // Issue memberID if missing
-      let memberID = data.memberID;
-      if (!memberID) {
-        memberID = `LAS-${(Math.floor(Math.random()*9000)+1000)}`;
-        await updateDoc(doc(db, 'members', currentUser.uid), { memberID, certificateIssued: true });
-      } else {
-        await updateDoc(doc(db, 'members', currentUser.uid), { certificateIssued: true });
-      }
-      // Create PDF
-      const pdf = new jsPDF('p','mm','a4');
-      pdf.setFontSize(18);
-      pdf.text('Liberian Astronomical Society', 20, 30);
-      pdf.setFontSize(14);
-      pdf.text(`Certificate of Membership`, 20, 50);
-      pdf.setFontSize(12);
-      pdf.text(`This certifies that ${data.name || 'Member'} is a registered member of the Liberian Astronomical Society (LAS).`, 20, 70);
-      pdf.text(`Member ID: ${memberID}`, 20, 90);
-      pdf.text(`Issued: ${new Date().toLocaleDateString()}`, 20, 110);
-      pdf.save(`LAS_Certificate_${memberID}.pdf`);
-      downloadCertBtn.classList.remove('hidden');
-      certificateStatus.textContent = `Certificate issued (${memberID})`;
-      showMsg('Certificate generated and recorded.');
-    });
-
-    // Download Certificate button (simply informs since we saved as file earlier)
-    downloadCertBtn.addEventListener('click', () => {
-      showMsg('Your certificate was generated in-browser. Check your downloads. (Server storage for certificates can be added later.)');
-    });
-
-    // Create event (admin)
-    saveEventBtn.addEventListener('click', async () => {
-      if (!isAdmin) return showMsg('Admin only');
-      const payload = {
-        title: eventTitle.value || 'Untitled',
-        description: eventDesc.value || '',
-        date: eventDate.value ? new Date(eventDate.value).toISOString() : new Date().toISOString(),
-        location: eventLocation.value || ''
-      };
-      await addDoc(collection(db, 'events'), payload);
-      eventTitle.value = eventDesc.value = eventLocation.value = '';
-      eventDate.value = '';
-      showMsg('Event created');
-    });
-
-    // Refresh events
-    refreshEvents.addEventListener('click', () => { showMsg('Events list refreshed automatically.'); });
-
-    // Simple sign-up helper (if you want to create accounts from front-end)
-    // Note: For production, use secure server or invite flow
-    async function quickSignUp(email, password) {
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        // create member doc
-        await setDoc(doc(db, 'members', cred.user.uid), { name: email.split('@')[0], email, status: 'Incomplete', accepted: false });
-        showMsg('Account created; please check your dashboard.');
-      } catch (e) {
-        showMsg('Error creating account: ' + e.message);
-      }
-    }
-
-    // END
-  </script>
+</script>
 </body>
 </html>
