@@ -94,7 +94,7 @@
     </section>
 
     <!-- Right column: Member ID -->
-    <section class="space-y-6">
+    <section class="space-y-6" id="memberIDSectionWrapper">
       <div id="memberIDSection" class="glass p-6 rounded-xl">
         <h2 class="text-xl font-semibold">My Member ID</h2>
         <p class="muted text-sm mb-3">View and download your membership ID.</p>
@@ -117,13 +117,9 @@
     </div>
 
   </main>
-
 </div>
 
 <script type="module">
-/* ===========================
-   Firebase Initialization
-=========================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -141,14 +137,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ===========================
+/* ---------------------------
    DOM Elements
-=========================== */
+--------------------------- */
 const emailBadge = document.getElementById('emailBadge');
 const logoutBtn = document.getElementById('logoutBtn');
 const incompleteSection = document.getElementById('incompleteSection');
 const profileSection = document.getElementById('profileSection');
 const eventsPaymentsSection = document.getElementById('eventsPaymentsSection');
+const memberIDSection = document.getElementById('memberIDSection');
 const membershipStatusEl = document.getElementById('membershipStatus');
 
 const memberNameEl = document.getElementById('memberName');
@@ -164,13 +161,13 @@ const refreshEventsBtn = document.getElementById('refreshEvents');
 const profilePhotoInput = document.getElementById('profilePhoto');
 const previewPhoto = document.getElementById('previewPhoto');
 
-/* ===========================
-   Authentication & User Status
-=========================== */
+/* ---------------------------
+   Authentication & Status
+--------------------------- */
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    await signInAnonymously(auth);
-    return;
+  if (!user) { 
+    await signInAnonymously(auth); 
+    return; 
   }
 
   emailBadge.textContent = user.email || user.uid;
@@ -180,7 +177,6 @@ onAuthStateChanged(auth, async (user) => {
 
   onSnapshot(userDocRef, (snap) => {
     if (!snap.exists()) {
-      // First-time user: set status to "Incomplete"
       setDoc(userDocRef, { 
         status: 'Incomplete', 
         name: user.email ? user.email.split('@')[0] : 'Member', 
@@ -205,26 +201,26 @@ onAuthStateChanged(auth, async (user) => {
   });
 });
 
-/* ===========================
-   Dashboard Display Functions
-=========================== */
+/* ---------------------------
+   Show / Hide Views
+--------------------------- */
 function showIncompleteView() {
   incompleteSection.classList.remove('hidden');
   profileSection.classList.add('hidden');
   eventsPaymentsSection.classList.add('hidden');
-  document.getElementById('memberIDSection').classList.add('hidden');
+  memberIDSection.classList.add('hidden');
 }
 
 function showFullDashboard() {
   incompleteSection.classList.add('hidden');
   profileSection.classList.remove('hidden');
   eventsPaymentsSection.classList.remove('hidden');
-  document.getElementById('memberIDSection').classList.remove('hidden');
+  memberIDSection.classList.remove('hidden');
 }
 
-/* ===========================
+/* ---------------------------
    Profile Handling
-=========================== */
+--------------------------- */
 function populateProfile(data, uid) {
   memberNameEl.textContent = data.name || 'Member Name';
   memberRoleEl.textContent = data.role || 'Role';
@@ -260,53 +256,43 @@ profilePhotoInput.addEventListener('input', () => {
   previewPhoto.src = profilePhotoInput.value || 'https://via.placeholder.com/150';
 });
 
-/* ===========================
+/* ---------------------------
    Member ID PDF
-=========================== */
+--------------------------- */
 function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'pt', 'a4');
 
-  // Add border
   doc.setLineWidth(2);
   doc.rect(20, 20, 555, 770);
 
-  // Add logo
   const logoUrl = 'https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png';
   const img = new Image();
   img.src = logoUrl;
   img.onload = () => {
     doc.addImage(img, 'PNG', 220, 40, 150, 50);
-
-    // Title
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
     doc.text('Liberian Astronomical Society', 297.5, 120, { align: 'center' });
-
     doc.setFontSize(18);
     doc.setFont('helvetica', 'normal');
     doc.text('Membership Certificate', 297.5, 150, { align: 'center' });
-
-    // Member info
     doc.setFontSize(14);
     doc.text(`Name: ${memberNameEl.textContent}`, 50, 200);
     doc.text(`Role: ${memberRoleEl.textContent}`, 50, 230);
     doc.text(`Member ID: ${memberNumberEl.textContent}`, 50, 260);
-
-    // Footer
     doc.setFontSize(12);
     doc.setTextColor(100);
     doc.text('This certificate certifies the above individual as a member of the Liberian Astronomical Society.', 50, 700, { maxWidth: 500 });
-
     doc.save('LAS_Member_Certificate.pdf');
   };
 }
 downloadProfileIDBtn.addEventListener('click', generatePDF);
 downloadMemberIDBtn.addEventListener('click', generatePDF);
 
-/* ===========================
+/* ---------------------------
    Payments
-=========================== */
+--------------------------- */
 addPaymentBtn.addEventListener('click', async () => {
   const amountInput = document.getElementById('paymentAmount');
   const amount = parseFloat(amountInput.value);
@@ -337,9 +323,9 @@ async function loadPayments() {
   });
 }
 
-/* ===========================
+/* ---------------------------
    Events
-=========================== */
+--------------------------- */
 refreshEventsBtn.addEventListener('click', loadEvents);
 
 async function loadEvents() {
@@ -360,7 +346,6 @@ async function loadEvents() {
     `;
     eventsListEl.appendChild(div);
 
-    // Event registration
     document.getElementById(btnID).addEventListener('click', async () => {
       const user = auth.currentUser;
       const regRef = collection(db, 'members', user.uid, 'registrations');
@@ -370,22 +355,20 @@ async function loadEvents() {
   });
 }
 
-/* ===========================
+/* ---------------------------
    Logout
-=========================== */
+--------------------------- */
 logoutBtn.addEventListener('click', async () => { 
   await signOut(auth); 
   window.location.href = "login.html"; 
 });
 
-/* ===========================
+/* ---------------------------
    Initial Load
-=========================== */
+--------------------------- */
 loadEvents();
 loadPayments();
 </script>
+
 </body>
 </html>
-
-
-
