@@ -121,6 +121,9 @@
 </div>
 
 <script type="module">
+/* ===========================
+   Firebase Initialization
+=========================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -138,6 +141,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+/* ===========================
+   DOM Elements
+=========================== */
 const emailBadge = document.getElementById('emailBadge');
 const logoutBtn = document.getElementById('logoutBtn');
 const incompleteSection = document.getElementById('incompleteSection');
@@ -149,27 +155,32 @@ const memberNameEl = document.getElementById('memberName');
 const memberRoleEl = document.getElementById('memberRole');
 const memberNumberEl = document.getElementById('memberNumber');
 
-// Buttons
 const saveProfileBtn = document.getElementById('saveProfile');
 const downloadProfileIDBtn = document.getElementById('downloadProfileID');
 const downloadMemberIDBtn = document.getElementById('downloadMemberID');
 const addPaymentBtn = document.getElementById('addPaymentBtn');
 const refreshEventsBtn = document.getElementById('refreshEvents');
 
+const profilePhotoInput = document.getElementById('profilePhoto');
+const previewPhoto = document.getElementById('previewPhoto');
+
+/* ===========================
+   Authentication & User Status
+=========================== */
 onAuthStateChanged(auth, async (user) => {
-  if (!user) { 
-    await signInAnonymously(auth); 
-    return; 
+  if (!user) {
+    await signInAnonymously(auth);
+    return;
   }
 
   emailBadge.textContent = user.email || user.uid;
   logoutBtn.classList.remove('hidden');
 
   const userDocRef = doc(db, 'members', user.uid);
-  
+
   onSnapshot(userDocRef, (snap) => {
     if (!snap.exists()) {
-      // First-time user: automatically set status to "Incomplete"
+      // First-time user: set status to "Incomplete"
       setDoc(userDocRef, { 
         status: 'Incomplete', 
         name: user.email ? user.email.split('@')[0] : 'Member', 
@@ -185,27 +196,18 @@ onAuthStateChanged(auth, async (user) => {
     const data = snap.data();
     membershipStatusEl.textContent = data.status || 'Pending';
 
-    // If status is "Incomplete" or "Pending", show only application link
     if (data.status === 'Incomplete' || data.status === 'Pending') {
       showIncompleteView();
     } else {
       showFullDashboard();
-
-      // Populate profile info
-      memberNameEl.textContent = data.name || 'Member Name';
-      memberRoleEl.textContent = data.role || 'Role';
-      memberNumberEl.textContent = data.memberID || user.uid;
-
-      document.getElementById('profileName').value = data.name || '';
-      document.getElementById('profileRole').value = data.role || 'Member';
-      document.getElementById('profilePhoto').value = data.photo || '';
-      document.getElementById('profileBio').value = data.bio || '';
-      document.getElementById('previewPhoto').src = data.photo || '';
+      populateProfile(data, user.uid);
     }
   });
 });
 
-// Helper functions
+/* ===========================
+   Dashboard Display Functions
+=========================== */
 function showIncompleteView() {
   incompleteSection.classList.remove('hidden');
   profileSection.classList.add('hidden');
@@ -220,10 +222,20 @@ function showFullDashboard() {
   document.getElementById('memberIDSection').classList.remove('hidden');
 }
 
-logoutBtn.addEventListener('click', async () => { await signOut(auth); window.location.href = "login.html"; });
+/* ===========================
+   Profile Handling
+=========================== */
+function populateProfile(data, uid) {
+  memberNameEl.textContent = data.name || 'Member Name';
+  memberRoleEl.textContent = data.role || 'Role';
+  memberNumberEl.textContent = data.memberID || uid;
 
-function showIncompleteView() { incompleteSection.classList.remove('hidden'); profileSection.classList.add('hidden'); eventsPaymentsSection.classList.add('hidden'); }
-function showFullDashboard() { incompleteSection.classList.add('hidden'); profileSection.classList.remove('hidden'); eventsPaymentsSection.classList.remove('hidden'); }
+  document.getElementById('profileName').value = data.name || '';
+  document.getElementById('profileRole').value = data.role || 'Member';
+  document.getElementById('profilePhoto').value = data.photo || '';
+  document.getElementById('profileBio').value = data.bio || '';
+  previewPhoto.src = data.photo || 'https://via.placeholder.com/150';
+}
 
 // Save Profile
 saveProfileBtn.addEventListener('click', async () => {
@@ -239,25 +251,32 @@ saveProfileBtn.addEventListener('click', async () => {
     status: 'Active'
   }, { merge: true });
 
-  document.getElementById('previewPhoto').src = document.getElementById('profilePhoto').value;
+  previewPhoto.src = document.getElementById('profilePhoto').value;
   alert('Profile saved!');
 });
 
-// Download Member ID
+// Live profile photo preview
+profilePhotoInput.addEventListener('input', () => {
+  previewPhoto.src = profilePhotoInput.value || 'https://via.placeholder.com/150';
+});
+
+/* ===========================
+   Member ID PDF
+=========================== */
 function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'pt', 'a4'); // portrait, points, A4 size
+  const doc = new jsPDF('p', 'pt', 'a4');
 
   // Add border
   doc.setLineWidth(2);
-  doc.rect(20, 20, 555, 770); // x, y, width, height
+  doc.rect(20, 20, 555, 770);
 
-  // Add LAS logo
+  // Add logo
   const logoUrl = 'https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png';
   const img = new Image();
   img.src = logoUrl;
   img.onload = () => {
-    doc.addImage(img, 'PNG', 220, 40, 150, 50); // x, y, width, height
+    doc.addImage(img, 'PNG', 220, 40, 150, 50);
 
     // Title
     doc.setFontSize(24);
@@ -268,7 +287,7 @@ function generatePDF() {
     doc.setFont('helvetica', 'normal');
     doc.text('Membership Certificate', 297.5, 150, { align: 'center' });
 
-    // Member info box
+    // Member info
     doc.setFontSize(14);
     doc.text(`Name: ${memberNameEl.textContent}`, 50, 200);
     doc.text(`Role: ${memberRoleEl.textContent}`, 50, 230);
@@ -279,14 +298,15 @@ function generatePDF() {
     doc.setTextColor(100);
     doc.text('This certificate certifies the above individual as a member of the Liberian Astronomical Society.', 50, 700, { maxWidth: 500 });
 
-    // Save PDF
     doc.save('LAS_Member_Certificate.pdf');
   };
 }
 downloadProfileIDBtn.addEventListener('click', generatePDF);
 downloadMemberIDBtn.addEventListener('click', generatePDF);
 
-// Add Payment
+/* ===========================
+   Payments
+=========================== */
 addPaymentBtn.addEventListener('click', async () => {
   const amountInput = document.getElementById('paymentAmount');
   const amount = parseFloat(amountInput.value);
@@ -301,10 +321,6 @@ addPaymentBtn.addEventListener('click', async () => {
   loadPayments();
 });
 
-// Refresh Events
-refreshEventsBtn.addEventListener('click', loadEvents);
-
-// Load Payments
 async function loadPayments() {
   const user = auth.currentUser;
   const paymentsListEl = document.getElementById('paymentsList');
@@ -320,16 +336,12 @@ async function loadPayments() {
     paymentsListEl.appendChild(div);
   });
 }
-// Update profile photo preview live
-const profilePhotoInput = document.getElementById('profilePhoto');
-const previewPhoto = document.getElementById('previewPhoto');
 
-profilePhotoInput.addEventListener('input', () => {
-  previewPhoto.src = profilePhotoInput.value || ''; // empty if no URL
-});
-previewPhoto.src = profilePhotoInput.value || 'https://via.placeholder.com/150';
+/* ===========================
+   Events
+=========================== */
+refreshEventsBtn.addEventListener('click', loadEvents);
 
-// Load Events
 async function loadEvents() {
   const eventsListEl = document.getElementById('eventsList');
   eventsListEl.innerHTML = '';
@@ -346,7 +358,6 @@ async function loadEvents() {
       <p class="text-sm muted">${event.date}</p>
       <button id="${btnID}" class="bg-indigo-600 px-2 py-1 mt-1 rounded text-sm hover:bg-indigo-700">Register</button>
     `;
-
     eventsListEl.appendChild(div);
 
     // Event registration
@@ -359,11 +370,22 @@ async function loadEvents() {
   });
 }
 
-// Initial load
+/* ===========================
+   Logout
+=========================== */
+logoutBtn.addEventListener('click', async () => { 
+  await signOut(auth); 
+  window.location.href = "login.html"; 
+});
+
+/* ===========================
+   Initial Load
+=========================== */
 loadEvents();
 loadPayments();
 </script>
 </body>
 </html>
+
 
 
