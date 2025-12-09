@@ -217,14 +217,42 @@ saveProfileBtn.addEventListener('click', async () => {
 // Download Member ID
 function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(20);
-  doc.text('Liberian Astronomical Society', 20, 20);
-  doc.setFontSize(14);
-  doc.text(`Name: ${memberNameEl.textContent}`, 20, 40);
-  doc.text(`Role: ${memberRoleEl.textContent}`, 20, 50);
-  doc.text(`Member ID: ${memberNumberEl.textContent}`, 20, 60);
-  doc.save('MemberID.pdf');
+  const doc = new jsPDF('p', 'pt', 'a4'); // portrait, points, A4 size
+
+  // Add border
+  doc.setLineWidth(2);
+  doc.rect(20, 20, 555, 770); // x, y, width, height
+
+  // Add LAS logo
+  const logoUrl = 'https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png';
+  const img = new Image();
+  img.src = logoUrl;
+  img.onload = () => {
+    doc.addImage(img, 'PNG', 220, 40, 150, 50); // x, y, width, height
+
+    // Title
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Liberian Astronomical Society', 297.5, 120, { align: 'center' });
+
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Membership Certificate', 297.5, 150, { align: 'center' });
+
+    // Member info box
+    doc.setFontSize(14);
+    doc.text(`Name: ${memberNameEl.textContent}`, 50, 200);
+    doc.text(`Role: ${memberRoleEl.textContent}`, 50, 230);
+    doc.text(`Member ID: ${memberNumberEl.textContent}`, 50, 260);
+
+    // Footer
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text('This certificate certifies the above individual as a member of the Liberian Astronomical Society.', 50, 700, { maxWidth: 500 });
+
+    // Save PDF
+    doc.save('LAS_Member_Certificate.pdf');
+  };
 }
 downloadProfileIDBtn.addEventListener('click', generatePDF);
 downloadMemberIDBtn.addEventListener('click', generatePDF);
@@ -263,6 +291,14 @@ async function loadPayments() {
     paymentsListEl.appendChild(div);
   });
 }
+// Update profile photo preview live
+const profilePhotoInput = document.getElementById('profilePhoto');
+const previewPhoto = document.getElementById('previewPhoto');
+
+profilePhotoInput.addEventListener('input', () => {
+  previewPhoto.src = profilePhotoInput.value || ''; // empty if no URL
+});
+previewPhoto.src = profilePhotoInput.value || 'https://via.placeholder.com/150';
 
 // Load Events
 async function loadEvents() {
@@ -300,3 +336,4 @@ loadPayments();
 </script>
 </body>
 </html>
+
