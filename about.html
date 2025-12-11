@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liberian Astronomical Society (LAS) - Vision, Mission & Values</title>
-<link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(rgba(17,24,39,0.85), rgba(17,24,39,0.85)), url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg') center/cover fixed;
-        color: #E5E7EB;
-    }
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 25px rgba(124, 58, 237, 0.4);
-    }
-    #content { opacity: 0; transition: opacity 1s ease; }
-    .loader {
-        border: 6px solid rgba(255,255,255,0.3);
-        border-top: 6px solid #6366F1;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .fade-in {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-    /* Section wavy SVGs */
-    .wave-top svg, .wave-bottom svg { display: block; width: 100%; height: 60px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberian Astronomical Society (LAS) - Vision, Mission & Values</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(17,24,39,0.85), rgba(17,24,39,0.85)), 
+                        url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg') center/cover fixed;
+            color: #E5E7EB;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(124, 58, 237, 0.4);
+        }
+
+        #content { opacity: 0; transition: opacity 1s ease; }
+
+        .loader {
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top: 6px solid #6366F1;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Wavy SVG */
+        .wave-top svg, .wave-bottom svg { display: block; width: 100%; height: 60px; }
+    </style>
 </head>
 <body class="antialiased text-gray-300">
 
@@ -44,16 +59,20 @@
     <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society...</p>
 </div>
 
+<!-- Page Content -->
 <div id="content">
-    <!-- Header -->
+
+    <!-- Header / Navigation -->
     <header class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-lg">
         <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <!-- Logo -->
             <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white">
                 <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" 
                      alt="LAS Logo" class="h-10 w-10 rounded-full ring-2 ring-indigo-500" 
                      onerror="this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';">
                 <span>LAS</span>
             </a>
+
             <!-- Desktop Menu -->
             <nav class="hidden md:flex space-x-6 items-center text-gray-400">
                 <a href="index.html" class="hover:text-indigo-400 transition">Home</a>
@@ -67,6 +86,7 @@
                 <a href="login.html" class="border-2 border-indigo-400 text-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition">Member Login</a>
                 <a href="signup.html" class="bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition text-white">Join Us</a>
             </nav>
+
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="md:hidden text-gray-400 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,6 +94,7 @@
                 </svg>
             </button>
         </div>
+
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
             <ul class="flex flex-col items-center py-4 space-y-3">
@@ -93,49 +114,49 @@
 
     <!-- Main Content -->
     <main>
-<!-- Vision & Mission -->
-<section class="section-padding fade-in">
-    <div class="container mx-auto px-6 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-12">Our Vision & Mission</h1>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all">
-                <h2 class="text-2xl font-bold text-indigo-400 mb-4">Our Vision</h2>
-                <p class="text-gray-300 mb-6">To spread astronomy education across Liberia.</p>
 
-                <!-- Official Mission & Objectives -->
-                <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Mission</h3>
-                <p class="text-gray-300 mb-6">Our mission is to make astronomy accessible to everyone in Liberia. We are dedicated to achieving this through the following key objectives:</p>
-                <ul class="space-y-4 text-gray-300">
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Introduce astronomy to the public and spark curiosity about the universe.</p>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Engage and empower young Liberians through hands-on astronomy activities and community outreach.</p>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Advocate for astronomy to be offered as a degree course at all universities in Liberia.</p>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-indigo-400 mr-2">⭐</span>
-                        <p>Establish and foster partnerships with university science clubs to promote astronomy education.</p>
-                    </li>
-                </ul>
+        <!-- Vision & Mission Section -->
+        <section class="section-padding fade-in">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-12">Our Vision & Mission</h1>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all">
+                        <h2 class="text-2xl font-bold text-indigo-400 mb-4">Our Vision</h2>
+                        <p class="text-gray-300 mb-6">To spread astronomy education across Liberia.</p>
+
+                        <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Mission</h3>
+                        <p class="text-gray-300 mb-6">Our mission is to make astronomy accessible to everyone in Liberia. We are dedicated to achieving this through the following key objectives:</p>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Introduce astronomy to the public and spark curiosity about the universe.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Engage and empower young Liberians through hands-on astronomy activities and community outreach.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Advocate for astronomy to be offered as a degree course at all universities in Liberia.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-400 mr-2">⭐</span>
+                                <p>Establish and foster partnerships with university science clubs to promote astronomy education.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <!-- Wavy Separator -->
+        <div class="wave-bottom">
+            <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#111827" d="M0,0 C480,100 960,0 1440,100 L1440,0 L0,0 Z"></path>
+            </svg>
         </div>
-    </div>
-</section>
 
-<!-- Wavy Separator -->
-<div class="wave-bottom">
-    <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#111827" d="M0,0 C480,100 960,0 1440,100 L1440,0 L0,0 Z"></path>
-    </svg>
-</div>
-
-        <!-- Core Values -->
+        <!-- Core Values Section -->
         <section class="bg-gray-900 section-padding fade-in">
             <div class="container mx-auto px-6 text-center">
                 <h1 class="text-4xl md:text-5xl font-bold text-indigo-400 mb-12">Core Values</h1>
@@ -167,6 +188,7 @@
                 </div>
             </div>
         </section>
+
     </main>
 
     <!-- Footer -->
@@ -184,8 +206,10 @@
     </footer>
 </div>
 
+<!-- Scripts -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    // Loader
     const loader = document.getElementById("loader");
     const content = document.getElementById("content");
     if(loader && content){
@@ -195,9 +219,12 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(()=> loader.style.display = "none", 600);
         }, 1200);
     }
+
+    // Footer Year
     const year = document.getElementById("current-year");
     if(year) year.textContent = new Date().getFullYear();
 
+    // Mobile Menu
     const btn = document.getElementById("mobile-menu-button");
     const menu = document.getElementById("mobile-menu");
     if(btn && menu){
