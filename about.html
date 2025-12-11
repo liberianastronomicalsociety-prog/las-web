@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liberian Astronomical Society (LAS) - Vision, Mission & Values</title>
     <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
+    <meta name="description" content="Liberian Astronomical Society (LAS) promotes astronomy education in Liberia. Explore our vision, mission, and core values.">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Smooth scroll -->
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
 
     <!-- Custom Styles -->
     <style>
@@ -69,6 +75,7 @@
             <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white">
                 <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" 
                      alt="LAS Logo" class="h-10 w-10 rounded-full ring-2 ring-indigo-500" 
+                     loading="lazy"
                      onerror="this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';">
                 <span>LAS</span>
             </a>
@@ -88,7 +95,7 @@
             </nav>
 
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-button" class="md:hidden text-gray-400 focus:outline-none">
+            <button id="mobile-menu-button" aria-label="Toggle navigation menu" class="md:hidden text-gray-400 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
@@ -113,36 +120,38 @@
     </header>
 
     <!-- Main Content -->
-    <main>
+    <main role="main">
 
         <!-- Vision & Mission Section -->
-        <section class="section-padding fade-in">
+        <section class="section-padding fade-in pt-12">
             <div class="container mx-auto px-6 text-center">
                 <h1 class="text-4xl md:text-5xl font-bold text-white mb-12">Our Vision & Mission</h1>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all">
-                        <h2 class="text-2xl font-bold text-indigo-400 mb-4">Our Vision</h2>
-                        <p class="text-gray-300 mb-6">To spread astronomy education across Liberia.</p>
+                <div class="grid md:grid-cols-2 gap-10">
 
-                        <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Mission</h3>
-                        <p class="text-gray-300 mb-6">Our mission is to make astronomy accessible to everyone in Liberia. We are dedicated to achieving this through the following key objectives:</p>
+                    <!-- Vision Card -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <h2 class="text-3xl font-bold text-indigo-400 mb-4 flex items-center">
+                            <span class="mr-3 text-4xl">🌟</span> Our Vision
+                        </h2>
+                        <p class="text-xl text-gray-300 leading-relaxed">
+                            To spread <strong>astronomy education</strong> across Liberia and inspire a nation to look toward the stars, positioning Liberia as a hub for space science interest in West Africa.
+                        </p>
+                        <div class="h-8"></div>
+                    </div>
+
+                    <!-- Mission Card -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <h2 class="text-3xl font-bold text-indigo-400 mb-4 flex items-center">
+                            <span class="mr-3 text-4xl">🚀</span> Our Mission
+                        </h2>
+                        <p class="text-gray-300 mb-6 text-lg">
+                            We are dedicated to making astronomy accessible to everyone in Liberia by focusing on key strategic objectives:
+                        </p>
                         <ul class="space-y-4 text-gray-300">
-                            <li class="flex items-start">
-                                <span class="text-indigo-400 mr-2">⭐</span>
-                                <p>Introduce astronomy to the public and spark curiosity about the universe.</p>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-indigo-400 mr-2">⭐</span>
-                                <p>Engage and empower young Liberians through hands-on astronomy activities and community outreach.</p>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-indigo-400 mr-2">⭐</span>
-                                <p>Advocate for astronomy to be offered as a degree course at all universities in Liberia.</p>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-indigo-400 mr-2">⭐</span>
-                                <p>Establish and foster partnerships with university science clubs to promote astronomy education.</p>
-                            </li>
+                            <li class="flex items-start"><span class="text-indigo-400 mr-2 mt-1">⭐</span> Introduce astronomy to the public and spark curiosity about the universe.</li>
+                            <li class="flex items-start"><span class="text-indigo-400 mr-2 mt-1">⭐</span> Engage and empower young Liberians through hands-on astronomy activities and community outreach.</li>
+                            <li class="flex items-start"><span class="text-indigo-400 mr-2 mt-1">⭐</span> Advocate for astronomy to be offered as a degree course at all universities in Liberia.</li>
+                            <li class="flex items-start"><span class="text-indigo-400 mr-2 mt-1">⭐</span> Establish and foster partnerships with university science clubs to promote astronomy education.</li>
                         </ul>
                     </div>
                 </div>
@@ -157,33 +166,41 @@
         </div>
 
         <!-- Core Values Section -->
-        <section class="bg-gray-900 section-padding fade-in">
+        <section class="bg-gray-900 section-padding fade-in py-12">
             <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-indigo-400 mb-12">Core Values</h1>
+                <h2 class="text-4xl md:text-5xl font-bold text-indigo-400 mb-12">Our Core Values</h2>
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="flex items-start space-x-3">
-                        <span class="text-3xl mt-1">🔭</span>
-                        <p><strong>Curiosity & Discovery:</strong> Inspiring Liberians to explore the universe.</p>
+
+                    <!-- Value Cards -->
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <span class="text-4xl mb-3 block">🔭</span>
+                        <h3 class="text-xl font-semibold text-white mb-2">Curiosity & Discovery</h3>
+                        <p class="text-gray-400 text-sm">Inspiring Liberians of all ages to explore the vastness of the universe and the scientific method.</p>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-3xl mt-1">📚</span>
-                        <p><strong>Accessible Education:</strong> Astronomy education for all schools and communities.</p>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <span class="text-4xl mb-3 block">📚</span>
+                        <h3 class="text-xl font-semibold text-white mb-2">Accessible Education</h3>
+                        <p class="text-gray-400 text-sm">Committing to bringing high-quality astronomy education to all schools and communities, regardless of location or economic status.</p>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-3xl mt-1">🤝</span>
-                        <p><strong>Inclusiveness & Community:</strong> Building a diverse and welcoming space.</p>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <span class="text-4xl mb-3 block">🤝</span>
+                        <h3 class="text-xl font-semibold text-white mb-2">Inclusiveness & Community</h3>
+                        <p class="text-gray-400 text-sm">Building a diverse, welcoming, and collaborative space where every member feels valued and empowered.</p>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-3xl mt-1">📈</span>
-                        <p><strong>Collaboration & Growth:</strong> Teamwork among scientists, educators, and partners.</p>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <span class="text-4xl mb-3 block">📈</span>
+                        <h3 class="text-xl font-semibold text-white mb-2">Collaboration & Growth</h3>
+                        <p class="text-gray-400 text-sm">Fostering strong partnerships with educational institutions, scientists, and external partners for mutual growth.</p>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-3xl mt-1">🔬</span>
-                        <p><strong>Scientific Integrity:</strong> Upholding truth and transparency.</p>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <span class="text-4xl mb-3 block">🔬</span>
+                        <h3 class="text-xl font-semibold text-white mb-2">Scientific Integrity</h3>
+                        <p class="text-gray-400 text-sm">Upholding the highest standards of truth, accuracy, and transparency in all our educational and outreach efforts.</p>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-3xl mt-1">🚀</span>
-                        <p><strong>Innovation & Opportunity:</strong> Inspiring research, careers, and learning.</p>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 card-hover transition-all text-left">
+                        <span class="text-4xl mb-3 block">💡</span>
+                        <h3 class="text-xl font-semibold text-white mb-2">Innovation & Opportunity</h3>
+                        <p class="text-gray-400 text-sm">Inspiring novel research, promoting STEM careers, and embracing creative ways to learn and teach astronomy.</p>
                     </div>
                 </div>
             </div>
