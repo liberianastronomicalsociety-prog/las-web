@@ -2,276 +2,215 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LAS Blog, News & Updates</title>
+  <title>LAS Blog & Updates</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico">
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Heroicons for social icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
 
   <style>
     body {
-      background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
-      background-color: #111827;
       font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #111827, #1f2937);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    html { scroll-behavior: smooth; }
-
     .content-card {
       background-color: #1f2937;
-      border: 1px solid #374151;
-      border-radius: 0.75rem;
+      border-radius: 1rem;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .content-card:hover {
       transform: translateY(-6px);
       box-shadow: 0 15px 30px rgba(79,70,229,0.4);
     }
 
     .card-image {
-      height: 14rem;
+      height: 12rem;
       object-fit: cover;
       width: 100%;
     }
 
     .card-link {
-      background-color: rgba(79,70,229,0.3);
-      color: #a5b4fc;
+      background-color: #4f46e5;
+      color: white;
       font-weight: 600;
       padding: 0.5rem 0.75rem;
       border-radius: 0.5rem;
+      text-align: center;
       transition: background-color 0.3s;
     }
-
     .card-link:hover {
-      background-color: #4f46e5;
-      color: white;
+      background-color: #3730a3;
     }
 
-    .loader {
-      border: 6px solid rgba(255,255,255,0.3);
-      border-top: 6px solid #3498db;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #content {
+    .fade-in {
       opacity: 0;
-      transition: opacity 1s ease;
+      transform: translateY(20px);
+      transition: all 0.6s ease-in-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
-
 <body>
-
-<!-- ✅ LOADER -->
+<!-- Loader -->
 <div id="loader" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-50">
   <div class="flex flex-col items-center space-y-4">
-    <div class="loader"></div>
+    <div class="loader border-6 border-gray-700 border-t-indigo-500 rounded-full w-12 h-12 animate-spin"></div>
     <p class="text-white text-lg">Loading LAS Blog...</p>
   </div>
 </div>
 
-<div id="content">
+<div id="content" class="flex-grow">
 
-<!-- ✅ NAVBAR -->
-  <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm shadow-lg py-4">
     <div class="container mx-auto flex justify-between items-center px-4">
-
-      <!-- LOGO -->
       <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
-        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png"
-             onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';"
-             alt="LAS Logo"
-             class="h-10 w-auto rounded-full ring-2 ring-indigo-500">
+        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" 
+             alt="LAS Logo" class="h-10 w-auto rounded-full ring-2 ring-indigo-500">
         <span>LAS</span>
       </a>
 
-      <!-- MOBILE MENU BUTTON -->
-      <div class="md:hidden">
-        <button id="mobile-menu-button"
-                class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div>
-
-      <!-- DESKTOP NAVIGATION -->
-      <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
-        <li><a href="index.html" class="nav-link">Home</a></li>
-        <li><a href="about.html" class="nav-link">About Us</a></li>
-        <li><a href="portfolio.html" class="nav-link">Activities</a></li>
-        <li><a href="team.html" class="nav-link">Our Team</a></li>
-        <li><a href="blog.html" class="nav-link text-indigo-400 font-bold" aria-current="page">Blog</a></li>
-        <li><a href="president.html" class="nav-link">About the President</a></li>
-        <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-
-        <li>
-          <a href="login.html"
-             class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full
-                    hover:bg-indigo-400 hover:text-white transition-all duration-300 text-sm font-medium">
-            Member Login
-          </a>
-        </li>
-
-        <li>
-          <a href="signup.html"
-             class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full
-                    hover:bg-indigo-700 transition-all duration-300 text-sm font-medium">
-            Join Us
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- ===== MOBILE MENU PANEL ===== -->
-    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
-      <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
-        <li><a href="index.html" class="nav-link">Home</a></li>
-        <li><a href="about.html" class="nav-link">About Us</a></li>
-        <li><a href="portfolio.html" class="nav-link">Activities</a></li>
-        <li><a href="team.html" class="nav-link">Our Team</a></li>
-        <li><a href="blog.html" class="nav-link text-indigo-400 font-bold">Blog</a></li>
-        <li><a href="president.html" class="nav-link">About the President</a></li>
-        <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-
-        <li>
-          <a href="login.html"
-             class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full
-                    hover:bg-indigo-400 hover:text-white transition-all duration-300">
-            Member Login
-          </a>
-        </li>
-
-        <li>
-          <a href="signup.html"
-             class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full
-                    hover:bg-indigo-700 transition-all duration-300">
-            Join Us
-          </a>
-        </li>
+      <ul class="hidden md:flex space-x-6 text-gray-300 items-center">
+        <li><a href="index.html" class="hover:text-indigo-400 transition">Home</a></li>
+        <li><a href="about.html" class="hover:text-indigo-400 transition">About Us</a></li>
+        <li><a href="portfolio.html" class="hover:text-indigo-400 transition">Activities</a></li>
+        <li><a href="team.html" class="hover:text-indigo-400 transition">Our Team</a></li>
+        <li><a href="blog.html" class="text-indigo-400 font-semibold">Blog</a></li>
+        <li><a href="getinvolve.html" class="hover:text-indigo-400 transition">Get Involved</a></li>
       </ul>
     </div>
   </nav>
 
-<!-- ✅ BLOG GRID -->
-<main class="flex-grow bg-gray-900 py-20">
-  <div class="max-w-6xl mx-auto px-4 text-center">
-    <h1 class="text-4xl font-bold text-white mb-10">Latest News & Updates</h1>
-
-    <div class="grid sm:grid-cols-2 gap-8">
-
-      <!-- ✅ CARD 1 -->
-      <div class="content-card">
-        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" class="card-image">
-        <div class="p-6 flex flex-col flex-grow">
-          <h3 class="text-xl text-indigo-400 font-bold mb-2">Asteroids Hunting Session</h3>
-          <p class="text-gray-400 mb-4">September 20, 2025</p>
-          <p class="text-gray-300 mb-6 flex-grow">
-            Join the Pan-African Citizen Science Asteroids Campaign with LAS.
-          </p>
-          <a href="#" class="card-link self-start">Register</a>
+  <!-- Featured Article -->
+  <section class="bg-gray-800 py-16">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold text-indigo-400 mb-6">Featured Article</h2>
+      <div class="content-card mx-auto max-w-3xl flex flex-col md:flex-row overflow-hidden">
+        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Featured%20Article.png" class="md:w-1/2 object-cover">
+        <div class="p-6 flex flex-col justify-center">
+          <h3 class="text-2xl font-bold text-white mb-4">Exploring the Wonders of the Universe</h3>
+          <p class="text-gray-300 mb-4">Discover how LAS is inspiring young Liberians to explore astronomy through hands-on activities, workshops, and online training sessions.</p>
+          <a href="blog.html#featured" class="card-link self-start">Read More</a>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- ✅ CARD 2 (FIXED YOUTUBE) -->
-      <div class="content-card">
-        <img src="https://img.youtube.com/vi/TNNGe-AGqYA/hqdefault.jpg" class="card-image">
-        <div class="p-6 flex flex-col flex-grow">
-          <h3 class="text-xl text-indigo-400 font-bold mb-2">Astrophotography Training</h3>
-          <p class="text-gray-400 mb-4">September 18, 2025</p>
-          <p class="text-gray-300 mb-6 flex-grow">
-            Learn astrophotography image processing techniques.
-          </p>
-          <a href="https://youtu.be/TNNGe-AGqYA" target="_blank" class="card-link self-start">
-            Watch on YouTube
-          </a>
+  <!-- Blog Grid -->
+  <main class="flex-grow py-20">
+    <div class="max-w-6xl mx-auto px-4">
+      <h1 class="text-4xl font-bold text-white mb-12 text-center">Latest News & Updates</h1>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Card 1 -->
+        <div class="content-card fade-in">
+          <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Asteroids%20Campaign%20flyer.png" class="card-image">
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl text-indigo-400 font-bold mb-2">Asteroids Hunting Session</h3>
+            <p class="text-gray-400 mb-4">September 20, 2025</p>
+            <p class="text-gray-300 mb-6 flex-grow">Join the Pan-African Citizen Science Asteroids Campaign with LAS.</p>
+            <a href="#" class="card-link">Register</a>
+          </div>
         </div>
+
+        <!-- Card 2 -->
+        <div class="content-card fade-in">
+          <img src="https://img.youtube.com/vi/TNNGe-AGqYA/hqdefault.jpg" class="card-image">
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl text-indigo-400 font-bold mb-2">Astrophotography Training</h3>
+            <p class="text-gray-400 mb-4">September 18, 2025</p>
+            <p class="text-gray-300 mb-6 flex-grow">Learn astrophotography image processing techniques.</p>
+            <a href="https://youtu.be/TNNGe-AGqYA" target="_blank" class="card-link">Watch on YouTube</a>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="content-card fade-in">
+          <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" class="card-image">
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl text-indigo-400 font-bold mb-2">Astronomy Outreach</h3>
+            <p class="text-gray-400 mb-4">Nov 1–26, 2025</p>
+            <p class="text-gray-300 mb-6 flex-grow">Promoting space science across Bong & Grand Bassa.</p>
+            <a href="index.html#contact" class="card-link">Get Involved</a>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="content-card fade-in">
+          <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Flyer%20-%20Introduction%20to%20Astronomy%20%20Series%20%231%20%20.png" class="card-image">
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl text-indigo-400 font-bold mb-2">Intro to Astronomy Series</h3>
+            <p class="text-gray-400 mb-4">Dec 20, 2025 | 8:00 PM UTC</p>
+            <p class="text-gray-300 mb-6 flex-grow">Live astronomy training with Ghana Astronomical Science.</p>
+            <a href="https://forms.gle/3sZVgWXh3r4MosGR9" target="_blank" class="card-link">Register Now</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-950 text-gray-400 py-12">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+
+      <!-- Newsletter -->
+      <div class="flex flex-col md:flex-row gap-4 items-center">
+        <p class="text-white font-semibold">Subscribe to our Newsletter:</p>
+        <form class="flex gap-2" action="#" method="POST">
+          <input type="email" placeholder="Your email" class="p-2 rounded-md text-black" required>
+          <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 rounded-md font-semibold">Subscribe</button>
+        </form>
       </div>
 
-      <!-- ✅ CARD 3 -->
-      <div class="content-card">
-        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/FB_IMG_1761242401979.jpg" class="card-image">
-        <div class="p-6 flex flex-col flex-grow">
-          <h3 class="text-xl text-indigo-400 font-bold mb-2">Astronomy Outreach</h3>
-          <p class="text-gray-400 mb-4">Nov 1–26, 2025</p>
-          <p class="text-gray-300 mb-6 flex-grow">
-            Promoting space science across Bong & Grand Bassa.
-          </p>
-          <a href="index.html#contact" class="card-link self-start">Get Involved</a>
-        </div>
-      </div>
-
-      <!-- ✅ CARD 4 -->
-      <div class="content-card">
-        <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Flyer%20-%20Introduction%20to%20Astronomy%20%20Series%20%231%20%20.png" class="card-image">
-        <div class="p-6 flex flex-col flex-grow">
-          <h3 class="text-xl text-indigo-400 font-bold mb-2">Intro to Astronomy Series</h3>
-          <p class="text-gray-400 mb-4">Dec 20, 2025 | 8:00 PM UTC</p>
-          <p class="text-gray-300 mb-6 flex-grow">
-            Live astronomy training with Ghana Astronomical Science.
-          </p>
-          <a href="https://forms.gle/3sZVgWXh3r4MosGR9" class="card-link self-start">
-            Register Now
-          </a>
-        </div>
+      <!-- Social Icons -->
+      <div class="flex gap-4 items-center text-white">
+        <a href="#" aria-label="Facebook" class="hover:text-indigo-400"><i data-feather="facebook"></i></a>
+        <a href="#" aria-label="Twitter" class="hover:text-indigo-400"><i data-feather="twitter"></i></a>
+        <a href="#" aria-label="Instagram" class="hover:text-indigo-400"><i data-feather="instagram"></i></a>
+        <a href="#" aria-label="YouTube" class="hover:text-indigo-400"><i data-feather="youtube"></i></a>
+        <a href="#" aria-label="LinkedIn" class="hover:text-indigo-400"><i data-feather="linkedin"></i></a>
       </div>
 
     </div>
-  </div>
-</main>
-
-<!-- ✅ FOOTER -->
-<footer class="bg-gray-950 text-center py-6 text-gray-400">
-  <p>&copy; <span id="current-year"></span> Liberian Astronomical Society</p>
-</footer>
+    <p class="text-center mt-6">&copy; <span id="current-year"></span> Liberian Astronomical Society | All rights reserved</p>
+  </footer>
 
 </div>
 
-<!-- ✅ SCRIPTS (FIXED & MERGED) -->
+<!-- Scripts -->
 <script>
   // Loader
   window.addEventListener("load", () => {
     document.getElementById("loader").style.display = "none";
     document.getElementById("content").style.opacity = "1";
-  });
 
-  // Mobile Menu
-  document.getElementById("mobile-menu-button").addEventListener("click", () => {
-    document.getElementById("desktop-menu").classList.toggle("hidden");
+    // Fade-in cards
+    document.querySelectorAll('.fade-in').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 200);
+    });
+
+    // Initialize Feather icons
+    feather.replace();
   });
 
   // Year
   document.getElementById("current-year").textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>
