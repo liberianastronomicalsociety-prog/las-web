@@ -1,266 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About the President - Daniel Ayorinde Obajemu</title>
-    <!-- Favicon -->
-    <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the President - Daniel Ayorinde Obajemu</title>
+<link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* ==================================================================== */
-/* 1. LOADER & PAGE TRANSITIONS */
-/* ==================================================================== */
-
-/* --- Loader Spinner --- */
+/* Loader */
 .loader {
-    border: 6px solid rgba(255, 255, 255, 0.3);
-    border-top: 6px solid #3498db;
+    border: 6px solid rgba(255,255,255,0.3);
+    border-top: 6px solid #6366F1; /* Indigo */
     border-radius: 50%;
     width: 50px;
     height: 50px;
     animation: spin 1s linear infinite;
 }
+@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Prevent content flash */
-#content {
-    opacity: 0;
-    transition-property: opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 1000ms;
-}
-
-
-/* ==================================================================== */
-/* 2. GLOBAL STYLES & LAYOUT */
-/* ==================================================================== */
-
-/* --- Global Layout & Typography --- */
-body {
-    /* FIX: Wallpaper is now the fixed background for the entire page */
-    background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+/* Hero background overlay */
+.hero-bg {
+    background-image: linear-gradient(rgba(17,24,39,0.7), rgba(17,24,39,0.7)), url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
     background-size: cover;
-    background-attachment: fixed; /* Keeps the background image fixed during scroll */
     background-position: center;
-    background-color: #111827; /* Fallback color */
-    font-family: 'Inter', sans-serif;
-}
-html {
-    scroll-behavior: smooth;
-}
-.section-padding {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    background-attachment: fixed;
 }
 
-
-/* ==================================================================== */
-/* 3. NAVIGATION STYLES */
-/* ==================================================================== */
-
-.nav-link { 
-    transition: color 0.3s ease; 
-}
-.nav-link:hover { 
-    color: #a5b4fc; /* Tailwind's indigo-300 */
-}
-
-
-/* ==================================================================== */
-/* 4. UTILITY CLASSES */
-/* ==================================================================== */
-
-/* Custom header/section padding for visual balance */
-.page-content-padding {
-    padding-top: 6rem; /* Adjust based on fixed header height */
-}
+/* Page content fade-in */
+#content { opacity: 0; transition: opacity 1s cubic-bezier(0.4,0,0.2,1); }
 </style>
 </head>
-<body class="antialiased">
-        <!-- 1. THE LOADER OVERLAY -->
-    <!-- This div covers the entire screen and is shown while content loads -->
-    <div id="loader" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50 transition-opacity duration-500">
-        <div class="flex flex-col items-center space-y-4">
-            <!-- The CSS Spinner element -->
-            <div class="loader"></div>
-            <!-- Updated text -->
-            <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page ....</p>
-        </div>
-        </div>
+<body class="antialiased bg-gray-900 text-gray-200">
 
-    <div id="content">
+<!-- Loader -->
+<div id="loader" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50">
+  <div class="flex flex-col items-center space-y-4">
+    <div class="loader"></div>
+    <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page...</p>
+  </div>
+</div>
 
-    <nav class="sticky top-0 z-50 ...">
-      </nav>
-    </div>
-    <!-- Header / Navigation Bar (Consistent with blog.html) -->
-    <header>
-        <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
-            <div class="container mx-auto flex justify-between items-center px-4">
-                <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto rounded-full ring-2 ring-indigo-500">
-                    <span>LAS</span>
-                </a>
-                
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Desktop Navigation (Highlighting 'About the President' link) -->
-                <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
-                    <li><a href="index.html" class="nav-link">Home</a></li> 
-                    <li><a href="about.html" class="nav-link">About Us</a></li> 
-                    <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
-                    <li><a href="team.html" class="nav-link">Our Team</a></li> 
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="president.html" class="nav-link text-indigo-400 font-bold">About the President</a></li> <!-- Highlighted -->
-                    <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
-                </ul>
-            </div>
-            
-            <!-- Mobile Menu Content - Now correctly structured and styled for vertical display on mobile -->
-            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
-                <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About Us</a></li>
-                    <!-- ACTIVITIES link is highlighted for this page -->
-                    <li><a href="portfolio.html" class="nav-link">Activities</a></li>
-                    <li><a href="team.html" class="nav-link">Our Team</a></li>
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="president.html" class="nav-link text-indigo-400 font-bold">About the President</a></li>
-                    <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
-                </ul>
-            </div>
+<div id="content">
+
+<!-- Header / Navigation -->
+<header class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-lg">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white">
+            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" 
+                 alt="LAS Logo" class="h-10 w-10 rounded-full ring-2 ring-indigo-500" loading="lazy"
+                 onerror="this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';">
+            <span>LAS</span>
+        </a>
+
+        <!-- Desktop Menu -->
+        <nav class="hidden md:flex space-x-6 items-center text-gray-400">
+            <a href="index.html" class="hover:text-indigo-400 transition">Home</a>
+            <a href="about.html" class="hover:text-indigo-400 transition">About Us</a>
+            <a href="portfolio.html" class="hover:text-indigo-400 transition">Activities</a>
+            <a href="team.html" class="hover:text-indigo-400 transition">Our Team</a>
+            <a href="blog.html" class="hover:text-indigo-400 transition">Blog</a>
+            <a href="president.html" class="text-indigo-400 font-bold">President</a> <!-- Active page -->
+            <a href="getinvolve.html" class="hover:text-indigo-400 transition">Get Involved</a>
+            <a href="index.html#contact" class="hover:text-indigo-400 transition">Contact</a>
+            <a href="login.html" class="border-2 border-indigo-400 text-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition">Member Login</a>
+            <a href="signup.html" class="bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition text-white">Join Us</a>
         </nav>
-    </header>
 
-    <main class="flex-grow page-content-padding">
-        
-        <!-- About the President Section -->
-        <section id="author" class="bg-gray-900 py-16 lg:py-24 text-white">
-            <div class="container mx-auto px-4">
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-center mb-12 text-indigo-400">About the President</h1>
-                
-                <div class="bg-gray-800 p-8 rounded-xl shadow-2xl border border-indigo-700/50 max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start space-y-8 md:space-y-0 md:space-x-10 transition duration-500 hover:shadow-indigo-500/30">
-                    
-                    <img class="w-48 h-48 rounded-full border-4 border-indigo-500 flex-shrink-0 object-cover shadow-lg"
-                        src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/President.jpg"
-                        alt="Daniel A. Obajemu, President of LAS"
-                        onerror="this.onerror=null;this.src='https://placehold.co/192x192/1f2937/a5b4fc?text=Daniel+Photo'">
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" aria-label="Toggle navigation menu" class="md:hidden text-gray-400 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
 
-                    <div class="text-center md:text-left">
-                        <h3 class="text-3xl font-bold text-white mb-1">Daniel Ayorinde Obajemu</h3>
-                        <p class="text-indigo-400 text-lg mb-4 font-medium">Founder & President, Liberian Astronomical Society</p>
-                        
-                        <p class="text-gray-300 mb-6 leading-relaxed">
-                            Daniel A. Obajemu is a visionary in the field of astronomy, dedicated to advancing scientific education in Africa, specifically Liberia. As the founder and President of the Liberian Astronomical Society (LAS), he established Liberia's first astronomical society to promote space science and inspire youth. 
-                            He also serves as a Research Analyst at the Pan-African Citizen Science e-Laboratory and was appointed Committee Chair for the PACS e-Lab Committee, an initiative under the African Astronomical Society (AfAS). 
-                        </p>
-                        
-                        <h4 class="text-xl font-semibold text-indigo-400 mb-3 border-b border-gray-700 inline-block pb-1">Honours & Awards</h4>
-                        <ul class="list-disc list-inside text-gray-400 space-y-2 text-base pl-4">
-                            <li>Liberia Academic Excellence Award 3.0 - Educate the NextGen / Ministry of Education, Liberia (2024)</li>
-                            <li>IAAC's National Award & Bronze Honor - International Astronomy & Astrophysics Competition (2023)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
+        <ul class="flex flex-col items-center py-4 space-y-3">
+            <li><a href="index.html" class="hover:text-indigo-400 transition">Home</a></li>
+            <li><a href="about.html" class="hover:text-indigo-400 transition">About Us</a></li>
+            <li><a href="portfolio.html" class="hover:text-indigo-400 transition">Activities</a></li>
+            <li><a href="team.html" class="hover:text-indigo-400 transition">Our Team</a></li>
+            <li><a href="blog.html" class="hover:text-indigo-400 transition">Blog</a></li>
+            <li><a href="president.html" class="text-indigo-400 font-bold">President</a></li>
+            <li><a href="getinvolve.html" class="hover:text-indigo-400 transition">Get Involved</a></li>
+            <li><a href="index.html#contact" class="hover:text-indigo-400 transition">Contact</a></li>
+            <li><a href="login.html" class="border-2 border-indigo-400 text-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition">Member Login</a></li>
+            <li><a href="signup.html" class="bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition text-white">Join Us</a></li>
+        </ul>
+    </div>
+</header>
 
-    </main>
+<!-- Hero Section -->
+<section class="hero-bg text-center py-24">
+  <div class="container mx-auto px-4">
+    <nav class="text-gray-400 text-sm mb-4">
+      <a href="index.html" class="hover:text-indigo-400">Home</a> &gt; 
+      <a href="about.html" class="hover:text-indigo-400">About</a> &gt; 
+      <span class="text-indigo-400 font-semibold">President</span>
+    </nav>
+    <h1 class="text-5xl md:text-6xl font-extrabold text-indigo-400 mb-4">About the President</h1>
+    <p class="text-gray-200 max-w-2xl mx-auto text-lg md:text-xl">Daniel Ayorinde Obajemu, leading LAS to inspire Liberia's next generation of space scientists and astronomers.</p>
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 border-t border-gray-700 mt-auto">
-        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex justify-center space-x-4 mb-4">
-                <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition">Home</a>
-                <span class="text-gray-600">|</span>
-                <a href="about.html" class="text-gray-400 hover:text-indigo-400 transition">About Us</a>
-                <span class="text-gray-600">|</span>
-                <a href="portfolio.html" class="text-gray-400 hover:text-indigo-400 transition">Activities</a>
-                <span class="text-gray-600">|</span>
-                <a href="blog.html" class="text-gray-400 hover:text-indigo-400 transition">Blog</a>
-                <span class="text-gray-600">|</span>
-                <a href="president.html" class="text-indigo-400 font-bold transition">President</a>
-                <span class="text-gray-600">|</span>
-                <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition">Contact</a>
-            </div>
-            <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
-        </div>
-    </footer>
+<!-- President Profile -->
+<section class="py-16 bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="bg-gray-800 p-10 rounded-2xl shadow-2xl border border-indigo-700/50 flex flex-col md:flex-row items-center md:items-start space-y-8 md:space-y-0 md:space-x-10 hover:shadow-indigo-500/40 transform transition duration-500 hover:-translate-y-1">
+      <img class="w-48 h-48 rounded-full border-4 border-indigo-500 object-cover shadow-lg" 
+           src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/President.jpg" 
+           alt="Daniel A. Obajemu, President of LAS">
 
+      <div class="text-center md:text-left">
+        <h3 class="text-3xl font-bold text-white mb-2">Daniel Ayorinde Obajemu</h3>
+        <p class="text-indigo-400 text-lg font-medium mb-4">Founder & President, Liberian Astronomical Society</p>
+        <p class="text-gray-300 mb-6 leading-relaxed">
+          Daniel A. Obajemu is a visionary in astronomy, dedicated to advancing scientific education in Liberia and Africa. He founded LAS to promote space science and inspire youth.
+        </p>
+        <h4 class="text-xl font-semibold text-indigo-400 mb-3 border-b border-gray-700 inline-block pb-1">Honours & Awards</h4>
+        <ul class="list-disc list-inside text-gray-400 space-y-2 text-base pl-4">
+          <li>Liberia Academic Excellence Award 3.0 - Educate the NextGen / Ministry of Education, Liberia (2024)</li>
+          <li>IAAC's National Award & Bronze Honor - International Astronomy & Astrophysics Competition (2023)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 border-t border-gray-700 mt-auto">
+  <div class="container mx-auto py-8 px-4 text-center">
+    <div class="flex justify-center space-x-4 mb-4 flex-wrap">
+      <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition">Home</a>
+      <span class="text-gray-600">|</span>
+      <a href="about.html" class="text-gray-400 hover:text-indigo-400 transition">About Us</a>
+      <span class="text-gray-600">|</span>
+      <a href="portfolio.html" class="text-gray-400 hover:text-indigo-400 transition">Activities</a>
+      <span class="text-gray-600">|</span>
+      <a href="blog.html" class="text-gray-400 hover:text-indigo-400 transition">Blog</a>
+      <span class="text-gray-600">|</span>
+      <a href="president.html" class="text-indigo-400 font-bold transition">President</a>
+      <span class="text-gray-600">|</span>
+      <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition">Contact</a>
+    </div>
+    <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
+  </div>
+</footer>
 
 <script>
-/* =====================================================
-   LOADING SCREEN — Smooth Fade-in / Fade-out (Fixed)
-=====================================================*/
 document.addEventListener("DOMContentLoaded", () => {
+    // Loader fade-out and content fade-in
     const loader = document.getElementById("loader");
     const content = document.getElementById("content");
-
-    if (!loader || !content) return;
-
-    const MIN_TIME = 1200; // 1.2s for a smooth experience
-
-    requestAnimationFrame(() => {
+    if(loader && content){
+        const MIN_DISPLAY_TIME = 1200; // minimum loader time in ms
         setTimeout(() => {
             loader.style.opacity = "0";
             content.style.opacity = "1";
+            setTimeout(() => loader.style.display = "none", 600); // wait for opacity transition
+        }, MIN_DISPLAY_TIME);
+    }
 
-            setTimeout(() => {
-                loader.style.display = "none";
-            }, 600); // matches CSS transition
-        }, MIN_TIME);
-    });
-});
+    // Set current year in footer
+    const yearElement = document.getElementById("current-year");
+    if(yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
-            const yearElement = document.getElementById('current-year');
-            if (yearElement) {
-                yearElement.textContent = new Date().getFullYear();
-            }
-
-            // --- Mobile Menu Toggle Logic (Consolidated and Cleaned) ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                // 1. Toggle the menu visibility on button click
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-
-                // 2. Close mobile menu on link click (to ensure smooth navigation)
-                document.querySelectorAll('#mobile-menu a').forEach(link => {
-                     link.addEventListener('click', () => {
-                         // Check if the menu is currently visible before attempting to hide it
-                         if (!mobileMenu.classList.contains('hidden')) {
-                             mobileMenu.classList.add('hidden');
-                         }
-                     });
-                });
-            } else {
-                 console.error("Mobile menu elements not found. Check IDs.");
-            }
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    if(mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
         });
-    </script>
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                if(!mobileMenu.classList.contains("hidden")) {
+                    mobileMenu.classList.add("hidden");
+                }
+            });
+        });
+    } else {
+        console.error("Mobile menu or button not found. Check your IDs!");
+    }
+});
+</script>
+</div>
 </body>
 </html>
