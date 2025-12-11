@@ -1,335 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meet Our Team - Liberian Astronomical Society</title>
-    <!-- Favicon -->
-    <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
- /* ==================================================================== */
-/* 1. LOADER & PAGE TRANSITIONS */
-/* ==================================================================== */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meet Our Team - Liberian Astronomical Society</title>
+<link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico?v=2" type="image/x-icon">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* =======================
+       Global Styles
+    ======================= */
+    body {
+        background: linear-gradient(rgba(17,24,39,0.85), rgba(17,24,39,0.85)), url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: 'Poppins', sans-serif;
+        color: #e5e7eb;
+    }
+    h1,h2,h3 { font-family: 'Lora', serif; }
+    html { scroll-behavior: smooth; }
 
-/* --- Loader Spinner --- */
-.loader {
-    border: 6px solid rgba(255, 255, 255, 0.3);
-    border-top: 6px solid #3498db;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-}
+    /* Loader Spinner */
+    .loader {
+        border: 6px solid rgba(255, 255, 255, 0.3);
+        border-top: 6px solid #4f46e5; /* Indigo */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0%{transform:rotate(0deg);}100%{transform:rotate(360deg);} }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+    /* Prevent content flash */
+    #content { opacity: 0; transition: opacity 1s cubic-bezier(0.4,0,0.2,1); }
 
-/* Prevent content flash */
-#content {
-    opacity: 0;
-    transition-property: opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 1000ms;
-}
-        /* --- Global Layout & Typography --- */
-        body {
-            /* FIX: Wallpaper is now the fixed background for the entire page */
-            background-image: url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg');
-            background-size: cover;
-            background-attachment: fixed; /* Keeps the background image fixed during scroll */
-            background-position: center;
-            background-color: #111827; /* Fallback color */
-            font-family: 'Inter', sans-serif;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        .section-padding {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
-        .nav-link { 
-            transition: color 0.3s ease; 
-        }
-        .nav-link:hover { 
-            color: #a5b4fc; /* Tailwind's indigo-300 */
-        }
-        /* Custom header/section padding for visual balance */
-        .page-content-padding {
-            padding-top: 6rem; /* Adjust based on fixed header height */
-        }
-        /* Add a subtle hover effect to the team cards */
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4), 0 4px 6px -2px rgba(99, 102, 241, 0.2);
-        }
-    </style>
+    /* Card hover effect */
+    .card-hover:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 20px rgba(99,102,241,0.3); }
+
+    /* Scroll-trigger fade-in helpers */
+    .opacity-0 { opacity: 0; }
+    .opacity-100 { opacity: 1; }
+    .translate-y-6 { transform: translateY(1.5rem); }
+    .translate-y-0 { transform: translateY(0); }
+    .transition-all { transition: all 0.7s ease-out; }
+
+</style>
 </head>
 <body class="antialiased">
-    <!-- 1. THE LOADER OVERLAY -->
-    <!-- This div covers the entire screen and is shown while content loads -->
-    <div id="loader" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50 transition-opacity duration-500">
-        <div class="flex flex-col items-center space-y-4">
-            <!-- The CSS Spinner element -->
-            <div class="loader"></div>
-            <!-- Updated text -->
-            <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page ....</p>
-        </div>
-        </div>
 
-    <div id="content">
-
-    <nav class="sticky top-0 z-50 ...">
-      </nav>
+<!-- Loader -->
+<div id="loader" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50">
+    <div class="flex flex-col items-center space-y-4">
+        <div class="loader"></div>
+        <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page ...</p>
     </div>
-    <!-- Header / Navigation Bar -->
-    <header>
-        <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
-            <div class="container mx-auto flex justify-between items-center px-4">
-                <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
-                    <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" alt="LAS Logo" class="h-10 w-auto rounded-full ring-2 ring-indigo-500">
-                    <span>LAS</span>
-                </a>
-                
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Desktop Navigation (Highlighting 'Our Team') -->
-                <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
-                    <li><a href="index.html" class="nav-link">Home</a></li> 
-                    <li><a href="about.html" class="nav-link">About Us</a></li> 
-                    <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
-                    <li><a href="team.html" class="nav-link text-indigo-400 font-bold">Our Team</a></li> <!-- Highlighted -->
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="president.html" class="nav-link">About the President</a></li>
-                    <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
-                </ul>
-            </div>
-            
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
-                <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About Us</a></li>
-                    <li><a href="portfolio.html" class="nav-link">Activities</a></li>
-                    <li><a href="team.html" class="nav-link text-indigo-400 font-bold">Our Team</a></li>
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="president.html" class="nav-link">About the President</a></li>
-                    <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
-                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                    <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
-                    <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+</div>
 
-    <main class="flex-grow page-content-padding">
-        
-        <!-- Key Faces Section -->
-        <section id="team" class="bg-gray-900 py-20 text-white">
-            <div class="container mx-auto px-4">
-                <!-- Section Heading and Description -->
-                <div>
-                    <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-indigo-400 mb-8">Meet Our Team</h1>
-                    <p class="text-xl text-center text-gray-300 max-w-3xl mx-auto mb-16">
-                        Meet the key faces dedicated to our mission. The driving force behind the Liberian Astronomical Society's efforts to promote scientific curiosity and education.
-                    </p>
-                </div>
+<div id="content">
 
-                <!-- Team Members Grid (Leadership) -->
-                <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
-                    <!-- Team Member Card 1: Daniel A. Obajemu -->
-                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                        <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
-                             src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/President.jpg" 
-                             alt="Daniel A. Obajemu"
-                             onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=D.O.'">
-                        <h3 class="text-2xl font-bold text-white">Daniel A. Obajemu</h3>
-                        <p class="text-indigo-400 font-semibold mb-3">Founder / President</p>
-                        <p class="text-gray-300 text-sm">
-                            Harvest Intercontinental American University
-                        </p>
-                        <a href="president.html" class="mt-4 text-sm text-indigo-400 hover:text-indigo-300 font-medium">View Profile &rarr;</a>
-                    </div>
-                    
-                    <!-- Team Member Card 2: Sadayah Isaac Davis -->
-                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                        <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
-                             src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Sada.jpg" 
-                             alt="Sadayah Isaac Davis"
-                             onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=S.D.'">
-                        <h3 class="text-2xl font-bold text-white">Sadayah Isaac Davis</h3>
-                        <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
-                        <p class="text-gray-300 text-sm">
-                            College Of West Africa
-                        </p>
-                    </div>
-                    
-                    <!-- Team Member Card 3: Ceree P. Williams -->
-                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                        <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
-                             src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ce.jpg" 
-                             alt="Ceree P. Williams"
-                             onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=C.W.'">
-                        <h3 class="text-2xl font-bold text-white">Ceree P. Williams</h3>
-                        <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
-                        <p class="text-gray-300 text-sm">
-                            University of Liberia
-                        </p>
-                    </div>
-                    
-                    <!-- Team Member Card 4: Adrienne Celine Uche Duru -->
-                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700 text-center flex flex-col items-center card-hover transition-all duration-300">
-                        <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
-                             src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Uche.jpg" 
-                             alt="Adrienne Celine Uche Duru"
-                             onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=A.D.'">
-                        <h3 class="text-2xl font-bold text-white">Adrienne Celine Uche Duru</h3>
-                        <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
-                        <p class="text-gray-300 text-sm">
-                            Stella Maris Polythenic University
-                        </p>
-                    </div>
-                </div>
+<!-- Header / Navbar -->
+<header>
+<nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
+    <div class="container mx-auto flex justify-between items-center px-4">
+        <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white tracking-wide">
+            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" 
+                 onerror="this.onerror=null;this.src='https://placehold.co/40x40/111827/a5b4fc?text=LAS';" 
+                 alt="LAS Logo" class="h-10 w-auto rounded-full ring-2 ring-indigo-500">
+            <span>LAS</span>
+        </a>
 
-                <!-- Advisors Section (Chief and Outreach) -->
-                <div class="mt-24 border-t border-gray-700 pt-16">
-                    <h2 class="text-3xl font-extrabold text-center text-white mb-12">Our Key Advisors</h2>
-                    
-                    <!-- Grid container for the two advisor cards (side-by-side on large screens) -->
-                    <div class="max-w-6xl mx-auto grid gap-8 lg:grid-cols-2">
+        <!-- Desktop Menu -->
+        <ul class="hidden md:flex space-x-8 text-gray-400 items-center">
+            <li><a href="index.html" class="nav-link">Home</a></li> 
+            <li><a href="about.html" class="nav-link">About Us</a></li> 
+            <li><a href="portfolio.html" class="nav-link">Activities</a></li> 
+            <li><a href="team.html" class="nav-link text-indigo-400 font-bold">Our Team</a></li>
+            <li><a href="blog.html" class="nav-link">Blog</a></li>
+            <li><a href="president.html" class="nav-link">About the President</a></li>
+            <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+            <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+        </ul>
 
-                        <!-- Chief Advisor Card -->
-                        <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
-                            <div class="md:flex-shrink-0">
-                                <img class="h-48 w-full object-cover md:w-48" 
-                                     src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Mr.%20Miracle.jpeg" 
-                                     alt="Mr. Miracle Chibuzor Marcel"
-                                     onerror="this.onerror=null;this.src='https://placehold.co/192x192/1f2937/a5b4fc?text=M.M.'">
-                            </div>
-                            <div class="p-8 text-center md:text-left flex flex-col justify-center">
-                                <h3 class="text-2xl font-bold text-white">Mr. Miracle Chibuzor Marcel</h3>
-                                <p class="text-indigo-400 font-semibold mb-3">Chief Advisor</p>
-                                <p class="text-indigo-400 font-semibold mb-3"> Founder / Director, Pan - African Citizen Science e - Laboratory</p>
-                                <p class="text-gray-300">
-                                    Guiding our society with a wealth of experience, Mr. Marcel provides invaluable strategic advice and fosters our connection with the broader Pan-African scientific community.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Outreach Advisor Card -->
-                        <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden md:flex card-hover transition-all duration-300">
-                            <div class="md:flex-shrink-0">
-                                <img class="h-48 w-full object-cover md:w-48" 
-                                     src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/mum.jpg" 
-                                     alt="Mrs. Alisabatu Obajemu"
-                                     onerror="this.onerror=null;this.src='https://placehold.co/192x192/1f2937/a5b4fc?text=A.O.'">
-                            </div>
-                            <div class="p-8 text-center md:text-left flex flex-col justify-center">
-                                <h3 class="text-2xl font-bold text-white">Mrs. Alisabatu Angelina Obajemu</h3>
-                                <p class="text-indigo-400 font-semibold mb-3">Outreach Advisor</p>
-                                <p class="text-indigo-400 font-semibold mb-3"> Instructor, Stella Marris Polytechnic University</p>
-                                <p class="text-gray-300">
-                                    Mrs. Obajemu is essential in developing and executing our public engagement and educational programs, ensuring we inspire the next generation of astronomers across Liberia.
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 border-t border-gray-700 mt-auto">
-        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex justify-center space-x-4 mb-4">
-                <a href="index.html" class="text-gray-400 hover:text-indigo-400 transition">Home</a>
-                <span class="text-gray-600">|</span>
-                <a href="about.html" class="text-gray-400 hover:text-indigo-400 transition">About Us</a>
-                <span class="text-gray-600">|</span>
-                <a href="portfolio.html" class="text-gray-400 hover:text-indigo-400 transition">Activities</a>
-                <span class="text-gray-600">|</span>
-                <a href="team.html" class="text-indigo-400 font-bold transition">Our Team</a>
-                <span class="text-gray-600">|</span>
-                <a href="blog.html" class="text-gray-400 hover:text-indigo-400 transition">Blog</a>
-                <span class="text-gray-600">|</span>
-                <a href="president.html" class="text-gray-400 hover:text-indigo-400 transition">President</a>
-                <span class="text-gray-600">|</span>
-                <a href="getinvolve.html" class="text-gray-400 hover:text-indigo-400 transition">Get Involved</a>
-                <span class="text-gray-600">|</span>
-                <a href="index.html#contact" class="text-gray-400 hover:text-indigo-400 transition">Contact</a>
-            </div>
-            <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
+        <!-- Mobile Button -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
         </div>
-    </footer>
+    </div>
 
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-90 backdrop-blur-sm">
+        <ul class="flex flex-col items-center py-4 space-y-4 text-gray-400">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="about.html" class="nav-link">About Us</a></li>
+            <li><a href="portfolio.html" class="nav-link">Activities</a></li>
+            <li><a href="team.html" class="nav-link text-indigo-400 font-bold">Our Team</a></li>
+            <li><a href="blog.html" class="nav-link">Blog</a></li>
+            <li><a href="president.html" class="nav-link">About the President</a></li>
+            <li><a href="getinvolve.html" class="nav-link">Get Involved</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            <li><a href="login.html" class="inline-block text-indigo-400 border-2 border-indigo-400 px-4 py-1 rounded-full hover:bg-indigo-400 hover:text-white transition-all duration-300">Member Login</a></li>
+            <li><a href="signup.html" class="inline-block text-white bg-indigo-600 px-4 py-1 rounded-full hover:bg-indigo-700 transition-all duration-300">Join Us</a></li>
+        </ul>
+    </div>
+</nav>
+</header>
 
-    <script>
-/* =====================================================
-   LOADING SCREEN — Smooth Fade-in / Fade-out (Fixed)
-=====================================================*/
+<main class="flex-grow page-content-padding">
+
+<!-- Section: Team -->
+<section id="team" class="py-20 animate-fadeIn">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-indigo-400 mb-6">Meet Our Team</h1>
+        <p class="text-xl text-center text-gray-300 max-w-3xl mx-auto mb-16">
+            Meet the key faces dedicated to our mission. The driving force behind the Liberian Astronomical Society's efforts to promote scientific curiosity and education.
+        </p>
+
+        <!-- Team Grid -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+            <!-- Daniel Obajemu -->
+            <div class="bg-gradient-to-b from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700 text-center flex flex-col items-center card-hover">
+                <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
+                     src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/President.jpg" 
+                     alt="Daniel A. Obajemu" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=D.O.'">
+                <h3 class="text-2xl font-bold text-white">Daniel A. Obajemu</h3>
+                <p class="text-indigo-400 font-semibold mb-3">Founder / President</p>
+                <p class="text-gray-300 text-sm">Harvest Intercontinental American University</p>
+                <a href="president.html" class="mt-4 px-4 py-2 bg-indigo-500 rounded-full text-white text-sm font-medium hover:bg-indigo-600 transition">View Profile</a>
+            </div>
+
+            <!-- Sadayah Isaac Davis -->
+            <div class="bg-gradient-to-b from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700 text-center flex flex-col items-center card-hover">
+                <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
+                     src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Sada.jpg" 
+                     alt="Sadayah Isaac Davis"
+                     onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=S.D.'">
+                <h3 class="text-2xl font-bold text-white">Sadayah Isaac Davis</h3>
+                <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
+                <p class="text-gray-300 text-sm">College Of West Africa</p>
+            </div>
+
+            <!-- Ceree P. Williams -->
+            <div class="bg-gradient-to-b from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700 text-center flex flex-col items-center card-hover">
+                <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
+                     src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Ce.jpg" 
+                     alt="Ceree P. Williams"
+                     onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=C.W.'">
+                <h3 class="text-2xl font-bold text-white">Ceree P. Williams</h3>
+                <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
+                <p class="text-gray-300 text-sm">University of Liberia</p>
+            </div>
+
+            <!-- Adrienne Celine Uche Duru -->
+            <div class="bg-gradient-to-b from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700 text-center flex flex-col items-center card-hover">
+                <img class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-indigo-500 object-cover" 
+                     src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Uche.jpg" 
+                     alt="Adrienne Celine Uche Duru"
+                     onerror="this.onerror=null;this.src='https://placehold.co/128x128/1f2937/a5b4fc?text=A.D.'">
+                <h3 class="text-2xl font-bold text-white">Adrienne Celine Uche Duru</h3>
+                <p class="text-indigo-400 font-semibold mb-3">Co-Founder / Administrator</p>
+                <p class="text-gray-300 text-sm">Stella Maris Polythenic University</p>
+            </div>
+        </div>
+
+        <!-- Advisors -->
+        <div class="mt-24 border-t border-gray-700 pt-16">
+            <h2 class="text-3xl font-extrabold text-center text-white mb-12">Our Key Advisors</h2>
+            <div class="max-w-6xl mx-auto grid gap-8 lg:grid-cols-2">
+                <!-- Chief Advisor -->
+                <div class="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden md:flex card-hover">
+                    <img class="h-48 w-full object-cover md:w-48" 
+                         src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Mr.%20Miracle.jpeg" 
+                         alt="Mr. Miracle Chibuzor Marcel"
+                         onerror="this.onerror=null;this.src='https://placehold.co/192x192/1f2937/a5b4fc?text=M.M.'">
+                    <div class="p-8 flex flex-col justify-center text-center md:text-left">
+                        <h3 class="text-2xl font-bold text-white">Mr. Miracle Chibuzor Marcel</h3>
+                        <p class="text-indigo-400 font-semibold mb-3">Chief Advisor</p>
+                        <p class="text-indigo-400 font-semibold mb-3">Founder / Director, Pan-African Citizen Science e-Laboratory</p>
+                        <p class="text-gray-300">Guiding our society with a wealth of experience, Mr. Marcel provides invaluable strategic advice and fosters our connection with the broader Pan-African scientific community.</p>
+                    </div>
+                </div>
+
+                <!-- Outreach Advisor -->
+                <div class="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden md:flex card-hover">
+                    <img class="h-48 w-full object-cover md:w-48" 
+                         src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/mum.jpg" 
+                         alt="Mrs. Alisabatu Obajemu"
+                         onerror="this.onerror=null;this.src='https://placehold.co/192x192/1f2937/a5b4fc?text=A.O.'">
+                    <div class="p-8 flex flex-col justify-center text-center md:text-left">
+                        <h3 class="text-2xl font-bold text-white">Mrs. Alisabatu Angelina Obajemu</h3>
+                        <p class="text-indigo-400 font-semibold mb-3">Outreach Advisor</p>
+                        <p class="text-indigo-400 font-semibold mb-3">Instructor, Stella Marris Polytechnic University</p>
+                        <p class="text-gray-300">Mrs. Obajemu develops and executes public engagement and educational programs, inspiring the next generation of astronomers across Liberia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-900 border-t border-gray-700 mt-auto">
+    <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+        <div class="flex justify-center space-x-6 mb-4">
+            <a href="#" class="hover:text-indigo-400 transition">Facebook</a>
+            <a href="#" class="hover:text-indigo-400 transition">Twitter</a>
+            <a href="#" class="hover:text-indigo-400 transition">Instagram</a>
+        </div>
+        <div class="flex justify-center space-x-4 mb-4 text-gray-400">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="portfolio.html">Activities</a>
+            <a href="team.html" class="text-indigo-400 font-bold">Our Team</a>
+            <a href="blog.html">Blog</a>
+            <a href="president.html">President</a>
+            <a href="getinvolve.html">Get Involved</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+        <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Liberian Astronomical Society. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
 document.addEventListener("DOMContentLoaded", () => {
+    // --- Loader Fade ---
     const loader = document.getElementById("loader");
     const content = document.getElementById("content");
-
-    if (!loader || !content) return;
-
-    const MIN_TIME = 1200; // 1.2s for a smooth experience
-
-    requestAnimationFrame(() => {
-        setTimeout(() => {
-            loader.style.opacity = "0";
-            content.style.opacity = "1";
-
+    if(loader && content){
+        const MIN_TIME = 1200;
+        requestAnimationFrame(() => {
             setTimeout(() => {
-                loader.style.display = "none";
-            }, 600); // matches CSS transition
-        }, MIN_TIME);
+                loader.style.transition = "opacity 0.6s ease";
+                loader.style.opacity = "0";
+                content.style.opacity = "1";
+                setTimeout(() => loader.style.display = "none", 600);
+            }, MIN_TIME);
+        });
+    }
+
+    // --- Footer Year ---
+    const yearElement = document.getElementById('current-year');
+    if(yearElement){
+        yearElement.textContent = new Date().getFullYear();
+    }
+
+    // --- Mobile Menu Toggle ---
+    const mobileBtn = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if(mobileBtn && mobileMenu){
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+    }
+
+    // --- Fade-in Animation for Sections & Cards ---
+    const fadeElements = document.querySelectorAll('.animate-fadeIn, .card-hover');
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-6');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    fadeElements.forEach(el => {
+        // Initial state
+        el.classList.add('opacity-0', 'translate-y-6', 'transition-all', 'duration-700', 'ease-out');
+        observer.observe(el);
     });
 });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
-            const yearElement = document.getElementById('current-year');
-            if (yearElement) {
-                yearElement.textContent = new Date().getFullYear();
-            }
-
-            // --- Mobile Menu Toggle ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-
-            // --- Close mobile menu on link click ---
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                 link.addEventListener('click', () => {
-                     if (mobileMenu) {
-                         mobileMenu.classList.add('hidden');
-                     }
-                 });
-            });
-        });
-    </script>
+</script>
 </body>
 </html>
