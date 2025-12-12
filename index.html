@@ -17,8 +17,8 @@
 <style>
 /* --- Loader Spinner --- */
 .loader {
-    border: 6px solid rgba(255, 255, 255, 0.3);
-    border-top: 6px solid #3498db;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid #7f5af0; /* neon indigo accent */
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -45,9 +45,10 @@ html {
 }
 
 body {
-    background-color: #0f172a;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
     font-family: 'Inter', sans-serif;
     margin: 0;
+    color: #e0e7ff; /* soft neon-ish text */
 }
 
 /* Section padding */
@@ -64,20 +65,22 @@ body {
 
 /* --- Navigation Styles --- */
 .nav-link {
-    transition: color 200ms ease-in-out;
+    transition: color 200ms ease-in-out, text-shadow 200ms ease-in-out;
 }
 .nav-link:hover {
-    color: #a5b4fc;
+    color: #7f5af0;
+    text-shadow: 0 0 8px #7f5af0, 0 0 16px #3b82f6;
 }
 
 /* --- Hero Background --- */
 .hero-bg-image {
     background:
-      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+      linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)),
       url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
       center/cover no-repeat;
     min-height: 70vh;
     position: relative;
+    backdrop-filter: blur(4px);
 }
 
 /* Desktop parallax */
@@ -95,21 +98,34 @@ body {
     }
 }
 
-/* --- Partner Card Hover Effect --- */
+/* --- Card Hover Effect --- */
 .card-hover {
     transition: transform .25s ease, box-shadow .25s ease;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    border-radius: 1rem;
 }
 .card-hover:hover {
     transform: translateY(-5px);
     box-shadow:
-      0 10px 15px -3px rgba(167, 139, 250, 0.3),
-      0 4px 6px -2px rgba(167, 139, 250, 0.1);
+      0 10px 15px -3px rgba(127, 90, 240, 0.5),
+      0 4px 6px -2px rgba(59, 130, 246, 0.3);
 }
 
-/* --- Button Focus Styling --- */
+/* --- Button Styling --- */
+.btn-primary {
+    background-color: #7f5af0;
+    color: #ffffff;
+    transition: background 200ms ease, box-shadow 200ms ease;
+    box-shadow: 0 0 8px #7f5af0;
+}
+.btn-primary:hover {
+    background-color: #3b82f6;
+    box-shadow: 0 0 16px #3b82f6, 0 0 32px #7f5af0;
+}
 .btn-primary:focus {
     outline: none;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 0 4px rgba(127, 90, 240, 0.5);
 }
 
 /* --- Image Fade Animation --- */
@@ -137,12 +153,14 @@ body {
 img {
     max-width: 100%;
     height: auto;
+    border-radius: 0.5rem;
 }
 
 /* Fix hero text shrinking */
 @media(max-width: 640px) {
     h1 {
         font-size: 2.25rem !important;
+        text-shadow: 0 0 8px #7f5af0;
     }
     p {
         font-size: 1rem !important;
@@ -157,6 +175,9 @@ img {
 /* Remove overflow on stat cards */
 .stat-card {
     width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    border-radius: 0.75rem;
 }
 
 /* Mobile breathing space */
@@ -166,7 +187,30 @@ img {
         padding-bottom: 2rem !important;
     }
 }
-</style>  
+
+/* Neon glow accents for headings */
+h1, h2, h3 {
+    text-shadow: 0 0 4px #7f5af0, 0 0 8px #3b82f6;
+}
+
+/* Links glow */
+a {
+    transition: color 200ms ease, text-shadow 200ms ease;
+}
+a:hover {
+    color: #3b82f6;
+    text-shadow: 0 0 8px #3b82f6;
+}
+
+/* Glass panel effect */
+.glass {
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(127, 90, 240, 0.3);
+    box-shadow: 0 4px 30px rgba(127, 90, 240, 0.1);
+}
+</style>
 </head>
 <body class="bg-gray-950 text-gray-200">
 
@@ -799,17 +843,3 @@ function stopAllInnerCarousels() {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
