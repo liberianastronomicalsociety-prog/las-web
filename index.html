@@ -28,7 +28,7 @@ body {
   margin: 0;
   background: linear-gradient(135deg, #0f172a, #1e293b);
   font-family: 'Inter', sans-serif;
-  color: #e0e7ff; /* soft neon-ish text */
+  color: #e0e7ff; 
 }
 
 /* Prevent content flash on load */
@@ -39,7 +39,7 @@ body {
   transition-duration: 1000ms;
 }
 
-/* Rendering optimization for long pages */
+/* Rendering optimization */
 .section {
   content-visibility: auto;
   contain-intrinsic-size: 1000px;
@@ -49,25 +49,26 @@ body {
    2. TYPOGRAPHY
    ========================================= */
 
+/* REMOVED: text-shadow on headings */
 h1, h2, h3 {
-  text-shadow: 0 0 4px #7f5af0, 0 0 8px #3b82f6;
+  /* No text-shadow here anymore */
 }
 
 /* Global Link Styles */
 a {
-  transition: color 200ms ease, text-shadow 200ms ease;
+  transition: color 200ms ease;
 }
 
 a:hover {
   color: #3b82f6;
-  text-shadow: 0 0 8px #3b82f6;
+  /* REMOVED: text-shadow on hover */
 }
 
 /* Mobile Typography Fixes */
 @media(max-width: 640px) {
   h1 {
     font-size: 2.25rem !important;
-    text-shadow: 0 0 8px #7f5af0;
+    /* REMOVED: text-shadow */
   }
   p {
     font-size: 1rem !important;
@@ -87,14 +88,15 @@ a:hover {
 @media (max-width: 768px) {
   .section-padding {
     padding-top: 2rem !important;
-    padding-bottom: 2rem !important; /* Combined padding rule */
+    padding-bottom: 2rem !important; 
   }
 }
 
 /* Glass Panel Effect */
+/* Note: backdrop-filter blurs the BACKGROUND behind the element, not the text */
 .glass {
   background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px); 
   border-radius: 1rem;
   border: 1px solid rgba(127, 90, 240, 0.3);
   box-shadow: 0 4px 30px rgba(127, 90, 240, 0.1);
@@ -105,12 +107,12 @@ a:hover {
    ========================================= */
 
 .nav-link {
-  transition: color 200ms ease-in-out, text-shadow 200ms ease-in-out;
+  transition: color 200ms ease-in-out;
 }
 
 .nav-link:hover {
   color: #7f5af0;
-  text-shadow: 0 0 8px #7f5af0, 0 0 16px #3b82f6;
+  /* REMOVED: text-shadow */
 }
 
 /* =========================================
@@ -140,7 +142,7 @@ a:hover {
 
 .loader {
   border: 6px solid rgba(255, 255, 255, 0.2);
-  border-top: 6px solid #7f5af0; /* neon indigo accent */
+  border-top: 6px solid #7f5af0; 
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -160,7 +162,7 @@ a:hover {
 .card-hover {
   transition: transform .25s ease, box-shadow .25s ease;
   background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px); /* Blurs background images behind card */
   border-radius: 1rem;
 }
 
@@ -869,5 +871,6 @@ function stopAllInnerCarousels() {
 </script>
 </body>
 </html>
+
 
 
