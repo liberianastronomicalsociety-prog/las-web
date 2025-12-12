@@ -15,200 +15,107 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- Loader Spinner --- */
-.loader {
-    border: 6px solid rgba(255, 255, 255, 0.2);
-    border-top: 6px solid #7f5af0; /* neon indigo accent */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
+/* --- Loader --- */
+#loader .loader {
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  border-top: 6px solid #6366f1; /* Indigo-500 */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Prevent content flash */
-#content {
-    opacity: 0;
-    transition-property: opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 1000ms;
-}
-
-/* --- Global Layout & Typography --- */
-html {
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-}
-
-body {
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    color: #e0e7ff; /* soft neon-ish text */
-}
-
-/* Section padding */
-.section-padding {
-    padding: 5rem 0;
-}
-
-/* Reduce padding on mobile */
-@media (max-width: 768px) {
-    .section-padding {
-        padding: 3rem 0;
-    }
-}
-
-/* --- Navigation Styles --- */
-.nav-link {
-    transition: color 200ms ease-in-out, text-shadow 200ms ease-in-out;
-}
-.nav-link:hover {
-    color: #7f5af0;
-    text-shadow: 0 0 8px #7f5af0, 0 0 16px #3b82f6;
+/* Smooth fade-out for loader */
+#loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* --- Hero Background --- */
 .hero-bg-image {
-    background:
-      linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)),
-      url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Wallpaper.jpeg')
-      center/cover no-repeat;
-    min-height: 70vh;
-    position: relative;
-    backdrop-filter: blur(4px);
+  background: linear-gradient(rgba(15,23,42,0.7), rgba(15,23,42,0.7)), 
+              url('https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/hero-bg.jpg') center/cover no-repeat;
+  transition: background 0.5s ease-in-out;
 }
 
-/* Desktop parallax */
-@media (min-width: 768px) {
-    .hero-bg-image {
-        aspect-ratio: 16 / 9;
-        background-attachment: fixed;
-    }
+/* --- Card Hover Effects --- */
+.stat-card:hover, .carousel-item:hover, #partners a:hover {
+  transform: scale(1.05);
+  box-shadow: 0 20px 30px rgba(99, 102, 241, 0.4); /* Indigo glow */
 }
 
-/* Prevent mobile background bugs */
-@media (max-width: 768px) {
-    .hero-bg-image {
-        background-attachment: scroll !important;
-    }
+/* --- Carousel Images --- */
+.inner-image {
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease;
+}
+.inner-image.inner-active {
+  opacity: 1;
+  transform: scale(1);
+}
+.inner-image:not(.inner-active) {
+  opacity: 0;
+  transform: scale(0.95);
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* --- Card Hover Effect --- */
-.card-hover {
-    transition: transform .25s ease, box-shadow .25s ease;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(6px);
-    border-radius: 1rem;
-}
-.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow:
-      0 10px 15px -3px rgba(127, 90, 240, 0.5),
-      0 4px 6px -2px rgba(59, 130, 246, 0.3);
-}
-
-/* --- Button Styling --- */
+/* --- Buttons --- */
 .btn-primary {
-    background-color: #7f5af0;
-    color: #ffffff;
-    transition: background 200ms ease, box-shadow 200ms ease;
-    box-shadow: 0 0 8px #7f5af0;
+  background: linear-gradient(90deg,#6366f1,#4f46e5);
 }
 .btn-primary:hover {
-    background-color: #3b82f6;
-    box-shadow: 0 0 16px #3b82f6, 0 0 32px #7f5af0;
-}
-.btn-primary:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(127, 90, 240, 0.5);
+  background: linear-gradient(90deg,#4f46e5,#4338ca);
+  transform: scale(1.02);
 }
 
-/* --- Image Fade Animation --- */
-.inner-image {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    width: 100%;
-    height: 100%;
-    object-fit: contain !important;
+/* --- Social Icons Hover --- */
+.social-link:hover {
+  color: #6366f1;
+  transform: scale(1.1);
 }
 
-.inner-image.inner-active {
-    opacity: 1;
+/* --- Smooth Scroll for Nav --- */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Section rendering optimization */
-.section {
-    content-visibility: auto;
-    contain-intrinsic-size: 1000px;
+/* --- Footer Styling --- */
+footer {
+  background: #0f172a;
+  color: #c7d2fe;
+}
+footer a:hover {
+  color: #6366f1;
 }
 
-/* Fix oversized images */
-img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
+/* --- Form Inputs --- */
+input:focus, textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
 }
 
-/* Fix hero text shrinking */
-@media(max-width: 640px) {
-    h1 {
-        font-size: 2.25rem !important;
-        text-shadow: 0 0 8px #7f5af0;
-    }
-    p {
-        font-size: 1rem !important;
-    }
-}
-
-/* Fix carousel width */
-#carousel-container {
-    width: 100%;
-}
-
-/* Remove overflow on stat cards */
-.stat-card {
-    width: 100%;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(6px);
-    border-radius: 0.75rem;
-}
-
-/* Mobile breathing space */
+/* --- Responsive Hero Text --- */
 @media (max-width: 768px) {
-    .section-padding {
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
-    }
+  .hero-bg-image h1 {
+    font-size: 3rem;
+  }
+  .hero-bg-image p {
+    font-size: 1rem;
+  }
 }
 
-/* Neon glow accents for headings */
-h1, h2, h3 {
-    text-shadow: 0 0 4px #7f5af0, 0 0 8px #3b82f6;
+/* --- Count-Up Numbers --- */
+.count-up {
+  transition: color 0.3s ease;
 }
-
-/* Links glow */
-a {
-    transition: color 200ms ease, text-shadow 200ms ease;
-}
-a:hover {
-    color: #3b82f6;
-    text-shadow: 0 0 8px #3b82f6;
-}
-
-/* Glass panel effect */
-.glass {
-    background: rgba(15, 23, 42, 0.5);
-    backdrop-filter: blur(10px);
-    border-radius: 1rem;
-    border: 1px solid rgba(127, 90, 240, 0.3);
-    box-shadow: 0 4px 30px rgba(127, 90, 240, 0.1);
+.count-up:hover {
+  color: #818cf8; /* Indigo-400 */
 }
 </style>
 </head>
@@ -843,3 +750,4 @@ function stopAllInnerCarousels() {
 </script>
 </body>
 </html>
+
