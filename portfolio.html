@@ -25,8 +25,11 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
+            z-index: 0; /* Keep overlay above the page background but below content */
         }
+
+        /* Ensure main content sits above the overlay */
+        #content { position: relative; z-index: 1; }
 
         html { scroll-behavior: smooth; }
         .section-padding { padding: 5rem 1rem; }
@@ -238,12 +241,25 @@
 
                     <div class="carousel-item bg-gray-800 rounded-xl border border-indigo-700 overflow-hidden">
                         <div class="inner-slideshow relative h-72 md:h-96 w-full overflow-hidden bg-black">
-                            <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/IMG_20251125_110138_670%40-655489296.jpg" class="inner-image w-full h-full object-cover absolute top-0 left-0" style="opacity:1;" alt="Outreach Bassa">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/IMG_20251125_110138_670%40-655489296.jpg" class="inner-image w-full h-full object-cover absolute top-0 left-0" style="opacity:1;" alt="Outreach Bassa (1)">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/IMG_20251125_111121_768%40303648979.jpg" class="inner-image w-full h-full object-cover absolute top-0 left-0" style="opacity:0;" alt="Outreach Bassa (2)">
                             </div>
                         <div class="p-6 text-left">
                             <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach in Grand Bassa</h3>
                             <p class="text-gray-400 text-sm mb-2">Date: Nov 25, 2025</p>
                             <p class="text-gray-300 text-sm">Engaging students at multiple high schools in Buchanan City, sparking curiosity about our universe.</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item bg-gray-800 rounded-xl border border-indigo-700 overflow-hidden">
+                        <div class="inner-slideshow relative h-72 md:h-96 w-full overflow-hidden bg-black">
+                                <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Flyer%20-%20Introduction%20to%20Astronomy%202.png" class="inner-image w-full h-full object-cover absolute top-0 left-0" style="opacity:1;" alt="Flyer 2">
+                            </div>
+                        <div class="p-6 text-left">
+                            <h3 class="text-xl font-semibold text-indigo-400 mb-2">Introduction to Astronomy</h3>
+                            <p class="text-gray-400 text-sm mb-2">Date: Dec 20, 2025</p>
+                            <p class="text-gray-300 text-sm">Educating students on the basics of astronomy and the universe through our Collaboration with Ghana Astronomical Science (GAS).</p>
+                            <a href="blog.html" class="inline-block mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-full shadow-sm transition" aria-label="Read the blog post about Introduction to Astronomy">Read the Blog</a>
                         </div>
                     </div>
 
@@ -286,10 +302,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // --- Mobile Menu ---
-    mobileButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-    });
+    if (mobileButton && mobileMenu) {
+        mobileButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+    }
 
     if (footerYear) footerYear.textContent = new Date().getFullYear();
 
@@ -305,25 +323,33 @@ document.addEventListener("DOMContentLoaded", () => {
     let isHovered = false;
 
     // Create dots
-    slides.forEach((_, i) => {
-        const dot = document.createElement("span");
-        dot.classList.add("dot");
-        if (i === 0) dot.classList.add("active");
-        dot.addEventListener("click", () => goToSlide(i));
-        dotsContainer.appendChild(dot);
-    });
+    if (dotsContainer) {
+        slides.forEach((_, i) => {
+            const dot = document.createElement("span");
+            dot.classList.add("dot");
+            if (i === 0) dot.classList.add("active");
+            dot.addEventListener("click", () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+    }
 
     function goToSlide(index) {
         if (index >= slides.length) index = 0;
         if (index < 0) index = slides.length - 1;
 
         slides[currentOuterIndex].classList.remove("active");
-        document.querySelectorAll(".dot")[currentOuterIndex].classList.remove("active");
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll(".dot");
+            if (dots[currentOuterIndex]) dots[currentOuterIndex].classList.remove("active");
+        }
 
         currentOuterIndex = index;
 
         slides[currentOuterIndex].classList.add("active");
-        document.querySelectorAll(".dot")[currentOuterIndex].classList.add("active");
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll(".dot");
+            if (dots[currentOuterIndex]) dots[currentOuterIndex].classList.add("active");
+        }
 
         startInnerSlideshow(slides[currentOuterIndex]);
         resetOuterTimer();
@@ -356,8 +382,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Buttons ---
-    nextBtn.addEventListener("click", () => goToSlide(currentOuterIndex + 1));
-    prevBtn.addEventListener("click", () => goToSlide(currentOuterIndex - 1));
+    if (nextBtn) nextBtn.addEventListener("click", () => goToSlide(currentOuterIndex + 1));
+    if (prevBtn) prevBtn.addEventListener("click", () => goToSlide(currentOuterIndex - 1));
 
     // --- Auto Slide ---
     function resetOuterTimer() {
@@ -401,6 +427,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 else goToSlide(currentOuterIndex - 1);
             }
         });
+    });
+
+    // --- Keyboard navigation ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') goToSlide(currentOuterIndex + 1);
+        if (e.key === 'ArrowLeft') goToSlide(currentOuterIndex - 1);
     });
 
     startInnerSlideshow(slides[0]);
