@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -249,14 +250,12 @@ img {
             <!-- The CSS Spinner element -->
             <div class="loader"></div>
             <!-- Updated text -->
-            <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page ....</p>
+            <p class="text-white text-lg font-medium">Loading Liberian Astronomical Society (LAS) page...</p>
         </div>
        </div>
 
     <div id="content">
 
-    <nav class="sticky top-0 z-50 ..."> 
-    </nav>
     <!-- Navigation Bar -->
         <nav class="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-xl py-4 transition-all duration-300">
             <div class="container mx-auto flex justify-between items-center px-4">
@@ -443,7 +442,7 @@ img {
             <div class="container mx-auto text-center px-4">
                 <div id="carousel-container" class="relative max-w-2xl mx-auto shadow-2xl rounded-xl">
 
-                    <button onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white hover:ring-indigo-300">
+                    <button type="button" aria-label="Previous slide" onclick="changeSlide(-1)" class="carousel-btn absolute top-1/2 left-0 z-20 transform -translate-y-1/2 -ml-6 md:-ml-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white hover:ring-indigo-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                     </button>
 
@@ -547,13 +546,13 @@ img {
                                 <h3 class="text-xl font-semibold text-indigo-400 mb-2">Outreach In Grand Bassa</h3>
                                 <p class="text-gray-400 text-sm mb-4">Date: Nov 25, 2025</p>
                                 <p class="text-gray-300 text-sm">
-                                    Our outreach in Buchanan City, Grand Bassa County, where we engage students about astronomy and drive awareness for LAS at Bassa High School System and the W. P. L. Brumskine United Methodist High School,sparking curiosity about our universe.
+                                    Our outreach in Buchanan City, Grand Bassa County, where we engage students about astronomy and drive awareness for LAS at Bassa High School System and the W. P. L. Brumskine United Methodist High School, sparking curiosity about our universe.
                                 </p>
                             </div>
                         </div>
                         
                     </div>
-                    <button onclick="changeSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white hover:ring-indigo-300">
+                    <button type="button" aria-label="Next slide" onclick="changeSlide(1)" class="carousel-btn absolute top-1/2 right-0 z-20 transform -translate-y-1/2 -mr-6 md:-mr-10 p-3 rounded-full text-white focus:outline-none ring-2 ring-white hover:ring-indigo-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </button>
                     
@@ -822,6 +821,12 @@ function setupMainCarousel() {
 
     // Start inner-image carousel for first slide
     startInnerCarousel(slides[0]);
+
+    // Keyboard navigation for accessibility
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+        if (e.key === 'ArrowRight') changeSlide(1);
+    });
 }
 
 function showSlide(n) {
@@ -871,6 +876,3 @@ function stopAllInnerCarousels() {
 </script>
 </body>
 </html>
-
-
-
