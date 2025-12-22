@@ -99,7 +99,7 @@
                     // Create a new document in the "members" collection
                     return setDoc(doc(db, "members", user.uid), {
                         email: user.email,
-                        membership_status: "Pending", // Default status for new users
+                        status: "Incomplete", // Default status for new users
                         join_date: new Date().toISOString()
                     }).then(() => {
                         showMessage("Account created successfully! Redirecting to dashboard...", 'success');
