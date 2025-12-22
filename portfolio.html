@@ -309,11 +309,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const footerYear = document.getElementById('current-year');
 
     // --- Loader ---
-    window.addEventListener('load', () => {
+    function hideLoader() {
+        if (!loader || !content) return;
         loader.style.opacity = "0";
         content.style.opacity = "1";
-        setTimeout(() => loader.style.display = "none", 700);
+        setTimeout(() => { try { loader.style.display = "none"; } catch (e) {} }, 700);
+    }
+
+    // Hide when the page fully loads
+    window.addEventListener('load', () => {
+        hideLoader();
+        if (typeof loaderFallback !== 'undefined') clearTimeout(loaderFallback);
     });
+
+    // Fallback: if 'load' doesn't fire (common on some mobile networks), hide loader after 3s
+    const loaderFallback = setTimeout(() => {
+        // Only run fallback if loader is still shown
+        if (loader && getComputedStyle(loader).display !== 'none') {
+            hideLoader();
+            console.info('Loader fallback applied: hiding loader after timeout');
+        }
+    }, 3000);
 
     // --- Mobile Menu ---
     if (mobileButton && mobileMenu) {
