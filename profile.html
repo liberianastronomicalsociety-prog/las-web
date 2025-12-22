@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complete Profile — Liberian Astronomical Society</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(180deg,#071126 0%, #011026 60%); color:#e6eef8; }
+    .hero { background: linear-gradient(90deg, rgba(8,23,51,0.6), rgba(10,16,30,0.6)); }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="max-w-6xl mx-auto py-6 px-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-4">
+      <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" alt="LAS" class="h-12 rounded-full">
+      <div>
+        <h1 class="text-xl font-semibold">Liberian Astronomical Society</h1>
+        <p class="text-xs text-gray-400">Empowering Liberian youth through astronomy</p>
+      </div>
+    </a>
+    <div class="flex items-center gap-3">
+      <a href="dashboard.html" class="text-sm bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded">Back to Dashboard</a>
+      <button id="signOut" class="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded">Sign out</button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-12">
+    <section class="hero rounded-xl p-8 mb-8 shadow-lg">
+      <div class="md:flex md:items-center md:justify-between">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold">Complete Your Member Profile</h2>
+          <p class="mt-2 text-gray-300">Help us verify your membership so you can access full member benefits. Your information is kept private and used only for LAS administration.</p>
+        </div>
+        <div class="mt-4 md:mt-0 text-sm text-gray-400">
+          <p class="font-semibold">Need help?</p>
+          <p>Email <a class="underline" href="mailto:admin@liberianastronomicalsociety.org">admin@liberianastronomicalsociety.org</a></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Form -->
+      <form id="profileForm" class="md:col-span-2 bg-gray-900/60 backdrop-blur rounded-xl p-8 space-y-4">
+        <h3 class="text-lg font-semibold">Your details</h3>
+
+        <div>
+          <label for="fullName" class="block text-sm text-gray-300">Full name</label>
+          <input id="fullName" name="fullName" required class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Jane Doe">
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label for="role" class="block text-sm text-gray-300">Role</label>
+            <select id="role" name="role" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white">
+              <option>Student</option>
+              <option>Volunteer</option>
+              <option>Teacher</option>
+              <option>Researcher</option>
+              <option>Executive</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="country" class="block text-sm text-gray-300">Country</label>
+            <input id="country" name="country" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Liberia">
+          </div>
+        </div>
+
+        <div>
+          <label for="phone" class="block text-sm text-gray-300">Phone (optional)</label>
+          <input id="phone" name="phone" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="+231...">
+        </div>
+
+        <div>
+          <label for="photoUrl" class="block text-sm text-gray-300">Profile photo URL</label>
+          <input id="photoUrl" name="photoUrl" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="https://...">
+        </div>
+
+        <div>
+          <label for="bio" class="block text-sm text-gray-300">Short bio</label>
+          <textarea id="bio" name="bio" rows="4" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Tell us briefly about your interest in astronomy"></textarea>
+        </div>
+
+        <div>
+          <label for="idLink" class="block text-sm text-gray-300">ID / Document (optional, URL)</label>
+          <input id="idLink" name="idLink" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="https://...">
+          <p class="text-xs text-gray-400 mt-1">Providing an ID or letter of affiliation speeds verification.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input id="agree" type="checkbox" required>
+          <label for="agree" class="text-sm text-gray-300">I confirm the information provided is accurate and agree to LAS data policies.</label>
+        </div>
+
+        <div class="flex gap-3">
+          <button id="saveBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-semibold">Save & Request Verification</button>
+          <a href="dashboard.html" class="inline-block"><button type="button" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button></a>
+        </div>
+
+        <div id="formMessage" class="hidden mt-2 text-sm rounded px-3 py-2" role="status" aria-live="polite"></div>
+      </form>
+
+      <!-- Preview + Info -->
+      <aside class="bg-gray-900/60 backdrop-blur rounded-xl p-6">
+        <div class="text-center">
+          <img id="preview" src="https://via.placeholder.com/180" alt="Profile preview" class="mx-auto h-36 w-36 object-cover rounded-full border-2 border-gray-700 mb-4">
+          <h4 id="previewName" class="text-lg font-semibold">Your name</h4>
+          <p id="previewRole" class="text-sm text-gray-400">Your role • Your country</p>
+        </div>
+
+        <hr class="my-4 border-gray-800">
+        <h5 class="text-sm font-semibold mb-2">Why we ask for this</h5>
+        <p class="text-sm text-gray-400">We use your details to verify membership, manage event registrations, and communicate important information. We will never share your personal data without consent.</p>
+
+        <div class="mt-6">
+          <h6 class="text-sm font-semibold">Privacy & Verification</h6>
+          <p class="text-xs text-gray-400">Your documents are used solely for identity verification and membership approval by LAS administrators.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-800 py-6 mt-12 text-center text-sm text-gray-400">
+    &copy; <span id="year"></span> Liberian Astronomical Society — All rights reserved
+  </footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
+    authDomain: "liberian-astro-society.firebaseapp.com",
+    projectId: "liberian-astro-society",
+    storageBucket: "liberian-astro-society.firebasestorage.app",
+    messagingSenderId: "914979035379",
+    appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
+    measurementId: "G-RBC64CGK4J"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const saveBtn = document.getElementById('saveBtn');
+  const form = document.getElementById('profileForm');
+  const preview = document.getElementById('preview');
+  const previewName = document.getElementById('previewName');
+  const previewRole = document.getElementById('previewRole');
+  const photoUrlInput = document.getElementById('photoUrl');
+  const fullNameInput = document.getElementById('fullName');
+  const roleInput = document.getElementById('role');
+  const countryInput = document.getElementById('country');
+  const phoneInput = document.getElementById('phone');
+  const bioInput = document.getElementById('bio');
+  const idLinkInput = document.getElementById('idLink');
+  const agreeInput = document.getElementById('agree');
+  const messageEl = document.getElementById('formMessage');
+  const signOutBtn = document.getElementById('signOut');
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function setMessage(text, type='info') {
+    messageEl.textContent = text;
+    messageEl.className = 'mt-2 text-sm rounded px-3 py-2';
+    if (type === 'success') messageEl.classList.add('bg-green-600','text-white');
+    else if (type === 'error') messageEl.classList.add('bg-red-600','text-white');
+    else messageEl.classList.add('bg-indigo-700','text-white');
+    messageEl.classList.remove('hidden');
+  }
+
+  function setLoading(on) {
+    saveBtn.disabled = on;
+    saveBtn.textContent = on ? 'Saving…' : 'Save & Request Verification';
+  }
+
+  // Live preview
+  function updatePreview() {
+    preview.src = photoUrlInput.value || 'https://via.placeholder.com/180';
+    previewName.textContent = fullNameInput.value || 'Your name';
+    previewRole.textContent = (roleInput.value || 'Role') + ' • ' + (countryInput.value || 'Country');
+  }
+
+  photoUrlInput.addEventListener('input', updatePreview);
+  fullNameInput.addEventListener('input', updatePreview);
+  roleInput.addEventListener('change', updatePreview);
+  countryInput.addEventListener('input', updatePreview);
+
+  // Auth guard
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    signOutBtn.addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = 'login.html';
+    });
+
+    // Pre-fill if user already has values (non-critical: keep simple)
+    // Could fetch members/user.uid doc to prefill — omitted here for brevity because dashboard keeps data.
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Basic validation
+      if (!fullNameInput.value.trim()) { setMessage('Enter your full name.', 'error'); fullNameInput.focus(); return; }
+      if (!agreeInput.checked) { setMessage('Please confirm you agree to LAS policies.', 'error'); agreeInput.focus(); return; }
+
+      setLoading(true);
+      setMessage('Saving your profile and requesting verification...', 'info');
+
+      try {
+        const userDocRef = doc(db, 'members', user.uid);
+        await setDoc(userDocRef, {
+          name: fullNameInput.value.trim(),
+          role: roleInput.value,
+          country: countryInput.value || '',
+          phone: phoneInput.value || '',
+          photo: photoUrlInput.value || '',
+          bio: bioInput.value || '',
+          id_document: idLinkInput.value || '',
+          membership_status: 'Pending',
+          last_updated: new Date().toISOString()
+        }, { merge: true });
+
+        setMessage('Profile saved. Your application is now pending verification by an administrator.', 'success');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+      } catch (err) {
+        setMessage('Failed to save profile: ' + err.message, 'error');
+      } finally {
+        setLoading(false);
+      }
+    });
+  });
+</script>
+</body>
+</html>
