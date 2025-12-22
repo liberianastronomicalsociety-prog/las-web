@@ -97,15 +97,19 @@
                     const user = userCredential.user;
 
                     // Create a new document in the "members" collection
-                    setDoc(doc(db, "members", user.uid), {
+                    return setDoc(doc(db, "members", user.uid), {
                         email: user.email,
                         membership_status: "Pending", // Default status for new users
                         join_date: new Date().toISOString()
                     }).then(() => {
-                        showMessage("Account created successfully! Redirecting to login...", 'success');
+                        showMessage("Account created successfully! Redirecting to dashboard...", 'success');
                         setTimeout(() => {
-                            window.location.href = 'login.html';
-                        }, 2000); // Redirect after 2 seconds
+                            // Redirect to the dashboard (user is already signed in)
+                            window.location.href = 'dashboard.html';
+                        }, 1500); // Redirect after 1.5 seconds
+                    }).catch((err) => {
+                        // If profile save fails, still best to let user continue but notify them
+                        showMessage("Account created but failed to save profile: " + err.message, 'error');
                     });
                 })
                 .catch((error) => {
@@ -115,4 +119,3 @@
     </script>
 </body>
 </html>
-
