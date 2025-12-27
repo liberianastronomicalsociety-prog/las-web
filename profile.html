@@ -10,6 +10,13 @@
   <style>
     body { font-family: 'Inter', sans-serif; background: linear-gradient(180deg,#071126 0%, #011026 60%); color:#e6eef8; }
     .hero { background: linear-gradient(90deg, rgba(8,23,51,0.6), rgba(10,16,30,0.6)); }
+    img { 
+      height: 150px;
+      width: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ddd;
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -76,7 +83,8 @@
 
         <div>
           <label for="photoUrl" class="block text-sm text-gray-300">Profile photo URL</label>
-          <input id="photoUrl" name="photoUrl" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="https://...">
+          <img id="previewImage" src="https://via.placeholder.com/180" alt="Profile preview" class="mx-auto h-36 w-36 object-cover rounded-full border-2 border-gray-700 mb-4">
+          <input type="file" id="file" name="file" accept="image/*" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white">
         </div>
 
         <div>
@@ -151,7 +159,8 @@
   const preview = document.getElementById('preview');
   const previewName = document.getElementById('previewName');
   const previewRole = document.getElementById('previewRole');
-  const photoUrlInput = document.getElementById('photoUrl');
+  const image = document.querySelector('img'),
+  input = document.querySelector('input[type="file"]');
   const fullNameInput = document.getElementById('fullName');
   const roleInput = document.getElementById('role');
   const countryInput = document.getElementById('country');
@@ -236,6 +245,8 @@
       } finally {
         setLoading(false);
       }
+    input.addEventListener('change', (e) => {
+      image.src = URL.createObjectURL(input.files[0]);
     });
   });
 </script>
