@@ -146,21 +146,18 @@
     projectId: "liberian-astro-society",
     storageBucket: "liberian-astro-society.firebasestorage.app",
     messagingSenderId: "914979035379",
-    appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86",
-    measurementId: "G-RBC64CGK4J"
+    appId: "1:914979035379:web:ad9a2dbb05ebd48c407f86"
   };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const saveBtn = document.getElementById('saveBtn');
   const form = document.getElementById('profileForm');
-  const preview = document.getElementById('preview');
-  const previewName = document.getElementById('previewName');
-  const previewRole = document.getElementById('previewRole');
-  const image = document.querySelector('img'),
-  input = document.querySelector('input[type="file"]');
+  const saveBtn = document.getElementById('saveBtn');
+  const signOutBtn = document.getElementById('signOut');
+  const messageEl = document.getElementById('formMessage');
+
   const fullNameInput = document.getElementById('fullName');
   const roleInput = document.getElementById('role');
   const countryInput = document.getElementById('country');
@@ -168,18 +165,22 @@
   const bioInput = document.getElementById('bio');
   const idLinkInput = document.getElementById('idLink');
   const agreeInput = document.getElementById('agree');
-  const messageEl = document.getElementById('formMessage');
-  const signOutBtn = document.getElementById('signOut');
+
+  const fileInput = document.getElementById('file');
+  const previewImg = document.getElementById('preview');
+  const previewName = document.getElementById('previewName');
+  const previewRole = document.getElementById('previewRole');
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  function setMessage(text, type='info') {
+  function setMessage(text, type = 'info') {
     messageEl.textContent = text;
     messageEl.className = 'mt-2 text-sm rounded px-3 py-2';
-    if (type === 'success') messageEl.classList.add('bg-green-600','text-white');
-    else if (type === 'error') messageEl.classList.add('bg-red-600','text-white');
-    else messageEl.classList.add('bg-indigo-700','text-white');
     messageEl.classList.remove('hidden');
+
+    if (type === 'success') messageEl.classList.add('bg-green-600', 'text-white');
+    else if (type === 'error') messageEl.classList.add('bg-red-600', 'text-white');
+    else messageEl.classList.add('bg-indigo-700', 'text-white');
   }
 
   function setLoading(on) {
@@ -187,19 +188,23 @@
     saveBtn.textContent = on ? 'Saving…' : 'Save & Request Verification';
   }
 
-  // Live preview
   function updatePreview() {
-    preview.src = photoUrlInput.value || 'https://via.placeholder.com/180';
     previewName.textContent = fullNameInput.value || 'Your name';
-    previewRole.textContent = (roleInput.value || 'Role') + ' • ' + (countryInput.value || 'Country');
+    previewRole.textContent =
+      (roleInput.value || 'Role') + ' • ' + (countryInput.value || 'Country');
   }
 
-  photoUrlInput.addEventListener('input', updatePreview);
   fullNameInput.addEventListener('input', updatePreview);
   roleInput.addEventListener('change', updatePreview);
   countryInput.addEventListener('input', updatePreview);
 
-  // Auth guard
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+      previewImg.src = URL.createObjectURL(file);
+    }
+  });
+
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       window.location.href = 'login.html';
@@ -211,42 +216,45 @@
       window.location.href = 'login.html';
     });
 
-    // Pre-fill if user already has values (non-critical: keep simple)
-    // Could fetch members/user.uid doc to prefill — omitted here for brevity because dashboard keeps data.
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Basic validation
-      if (!fullNameInput.value.trim()) { setMessage('Enter your full name.', 'error'); fullNameInput.focus(); return; }
-      if (!agreeInput.checked) { setMessage('Please confirm you agree to LAS policies.', 'error'); agreeInput.focus(); return; }
+      if (!fullNameInput.value.trim()) {
+        setMessage('Enter your full name.', 'error');
+        return;
+      }
+
+      if (!agreeInput.checked) {
+        setMessage('Please agree to LAS policies.', 'error');
+        return;
+      }
 
       setLoading(true);
-      setMessage('Saving your profile and requesting verification...', 'info');
+      setMessage('Saving your profile...', 'info');
 
       try {
-        const userDocRef = doc(db, 'members', user.uid);
-        await setDoc(userDocRef, {
-          name: fullNameInput.value.trim(),
-          role: roleInput.value,
-          country: countryInput.value || '',
-          phone: phoneInput.value || '',
-          photo: photoUrlInput.value || '',
-          bio: bioInput.value || '',
-          id_document: idLinkInput.value || '',
-          membership_status: 'Pending',
-          last_updated: new Date().toISOString()
-        }, { merge: true });
+        await setDoc(
+          doc(db, 'members', user.uid),
+          {
+            name: fullNameInput.value.trim(),
+            role: roleInput.value,
+            country: countryInput.value || '',
+            phone: phoneInput.value || '',
+            bio: bioInput.value || '',
+            id_document: idLinkInput.value || '',
+            membership_status: 'Pending',
+            last_updated: new Date().toISOString()
+          },
+          { merge: true }
+        );
 
-        setMessage('Profile saved. Your application is now pending verification by an administrator.', 'success');
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+        setMessage('Profile saved. Verification pending.', 'success');
+        setTimeout(() => (window.location.href = 'dashboard.html'), 1500);
       } catch (err) {
-        setMessage('Failed to save profile: ' + err.message, 'error');
+        setMessage('Error: ' + err.message, 'error');
       } finally {
         setLoading(false);
       }
-    input.addEventListener('change', (e) => {
-      image.src = URL.createObjectURL(input.files[0]);
     });
   });
 </script>
