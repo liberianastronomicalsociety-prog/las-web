@@ -29,6 +29,10 @@
         <h1 class="text-2xl font-bold">Liberian Astronomical Society — Dashboard</h1>
         <p class="muted text-sm">Profile · Events · Payments</p>
       </div>
+      <a href="profile.html" id="profileBtn"
+        class="bg-indigo-600 px-4 py-2 rounded text-white hidden">
+        Profile
+      </a>
     </div>
     <div class="space-x-3">
       <span id="emailBadge" class="chip">Not signed in</span>
@@ -169,6 +173,7 @@ let isAdmin = false;
    DOM Elements
 --------------------------- */
 const emailBadge = document.getElementById('emailBadge');
+const profileBtn = document.getElementById('profileBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const incompleteSection = document.getElementById('incompleteSection');
 const profileSection = document.getElementById('profileSection');
@@ -206,6 +211,7 @@ function setStatusVisual(status) {
     membershipStatusEl.classList.add('bg-gray-600', 'text-white');
   }
 }
+
 
 function showIncompleteOnly() {
   incompleteSection.classList.remove('hidden');
@@ -256,12 +262,21 @@ onAuthStateChanged(auth, async (user) => {
         membership_status: 'Incomplete',
         memberID: generateMemberID(user.uid)
       }, { merge: true });
-
+      
+      // when user doc does not exist
       currentMembershipStatus = 'incomplete';
       setStatusVisual('Incomplete');
-      showIncompleteView();
+      showIncompleteOnly(); // ✅ FIXED
       return;
+    if (currentMembershipStatus === 'approved') {
+        window.location.href = 'profile.html';
     }
+    if (currentMembershipStatus === 'approved' || currentMembershipStatus === 'active') {
+      profileBtn.classList.remove('hidden');
+    } else {
+      profileBtn.classList.add('hidden');
+    }
+
 
     const data = snap.data();
     currentMembershipStatus = (data.membership_status || 'incomplete').toLowerCase();
@@ -275,7 +290,7 @@ onAuthStateChanged(auth, async (user) => {
     if (currentMembershipStatus === 'approved') {
       showFullDashboard();
     } else {
-      showIncompleteView();
+      showIncompleteOnly();
     }
   });
 });
@@ -365,5 +380,6 @@ loadEvents();
 </script>
 </body>
 </html>
+
 
 
