@@ -42,20 +42,17 @@
 
     <!-- Left column: Profile + Membership Status -->
     <section class="glass p-6 rounded-xl" id="profileSection">
-     <div id="incompleteSection" class="glass p-6 rounded-xl mt-6 hidden col-span-3">
-      <h2 class="text-xl font-semibold">Complete Your Membership Profile</h2>
-      <p class="muted text-sm mb-3">Please complete your profile.</p>
-      <div class="flex gap-3">
-        <a href="profile.html" class="inline-block"><button class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Complete Profile</button></a>
-        </div>
-        </div>
-
-        <div class="mt-4">
-          <p class="muted text-sm">Membership status</p>
-          <div id="membershipStatus" class="inline-flex items-center gap-2 mt-2 status-pill px-3 py-1 rounded-full bg-yellow-400 text-gray-900 font-semibold">Loading...</div>
+      <h2 class="text-xl font-semibold mb-2">My Profile</h2>
+      
+      <div class="mt-4">
+        <p class="muted text-sm">Membership status</p>
+        <div id="membershipStatus"
+          class="inline-flex items-center gap-2 mt-2 status-pill bg-yellow-400 text-gray-900">
+          Loading...
         </div>
       </div>
     </section>
+
 
     <!-- Middle column: Events and Payments -->
     <section class="col-span-1 lg:col-span-1 space-y-6" id="eventsPaymentsSection">
@@ -212,9 +209,9 @@ function setStatusVisual(status) {
 
 function showIncompleteView() {
   incompleteSection.classList.remove('hidden');
-  profileSection.classList.add('hidden');
-  eventsPaymentsSection.classList.add('hidden');
-  memberIDSection.classList.add('hidden');
+  profileSection.classList.remove('hidden');
+  eventsPaymentsSection.classList.remove('hidden');
+  memberIDSection.classList.remove('hidden');
 }
 
 function showFullDashboard() {
@@ -366,3 +363,4 @@ loadEvents();
 </script>
 </body>
 </html>
+
