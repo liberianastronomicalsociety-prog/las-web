@@ -125,7 +125,7 @@
       <h2 class="text-xl font-semibold">Complete Your Membership Application</h2>
       <p class="muted text-sm mb-3">Your membership isn't fully verified yet — please complete your profile or contact an administrator for assistance.</p>
       <div class="flex gap-3">
-        <a href="membership_applcation.html" class="inline-block"><button class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Complete Profile</button></a>
+        <a href="membership_application.html" class="inline-block"><button class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Complete Application</button></a>
         <a href="mailto:liberianastronomicalsociety@gmail.com" class="inline-block"><button class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">Contact Admin</button></a>
       </div>
     </div>
@@ -207,15 +207,17 @@ function setStatusVisual(status) {
   }
 }
 
-function showIncompleteView() {
+function showIncompleteOnly() {
   incompleteSection.classList.remove('hidden');
-  profileSection.classList.remove('hidden');
-  eventsPaymentsSection.classList.remove('hidden');
-  memberIDSection.classList.remove('hidden');
+
+  profileSection.classList.add('hidden');
+  eventsPaymentsSection.classList.add('hidden');
+  memberIDSection.classList.add('hidden');
 }
 
 function showFullDashboard() {
   incompleteSection.classList.add('hidden');
+
   profileSection.classList.remove('hidden');
   eventsPaymentsSection.classList.remove('hidden');
   memberIDSection.classList.remove('hidden');
@@ -282,7 +284,7 @@ onAuthStateChanged(auth, async (user) => {
    Certificate Download (LOCKED)
 --------------------------- */
 downloadMemberIDBtn.addEventListener('click', () => {
-  if (currentMembershipStatus !== 'approved') {
+  if (!['approved', 'active'].includes(currentMembershipStatus)) {
     showTopNotice('Certificate available only after approval', 'error');
     return;
   }
@@ -363,4 +365,5 @@ loadEvents();
 </script>
 </body>
 </html>
+
 
