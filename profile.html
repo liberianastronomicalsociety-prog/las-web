@@ -246,22 +246,26 @@
 
       setLoading(true);
       setMessage('Saving your profile...', 'info');
-
-      try {
-        await setDoc(
-          doc(db, 'members', user.uid),
-          {
-            name: fullNameInput.value.trim(),
-            role: roleInput.value,
-            country: countryInput.value || '',
-            phone: phoneInput.value || '',
-            bio: bioInput.value || '',
-            id_document: idLinkInput.value || '',
-            membership_status: 'Pending',
-            last_updated: new Date().toISOString()
-          },
-          { merge: true }
-        );
+      
+      const payload = {
+        name: fullNameInput.value.trim(),
+        role: roleInput.value,
+        country: countryInput.value || '',
+        phone: phoneInput.value || '',
+        bio: bioInput.value || '',
+        id_document: idLinkInput.value || '',
+        last_updated: new Date().toISOString()
+      };
+      
+      // ONLY set Pending for brand-new users
+      if (!snap.exists() || !snap.data()?.membership_status) {
+        payload.membership_status = 'Pending';
+      }
+      await setDoc(
+        doc(db, 'members', user.uid),
+        payload,
+        { merge: true }
+      );
 
         setMessage('Profile saved. Verification pending.', 'success');
         setTimeout(() => (window.location.href = 'dashboard.html'), 1500);
