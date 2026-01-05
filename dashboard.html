@@ -92,6 +92,7 @@
           <p id="memberName" class="font-semibold"></p>
           <p id="memberRole" class="muted"></p>
           <p id="memberNumber" class="muted"></p>
+          <p id="memberCountry" class="hidden"></p>
         </div>
         <div class="flex gap-2 mb-3">
           <button id="downloadMemberID" class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Download Member ID</button>
@@ -331,6 +332,13 @@ function generatePDF() {
   doc.setFontSize(12);
   doc.text(`Role: ${memberRoleEl.textContent}`, w/2, 105, { align: 'center' });
   doc.text(`Member ID: ${memberNumberEl.textContent}`, w/2, 115, { align: 'center' });
+  doc.text(
+    `Country: ${document.getElementById('memberCountry').textContent}`,
+    w / 2,
+    125,
+    { align: 'center' }
+  );
+
 
   const verifyURL = `${location.origin}/verify.html?cert=${memberNumberEl.textContent}`;
 
@@ -384,6 +392,7 @@ loadEvents();
 </script>
 </body>
 </html>
+
 
 
 
