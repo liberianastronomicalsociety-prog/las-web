@@ -255,6 +255,8 @@ onAuthStateChanged(auth, async (user) => {
   const userRef = doc(db, 'members', user.uid);
 
   onSnapshot(userRef, async (snap) => {
+    
+    /* -------- FIRST TIME USER -------- */
     if (!snap.exists()) {
       await setDoc(userRef, {
         name: user.email?.split('@')[0] || 'Member',
@@ -263,35 +265,37 @@ onAuthStateChanged(auth, async (user) => {
         memberID: generateMemberID(user.uid)
       }, { merge: true });
       
-      // when user doc does not exist
       currentMembershipStatus = 'incomplete';
       setStatusVisual('Incomplete');
-      showIncompleteOnly(); // ✅ FIXED
+      showIncompleteOnly();
       return;
-    if (currentMembershipStatus === 'approved') {
-        window.location.href = 'profile.html';
     }
-    if (currentMembershipStatus === 'approved' || currentMembershipStatus === 'active') {
-      profileBtn.classList.remove('hidden');
-    } else {
-      profileBtn.classList.add('hidden');
-    }
-
-
+    
+    /* -------- USER EXISTS -------- */
     const data = snap.data();
-    currentMembershipStatus = (data.membership_status || 'incomplete').toLowerCase();
-
+    currentMembershipStatus = (data.membership_status || 'Incomplete').toLowerCase();
+    
+    
     setStatusVisual(data.membership_status || 'Incomplete');
-
+    
     memberNameEl.textContent = data.name || 'Member Name';
     memberRoleEl.textContent = data.role || 'Member';
     memberNumberEl.textContent = data.memberID || generateMemberID(user.uid);
-
-    if (currentMembershipStatus === 'approved') {
+    
+    /* -------- DASHBOARD VISIBILITY -------- */
+    if (['approved', 'active'].includes(currentMembershipStatus)) {
       showFullDashboard();
+      profileBtn.classList.remove('hidden');
     } else {
       showIncompleteOnly();
+      profileBtn.classList.add('hidden');
     }
+    
+   if (!['approved', 'active'].includes(currentMembershipStatus)) {
+     downloadMemberIDBtn.classList.add('hidden');
+   } else {
+     downloadMemberIDBtn.classList.remove('hidden');
+   }
   });
 });
 
@@ -300,7 +304,7 @@ onAuthStateChanged(auth, async (user) => {
 --------------------------- */
 downloadMemberIDBtn.addEventListener('click', () => {
   if (!['approved', 'active'].includes(currentMembershipStatus)) {
-    showTopNotice('Certificate available only after approval', 'error');
+    showTopNotice('Downloads available only after approval', 'error');
     return;
   }
   generatePDF();
@@ -380,6 +384,7 @@ loadEvents();
 </script>
 </body>
 </html>
+
 
 
 
