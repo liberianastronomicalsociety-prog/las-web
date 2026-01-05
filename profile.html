@@ -210,6 +210,21 @@
       window.location.href = 'login.html';
       return;
     }
+    
+    const userRef = doc(db, 'members', user.uid);
+    const snap = await getDoc(userRef);
+    
+    if (snap.exists()) {
+      const data = snap.data();
+      fullNameInput.value = data.name || '';
+      roleInput.value = data.role || 'Student';
+      countryInput.value = data.country || '';
+      phoneInput.value = data.phone || '';
+      bioInput.value = data.bio || '';
+      idLinkInput.value = data.id_document || '';
+      
+      updatePreview();
+    }
 
     signOutBtn.addEventListener('click', async () => {
       await signOut(auth);
