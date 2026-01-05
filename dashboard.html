@@ -116,7 +116,8 @@
                 <button id="useGithubSigBtn" class="bg-gray-700 px-3 py-1 rounded text-sm">Use GitHub signature</button>
               </div>
             </div>
-            <p id="signatureAdminNotice" class="text-xs muted mt-2 hidden">Only administrators can update this signature. Contact <a href="mailto:admin@liberianastronomicalsociety.org" class="underline">admin@liberianastronomicalsociety.org</a> to request changes.</p>
+            <p id="signatureAdminNotice" class="text-xs muted mt-2 hidden">Only administrators can update this signature. Contact <a href="mailto:liberianastronomicalsociety@gmail.com" class="underline">admin@liberianastronomicalsociety.org</a> to request changes.</p>
+            <div id="signatureAdminBlock" class="mt-4 border-t pt-4 hidden">
           </div>
         </div>
       </div>
@@ -127,8 +128,8 @@
       <h2 class="text-xl font-semibold">Complete Your Membership Application</h2>
       <p class="muted text-sm mb-3">Your membership isn't fully verified yet — please complete your profile or contact an administrator for assistance.</p>
       <div class="flex gap-3">
-        <a href="profile.html" class="inline-block"><button class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Complete Profile</button></a>
-        <a href="mailto:admin@liberianastronomicalsociety.org" class="inline-block"><button class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">Contact Admin</button></a>
+        <a href="membership_applcation.html" class="inline-block"><button class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700">Complete Profile</button></a>
+        <a href="mailto:liberianastronomicalsociety@gmail.com" class="inline-block"><button class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">Contact Admin</button></a>
       </div>
     </div>
 
@@ -137,9 +138,15 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDocs, getDoc, query, where, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { 
+  getFirestore, doc, setDoc, onSnapshot, collection,
+  addDoc, getDocs, getDoc
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+/* ---------------------------
+   Firebase Init
+--------------------------- */
 const firebaseConfig = {
   apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
   authDomain: "liberian-astro-society.firebaseapp.com",
@@ -152,6 +159,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+/* ---------------------------
+   Global State
+--------------------------- */
+let currentMembershipStatus = 'incomplete';
+let presidentSignature = null;
+let siteSettings = {};
+let isAdmin = false;
 
 /* ---------------------------
    DOM Elements
@@ -168,138 +183,33 @@ const memberNameEl = document.getElementById('memberName');
 const memberRoleEl = document.getElementById('memberRole');
 const memberNumberEl = document.getElementById('memberNumber');
 
-const saveProfileBtn = document.getElementById('saveProfile');
-const downloadProfileIDBtn = document.getElementById('downloadProfileID');
 const downloadMemberIDBtn = document.getElementById('downloadMemberID');
 const addPaymentBtn = document.getElementById('addPaymentBtn');
 const refreshEventsBtn = document.getElementById('refreshEvents');
 
-const profilePhotoInput = document.getElementById('profilePhoto');
-const previewPhoto = document.getElementById('previewPhoto');
-
-// Certificate settings elements
-const signatureFile = document.getElementById('signatureFile');
-const signatureUrl = document.getElementById('signatureUrl');
-const signaturePreview = document.getElementById('signaturePreview');
-const saveSignatureBtn = document.getElementById('saveSignatureBtn');
-const useGithubSigBtn = document.getElementById('useGithubSigBtn');
-
-let presidentSignature = null; // will hold data URL or external URL
-let siteSettings = null;
-let isAdmin = false;
-
-async function loadSiteSettings() {
-  try {
-    const ref = doc(db, 'settings', 'site');
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      siteSettings = snap.data();
-    } else {
-      siteSettings = {};
-    }
-  } catch (err) {
-    console.warn('Could not load site settings:', err.message);
-    siteSettings = {};
-  }
+/* ---------------------------
+   Helpers
+--------------------------- */
+function generateMemberID(uid) {
+  const year = new Date().getFullYear();
+  const short = uid.slice(-6).toUpperCase();
+  return `LAS-${year}-${short}`;
 }
 
-function updateSignatureUIForAdmin() {
-  const notice = document.getElementById('signatureAdminNotice');
-  if (isAdmin) {
-    signatureFile && (signatureFile.disabled = false);
-    signatureUrl && (signatureUrl.disabled = false);
-    saveSignatureBtn && (saveSignatureBtn.disabled = false);
-    useGithubSigBtn && (useGithubSigBtn.disabled = false);
-    if (notice) notice.classList.add('hidden');
+function setStatusVisual(status) {
+  const s = status.toLowerCase();
+  membershipStatusEl.textContent = status;
+  membershipStatusEl.className = 'status-pill mt-2';
+
+  if (s === 'approved' || s === 'active') {
+    membershipStatusEl.classList.add('bg-green-500', 'text-white');
+  } else if (s === 'pending' || s === 'incomplete') {
+    membershipStatusEl.classList.add('bg-yellow-400', 'text-gray-900');
   } else {
-    signatureFile && (signatureFile.disabled = true);
-    signatureUrl && (signatureUrl.disabled = true);
-    saveSignatureBtn && (saveSignatureBtn.disabled = true);
-    useGithubSigBtn && (useGithubSigBtn.disabled = true);
-    if (notice) notice.classList.remove('hidden');
+    membershipStatusEl.classList.add('bg-gray-600', 'text-white');
   }
 }
 
-function checkAdminForUser(user) {
-  isAdmin = false;
-  if (!user) { updateSignatureUIForAdmin(); return; }
-  const email = (user.email || '').toLowerCase();
-  const uid = (user.uid || '');
-
-  if (siteSettings) {
-    const emails = siteSettings.adminEmails || [];
-    const uids = siteSettings.adminUIDs || [];
-    if (emails.map(e => String(e).toLowerCase()).includes(email)) isAdmin = true;
-    if (uids.includes(uid)) isAdmin = true;
-  }
-
-  // Fallback allow-list (use carefully)
-  const fallbackAdmins = ['admin@liberianastronomicalsociety.org'];
-  if (fallbackAdmins.includes(email)) isAdmin = true;
-
-  updateSignatureUIForAdmin();
-}
-
-/* ---------------------------
-   Authentication & Status
---------------------------- */
-// Helper: update membership status visual
-  function setStatusVisual(status) {
-    const s = String(status || 'Incomplete');
-    membershipStatusEl.textContent = s;
-    membershipStatusEl.className = 'inline-flex items-center gap-2 mt-2 status-pill px-3 py-1 rounded-full font-semibold';
-
-    if (s.toLowerCase() === 'approved' || s.toLowerCase() === 'active') membershipStatusEl.classList.add('bg-green-500', 'text-white');
-    else if (s.toLowerCase() === 'pending' || s.toLowerCase() === 'incomplete') membershipStatusEl.classList.add('bg-yellow-400', 'text-gray-900');
-    else membershipStatusEl.classList.add('bg-gray-600', 'text-white');
-  }
-
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) { 
-      await signInAnonymously(auth); 
-      return; 
-    }
-
-    emailBadge.textContent = user.email || user.uid;
-    logoutBtn.classList.remove('hidden');
-
-    // Load site settings and determine admin rights
-    await loadSiteSettings();
-    checkAdminForUser(user);
-
-    const userDocRef = doc(db, 'members', user.uid);
-
-    onSnapshot(userDocRef, (snap) => {
-      if (!snap.exists()) {
-        setDoc(userDocRef, { 
-          membership_status: 'Incomplete', 
-          name: user.email ? user.email.split('@')[0] : 'Member', 
-          email: user.email || '', 
-          role: 'Member' 
-        }, { merge: true });
-
-        setStatusVisual('Incomplete');
-        showIncompleteView();
-        return;
-      }
-
-      const data = snap.data();
-      const status = data.membership_status || data.status || 'Incomplete';
-      setStatusVisual(status);
-
-      if (String(status).toLowerCase() === 'incomplete' || String(status).toLowerCase() === 'pending') {
-        showIncompleteView();
-        populateProfile(data, user.uid);
-      } else {
-        showFullDashboard();
-        populateProfile(data, user.uid);
-      }
-    });
-  });
-
-/* ---------------------------
-   Show / Hide Views
---------------------------- */
 function showIncompleteView() {
   incompleteSection.classList.remove('hidden');
   profileSection.classList.add('hidden');
@@ -314,346 +224,145 @@ function showFullDashboard() {
   memberIDSection.classList.remove('hidden');
 }
 
+function showTopNotice(msg, type='info') {
+  const el = document.getElementById('topNotice');
+  el.textContent = msg;
+  el.className = 'p-3 rounded text-sm';
+  el.classList.add(type === 'error' ? 'bg-red-600' :
+                   type === 'success' ? 'bg-green-600' :
+                   'bg-indigo-700', 'text-white');
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 3000);
+}
+
 /* ---------------------------
-   Profile Handling
+   Auth & Profile
 --------------------------- */
-function populateProfile(data, uid) {
-  memberNameEl.textContent = data.name || 'Member Name';
-  memberRoleEl.textContent = data.role || 'Role';
-  memberNumberEl.textContent = data.memberID || uid;
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-  document.getElementById('profileName').value = data.name || '';
-  document.getElementById('profileRole').value = data.role || 'Member';
-  document.getElementById('profilePhoto').value = data.photo || '';
-  document.getElementById('profileBio').value = data.bio || '';
-  previewPhoto.src = data.photo || 'https://via.placeholder.com/150';
-}
+  emailBadge.textContent = user.email || user.uid;
+  logoutBtn.classList.remove('hidden');
 
-// Top notice helper
-function showTopNotice(message, type = 'info', timeout = 3000) {
-  const top = document.getElementById('topNotice');
-  top.textContent = message;
-  top.className = 'max-w-6xl mx-auto p-3 rounded-md text-sm';
-  if (type === 'success') top.classList.add('bg-green-600', 'text-white');
-  else if (type === 'error') top.classList.add('bg-red-600', 'text-white');
-  else top.classList.add('bg-indigo-700', 'text-white');
-  top.classList.remove('hidden');
-  setTimeout(() => { top.classList.add('hidden'); }, timeout);
-}
+  const userRef = doc(db, 'members', user.uid);
 
-// Load president signature from Firestore settings if available
-async function loadPresidentSignature() {
-  try {
-    const ref = doc(db, 'settings', 'president');
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      const data = snap.data();
-      presidentSignature = data.signature || data.signatureUrl || null;
-      if (presidentSignature) signaturePreview.src = presidentSignature;
+  onSnapshot(userRef, async (snap) => {
+    if (!snap.exists()) {
+      await setDoc(userRef, {
+        name: user.email?.split('@')[0] || 'Member',
+        role: 'Member',
+        membership_status: 'Incomplete',
+        memberID: generateMemberID(user.uid)
+      }, { merge: true });
+
+      currentMembershipStatus = 'incomplete';
+      setStatusVisual('Incomplete');
+      showIncompleteView();
+      return;
     }
-  } catch (err) {
-    console.warn('Could not load president signature:', err.message);
-  }
-}
 
-// Signature UI handlers
-signatureFile && signatureFile.addEventListener('change', (e) => {
-  const f = e.target.files && e.target.files[0];
-  if (!f) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    presidentSignature = reader.result; // data URL
-    signaturePreview.src = presidentSignature;
-    signatureUrl.value = '';
-  };
-  reader.readAsDataURL(f);
-});
+    const data = snap.data();
+    currentMembershipStatus = (data.membership_status || 'incomplete').toLowerCase();
 
-signatureUrl && signatureUrl.addEventListener('input', () => {
-  const v = signatureUrl.value.trim();
-  if (!v) return;
-  presidentSignature = v;
-  signaturePreview.src = v;
-});
+    setStatusVisual(data.membership_status || 'Incomplete');
 
-useGithubSigBtn && useGithubSigBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  const githubRaw = 'https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/Signature.jpg';
-  signatureUrl.value = githubRaw;
-  presidentSignature = githubRaw;
-  signaturePreview.src = githubRaw;
-});
+    memberNameEl.textContent = data.name || 'Member Name';
+    memberRoleEl.textContent = data.role || 'Member';
+    memberNumberEl.textContent = data.memberID || generateMemberID(user.uid);
 
-saveSignatureBtn && saveSignatureBtn.addEventListener('click', async () => {
-  if (!isAdmin) return showTopNotice('Only administrators can update the signature', 'error');
-  if (!presidentSignature) return showTopNotice('No signature selected', 'error');
-  try {
-    await setDoc(doc(db, 'settings', 'president'), { signature: presidentSignature, name: 'Mr. Daniel A. Obajemu', title: 'President' }, { merge: true });
-    showTopNotice('Signature saved', 'success');
-  } catch (err) {
-    showTopNotice('Failed to save signature: ' + err.message, 'error');
-  }
-});
-
-// kick off settings & signature load
-loadSiteSettings().then(() => {
-  loadPresidentSignature();
-});
-
-// Save Profile
-saveProfileBtn.addEventListener('click', async () => {
-  const user = auth.currentUser;
-  if (!user) return;
-
-  saveProfileBtn.disabled = true;
-  try {
-    const userDocRef = doc(db, 'members', user.uid);
-    await setDoc(userDocRef, {
-      name: document.getElementById('profileName').value,
-      role: document.getElementById('profileRole').value,
-      photo: document.getElementById('profilePhoto').value,
-      bio: document.getElementById('profileBio').value,
-      membership_status: 'Active'
-    }, { merge: true });
-
-    previewPhoto.src = document.getElementById('profilePhoto').value || 'https://via.placeholder.com/150';
-    showTopNotice('Profile saved successfully!', 'success');
-  } catch (err) {
-    showTopNotice('Failed to save profile: ' + err.message, 'error');
-  } finally {
-    saveProfileBtn.disabled = false;
-  }
-});
-
-// Live profile photo preview
-profilePhotoInput.addEventListener('input', () => {
-  previewPhoto.src = profilePhotoInput.value || 'https://via.placeholder.com/150';
+    if (currentMembershipStatus === 'approved') {
+      showFullDashboard();
+    } else {
+      showIncompleteView();
+    }
+  });
 });
 
 /* ---------------------------
-   Member ID / Membership Certificate (Professional NGO design)
+   Certificate Download (LOCKED)
+--------------------------- */
+downloadMemberIDBtn.addEventListener('click', () => {
+  if (currentMembershipStatus !== 'approved') {
+    showTopNotice('Certificate available only after approval', 'error');
+    return;
+  }
+  generatePDF();
+});
+
+/* ---------------------------
+   Certificate PDF
 --------------------------- */
 function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'pt', 'a4');
-  const width = doc.internal.pageSize.getWidth();
-  const height = doc.internal.pageSize.getHeight();
+  const doc = new jsPDF();
+  const w = doc.internal.pageSize.getWidth();
+  const h = doc.internal.pageSize.getHeight();
 
-  // Outer frame
-  doc.setDrawColor(20, 34, 77);
-  doc.setLineWidth(3);
-  doc.rect(24, 24, width - 48, height - 48);
-  doc.setLineWidth(1);
-  doc.rect(32, 32, width - 64, height - 64);
+  doc.setFontSize(18);
+  doc.text('Liberian Astronomical Society', w/2, 40, { align: 'center' });
 
-  const logoUrl = 'https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png';
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.src = logoUrl;
+  doc.setFontSize(14);
+  doc.text('Certificate of Membership', w/2, 55, { align: 'center' });
 
-  img.onload = () => {
-    // Header: logo + organization name
-    const logoW = 120;
-    const logoH = (img.height / img.width) * logoW;
-    const centerX = width / 2;
-    doc.addImage(img, 'PNG', centerX - (logoW/2), 48, logoW, logoH);
+  doc.setFontSize(20);
+  doc.text(memberNameEl.textContent, w/2, 90, { align: 'center' });
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.text('Liberian Astronomical Society', centerX, 48 + logoH + 28, { align: 'center' });
+  doc.setFontSize(12);
+  doc.text(`Role: ${memberRoleEl.textContent}`, w/2, 105, { align: 'center' });
+  doc.text(`Member ID: ${memberNumberEl.textContent}`, w/2, 115, { align: 'center' });
 
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(14);
-    doc.text('Certificate of Membership', centerX, 48 + logoH + 50, { align: 'center' });
+  const verifyURL = `${location.origin}/verify.html?cert=${memberNumberEl.textContent}`;
 
-    // Decorative separator
-    doc.setDrawColor(180);
-    doc.setLineWidth(0.7);
-    doc.line(60, 48 + logoH + 62, width - 60, 48 + logoH + 62);
-
-    // Member name
-    const name = (memberNameEl.textContent || 'Member Name').trim();
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
-    doc.setTextColor(20, 24, 48);
-    doc.text(name, centerX, 48 + logoH + 110, { align: 'center' });
-
-    // Role and Member ID
-    doc.setFontSize(11.5);
-    doc.setFont('helvetica', 'normal');
-    const role = memberRoleEl.textContent || 'Member';
-    const memId = memberNumberEl.textContent || '';
-    doc.setTextColor(60);
-    doc.text(`Role: ${role}`, centerX, 48 + logoH + 140, { align: 'center' });
-    doc.text(`Member ID: ${memId}`, centerX, 48 + logoH + 155, { align: 'center' });
-
-    // Certification paragraph
-    doc.setFontSize(11);
-    doc.setTextColor(80);
-    const certText = `This is to certify that the person named above is a registered member in good standing of the Liberian Astronomical Society. Membership entitles the holder to participate in LAS programs, events, and community activities in accordance with our policies.`;
-    doc.text(certText, 72, 48 + logoH + 190, { maxWidth: width - 144, align: 'left' });
-
-    // Issue date and certificate number
-    const issued = new Date();
-    const issueStr = issued.toLocaleDateString();
-    doc.setFontSize(10.5);
-    doc.setTextColor(30);
-    doc.text(`Date of issue: ${issueStr}`, 72, height - 120);
-    if (memId) doc.text(`Certificate No: ${memId}`, 72, height - 102);
-
-    // Signature line
-    const sigX = width - 240;
-    doc.setDrawColor(30);
-    doc.setLineWidth(0.8);
-    doc.line(sigX, height - 120, sigX + 160, height - 120);
-    doc.setFontSize(11);
-    doc.text('President, Liberian Astronomical Society', sigX + 6, height - 98);
-
-    // Insert signature image if available (async)
-    function finalizeWithSignature() {
-      if (presidentSignature) {
-        const sigImg = new Image();
-        sigImg.crossOrigin = 'anonymous';
-        sigImg.src = presidentSignature;
-        sigImg.onload = () => {
-          const w = 140; const h = (sigImg.height / sigImg.width) * w;
-          doc.addImage(sigImg, 'PNG', sigX + 8, height - 160, w, h);
-          finalizeQR();
-        };
-        sigImg.onerror = () => { finalizeQR(); };
-      } else {
-        finalizeQR();
-      }
-    }
-
-    // Seal (simple circle with text)
-    doc.setDrawColor(120);
-    doc.circle(96, height - 110, 36);
-    doc.setFontSize(9);
-    doc.text('OFFICIAL', 96, height - 122, { align: 'center' });
-    doc.text('SEAL', 96, height - 108, { align: 'center' });
-
-    // Footer small print
-    doc.setFontSize(9);
-    doc.setTextColor(110);
-    doc.text('Liberian Astronomical Society — LAS. Registered NGO. For verification contact admin@liberianastronomicalsociety.org', centerX, height - 40, { align: 'center', maxWidth: width - 120 });
-
-    // QR code and save
-    function finalizeQR() {
-      const certId = memId || (window.auth && window.auth.currentUser && window.auth.currentUser.uid) || '';
-      const verificationUrl = `${location.origin}${location.pathname.replace(/[^/]*$/, '')}verify.html?cert=${encodeURIComponent(certId)}`;
-      // generate QR
-      if (typeof QRCode !== 'undefined' && verificationUrl) {
-        QRCode.toDataURL(verificationUrl, { width: 110 }).then((qrDataUrl) => {
-          doc.addImage(qrDataUrl, 'PNG', width - 140, height - 190, 100, 100);
-          const safeName = name.replace(/[^a-z0-9_\-]/gi, '_');
-          doc.save(`LAS_Certificate_${safeName || 'member'}.pdf`);
-        }).catch(() => {
-          const safeName = name.replace(/[^a-z0-9_\-]/gi, '_');
-          doc.save(`LAS_Certificate_${safeName || 'member'}.pdf`);
-        });
-      } else {
-        const safeName = name.replace(/[^a-z0-9_\-]/gi, '_');
-        doc.save(`LAS_Certificate_${safeName || 'member'}.pdf`);
-      }
-    }
-
-    // start signature/qr finalization
-    finalizeWithSignature();
-  };
-}
-downloadProfileIDBtn.addEventListener('click', generatePDF);
-downloadMemberIDBtn.addEventListener('click', generatePDF);
-
-/* ---------------------------
-   Payments
---------------------------- */
-addPaymentBtn.addEventListener('click', async () => {
-  const amountInput = document.getElementById('paymentAmount');
-  const amount = parseFloat(amountInput.value);
-  if (isNaN(amount) || amount <= 0) return showTopNotice('Enter a valid amount', 'error');
-
-  addPaymentBtn.disabled = true;
-  try {
-    const user = auth.currentUser;
-    const paymentsRef = collection(db, 'members', user.uid, 'payments');
-    await addDoc(paymentsRef, { amount, date: new Date() });
-
-    amountInput.value = '';
-    showTopNotice('Payment recorded', 'success');
-    loadPayments();
-  } catch (err) {
-    showTopNotice('Failed to record payment: ' + err.message, 'error');
-  } finally {
-    addPaymentBtn.disabled = false;
-  }
-});
-
-async function loadPayments() {
-  const user = auth.currentUser;
-  if (!user) return;
-
-  const paymentsListEl = document.getElementById('paymentsList');
-  paymentsListEl.innerHTML = '';
-
-  const paymentsRef = collection(db, 'members', user.uid, 'payments');
-  const snapshot = await getDocs(paymentsRef);
-
-  snapshot.forEach(docSnap => {
-    const data = docSnap.data();
-    const div = document.createElement('div');
-    div.textContent = `USD ${data.amount} — ${data.date.toDate().toLocaleDateString()}`;
-    paymentsListEl.appendChild(div);
+  QRCode.toDataURL(verifyURL).then(qr => {
+    doc.addImage(qr, 'PNG', w - 80, h - 80, 60, 60);
+    doc.save(`LAS_Certificate_${memberNameEl.textContent}.pdf`);
   });
 }
 
 /* ---------------------------
    Events
 --------------------------- */
-refreshEventsBtn.addEventListener('click', loadEvents);
-
 async function loadEvents() {
-  const eventsListEl = document.getElementById('eventsList');
-  eventsListEl.innerHTML = '';
-
-  const eventsSnapshot = await getDocs(collection(db, 'events'));
-  eventsSnapshot.forEach(docSnap => {
-    const event = docSnap.data();
+  const list = document.getElementById('eventsList');
+  list.innerHTML = '';
+  const snap = await getDocs(collection(db, 'events'));
+  snap.forEach(d => {
+    const e = d.data();
     const div = document.createElement('div');
-    div.classList.add('glass', 'p-2', 'rounded');
-    const btnID = 'register_' + docSnap.id;
-
-    div.innerHTML = `
-      <p class="font-semibold">${event.title}</p>
-      <p class="text-sm muted">${event.date}</p>
-      <button id="${btnID}" class="bg-indigo-600 px-2 py-1 mt-1 rounded text-sm hover:bg-indigo-700">Register</button>
-    `;
-    eventsListEl.appendChild(div);
-
-    document.getElementById(btnID).addEventListener('click', async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-      const regRef = collection(db, 'members', user.uid, 'registrations');
-      await addDoc(regRef, { eventID: docSnap.id, title: event.title, date: new Date() });
-      showTopNotice(`Registered for ${event.title}`, 'success');
-    });
+    div.textContent = e.title;
+    list.appendChild(div);
   });
 }
+refreshEventsBtn.addEventListener('click', loadEvents);
+
+/* ---------------------------
+   Payments
+--------------------------- */
+addPaymentBtn.addEventListener('click', async () => {
+  const amount = parseFloat(document.getElementById('paymentAmount').value);
+  if (!amount || amount <= 0) return showTopNotice('Invalid amount', 'error');
+
+  await addDoc(collection(db, 'members', auth.currentUser.uid, 'payments'), {
+    amount, date: new Date()
+  });
+  showTopNotice('Payment recorded', 'success');
+});
 
 /* ---------------------------
    Logout
 --------------------------- */
-logoutBtn.addEventListener('click', async () => { 
-  await signOut(auth); 
-  window.location.href = "login.html"; 
+logoutBtn.addEventListener('click', async () => {
+  await signOut(auth);
+  window.location.href = 'login.html';
 });
 
 /* ---------------------------
-   Initial Load
+   Init
 --------------------------- */
 loadEvents();
-loadPayments();
 </script>
-
 </body>
 </html>
