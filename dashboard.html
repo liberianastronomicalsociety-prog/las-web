@@ -139,16 +139,19 @@
 </div>
 
 <script type="module">
+/* =========================================================
+   IMPORTS
+========================================================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { 
-  getFirestore, doc, setDoc, onSnapshot, collection,
-  addDoc, getDocs, getDoc
+import {
+  getFirestore, doc, setDoc, onSnapshot,
+  collection, addDoc, getDocs
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-/* ---------------------------
-   Firebase Init
---------------------------- */
+/* =========================================================
+   FIREBASE INIT
+========================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyAX8le3vbPja0UfSUR2UvEMCkUxkQQPvks",
   authDomain: "liberian-astro-society.firebaseapp.com",
@@ -162,61 +165,58 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ---------------------------
-   Global State
---------------------------- */
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
 let currentMembershipStatus = 'incomplete';
-let presidentSignature = null;
-let siteSettings = {};
-let isAdmin = false;
 
-/* ---------------------------
-   DOM Elements
---------------------------- */
+/* =========================================================
+   DOM ELEMENTS
+========================================================= */
 const emailBadge = document.getElementById('emailBadge');
 const profileBtn = document.getElementById('profileBtn');
 const logoutBtn = document.getElementById('logoutBtn');
+
 const incompleteSection = document.getElementById('incompleteSection');
 const profileSection = document.getElementById('profileSection');
 const eventsPaymentsSection = document.getElementById('eventsPaymentsSection');
 const memberIDSection = document.getElementById('memberIDSection');
+
 const membershipStatusEl = document.getElementById('membershipStatus');
 
 const memberNameEl = document.getElementById('memberName');
 const memberRoleEl = document.getElementById('memberRole');
 const memberNumberEl = document.getElementById('memberNumber');
+const memberCountryEl = document.getElementById('memberCountry'); // MUST exist in HTML
 
 const downloadMemberIDBtn = document.getElementById('downloadMemberID');
 const addPaymentBtn = document.getElementById('addPaymentBtn');
 const refreshEventsBtn = document.getElementById('refreshEvents');
 
-/* ---------------------------
-   Helpers
---------------------------- */
+/* =========================================================
+   HELPERS
+========================================================= */
 function generateMemberID(uid) {
   const year = new Date().getFullYear();
-  const short = uid.slice(-6).toUpperCase();
-  return `LAS-${year}-${short}`;
+  return `LAS-${year}-${uid.slice(-6).toUpperCase()}`;
 }
 
-function setStatusVisual(status) {
+function setStatusVisual(status = 'Incomplete') {
   const s = status.toLowerCase();
   membershipStatusEl.textContent = status;
   membershipStatusEl.className = 'status-pill mt-2';
 
-  if (s === 'approved' || s === 'active') {
+  if (['approved', 'active'].includes(s)) {
     membershipStatusEl.classList.add('bg-green-500', 'text-white');
-  } else if (s === 'pending' || s === 'incomplete') {
+  } else if (['pending', 'incomplete'].includes(s)) {
     membershipStatusEl.classList.add('bg-yellow-400', 'text-gray-900');
   } else {
     membershipStatusEl.classList.add('bg-gray-600', 'text-white');
   }
 }
 
-
 function showIncompleteOnly() {
   incompleteSection.classList.remove('hidden');
-
   profileSection.classList.add('hidden');
   eventsPaymentsSection.classList.add('hidden');
   memberIDSection.classList.add('hidden');
@@ -224,26 +224,26 @@ function showIncompleteOnly() {
 
 function showFullDashboard() {
   incompleteSection.classList.add('hidden');
-
   profileSection.classList.remove('hidden');
   eventsPaymentsSection.classList.remove('hidden');
   memberIDSection.classList.remove('hidden');
 }
 
-function showTopNotice(msg, type='info') {
+function showTopNotice(msg, type = 'info') {
   const el = document.getElementById('topNotice');
   el.textContent = msg;
-  el.className = 'p-3 rounded text-sm';
-  el.classList.add(type === 'error' ? 'bg-red-600' :
-                   type === 'success' ? 'bg-green-600' :
-                   'bg-indigo-700', 'text-white');
+  el.className = `p-3 rounded text-sm text-white ${
+    type === 'error' ? 'bg-red-600' :
+    type === 'success' ? 'bg-green-600' :
+    'bg-indigo-700'
+  }`;
   el.classList.remove('hidden');
   setTimeout(() => el.classList.add('hidden'), 3000);
 }
 
-/* ---------------------------
-   Auth & Profile
---------------------------- */
+/* =========================================================
+   AUTH & PROFILE SNAPSHOT
+========================================================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = 'login.html';
@@ -256,34 +256,32 @@ onAuthStateChanged(auth, async (user) => {
   const userRef = doc(db, 'members', user.uid);
 
   onSnapshot(userRef, async (snap) => {
-    
-    /* -------- FIRST TIME USER -------- */
+
+    // Create profile doc if missing
     if (!snap.exists()) {
       await setDoc(userRef, {
-        name: user.email?.split('@')[0] || 'Member',
-        role: 'Member',
+        name: '',
+        role: '',
+        country: '',
         membership_status: 'Incomplete',
         memberID: generateMemberID(user.uid)
       }, { merge: true });
-      
-      currentMembershipStatus = 'incomplete';
-      setStatusVisual('Incomplete');
-      showIncompleteOnly();
       return;
     }
-    
-    /* -------- USER EXISTS -------- */
+
     const data = snap.data();
+
+    // Status
     currentMembershipStatus = (data.membership_status || 'Incomplete').toLowerCase();
-    
-    
-    setStatusVisual(data.membership_status || 'Incomplete');
-    
-    memberNameEl.textContent = data.name || 'Member Name';
-    memberRoleEl.textContent = data.role || 'Member';
+    setStatusVisual(data.membership_status);
+
+    // Profile info
+    memberNameEl.textContent = data.name?.trim() || 'Member';
+    memberRoleEl.textContent = data.role?.trim() || 'Member';
     memberNumberEl.textContent = data.memberID || generateMemberID(user.uid);
-    
-    /* -------- DASHBOARD VISIBILITY -------- */
+    if (memberCountryEl) memberCountryEl.textContent = data.country || '';
+
+    // Visibility
     if (['approved', 'active'].includes(currentMembershipStatus)) {
       showFullDashboard();
       profileBtn.classList.remove('hidden');
@@ -291,18 +289,12 @@ onAuthStateChanged(auth, async (user) => {
       showIncompleteOnly();
       profileBtn.classList.add('hidden');
     }
-    
-   if (!['approved', 'active'].includes(currentMembershipStatus)) {
-     downloadMemberIDBtn.classList.add('hidden');
-   } else {
-     downloadMemberIDBtn.classList.remove('hidden');
-   }
   });
 });
 
-/* ---------------------------
-   Certificate Download (LOCKED)
---------------------------- */
+/* =========================================================
+   CERTIFICATE DOWNLOAD
+========================================================= */
 downloadMemberIDBtn.addEventListener('click', () => {
   if (!['approved', 'active'].includes(currentMembershipStatus)) {
     showTopNotice('Downloads available only after approval', 'error');
@@ -311,87 +303,84 @@ downloadMemberIDBtn.addEventListener('click', () => {
   generatePDF();
 });
 
-/* ---------------------------
-   Certificate PDF
---------------------------- */
 function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const w = doc.internal.pageSize.getWidth();
-  const h = doc.internal.pageSize.getHeight();
 
   doc.setFontSize(18);
-  doc.text('Liberian Astronomical Society', w/2, 40, { align: 'center' });
+  doc.text('Liberian Astronomical Society', w / 2, 40, { align: 'center' });
 
   doc.setFontSize(14);
-  doc.text('Certificate of Membership', w/2, 55, { align: 'center' });
+  doc.text('Certificate of Membership', w / 2, 55, { align: 'center' });
 
   doc.setFontSize(20);
-  doc.text(memberNameEl.textContent, w/2, 90, { align: 'center' });
+  doc.text(memberNameEl.textContent, w / 2, 90, { align: 'center' });
 
   doc.setFontSize(12);
-  doc.text(`Role: ${memberRoleEl.textContent}`, w/2, 105, { align: 'center' });
-  doc.text(`Member ID: ${memberNumberEl.textContent}`, w/2, 115, { align: 'center' });
-  doc.text(
-    `Country: ${document.getElementById('memberCountry').textContent}`,
-    w / 2,
-    125,
-    { align: 'center' }
-  );
+  doc.text(`Role: ${memberRoleEl.textContent}`, w / 2, 105, { align: 'center' });
+  doc.text(`Member ID: ${memberNumberEl.textContent}`, w / 2, 115, { align: 'center' });
 
+  if (memberCountryEl?.textContent) {
+    doc.text(`Country: ${memberCountryEl.textContent}`, w / 2, 125, { align: 'center' });
+  }
 
   const verifyURL = `${location.origin}/verify.html?cert=${memberNumberEl.textContent}`;
-
   QRCode.toDataURL(verifyURL).then(qr => {
-    doc.addImage(qr, 'PNG', w - 80, h - 80, 60, 60);
+    doc.addImage(qr, 'PNG', w - 80, 200, 60, 60);
     doc.save(`LAS_Certificate_${memberNameEl.textContent}.pdf`);
   });
 }
 
-/* ---------------------------
-   Events
---------------------------- */
+/* =========================================================
+   EVENTS
+========================================================= */
 async function loadEvents() {
   const list = document.getElementById('eventsList');
   list.innerHTML = '';
   const snap = await getDocs(collection(db, 'events'));
   snap.forEach(d => {
-    const e = d.data();
     const div = document.createElement('div');
-    div.textContent = e.title;
+    div.textContent = d.data().title;
     list.appendChild(div);
   });
 }
 refreshEventsBtn.addEventListener('click', loadEvents);
 
-/* ---------------------------
-   Payments
---------------------------- */
+/* =========================================================
+   PAYMENTS
+========================================================= */
 addPaymentBtn.addEventListener('click', async () => {
   const amount = parseFloat(document.getElementById('paymentAmount').value);
-  if (!amount || amount <= 0) return showTopNotice('Invalid amount', 'error');
+  if (!amount || amount <= 0) {
+    showTopNotice('Invalid amount', 'error');
+    return;
+  }
 
   await addDoc(collection(db, 'members', auth.currentUser.uid, 'payments'), {
-    amount, date: new Date()
+    amount,
+    date: new Date()
   });
+
   showTopNotice('Payment recorded', 'success');
 });
 
-/* ---------------------------
-   Logout
---------------------------- */
+/* =========================================================
+   LOGOUT
+========================================================= */
 logoutBtn.addEventListener('click', async () => {
   await signOut(auth);
   window.location.href = 'login.html';
 });
 
-/* ---------------------------
-   Init
---------------------------- */
+/* =========================================================
+   INIT
+========================================================= */
 loadEvents();
 </script>
 </body>
 </html>
+
 
 
 
