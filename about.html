@@ -208,116 +208,37 @@
 
     </main>
 
-<!-- CONTACT + FOOTER WRAPPER -->
-<section id="contact" class="bg-gradient-to-b from-[#0b1220] via-[#0a0f1a] to-[#05080f] pt-20">
+  <!-- FOOTER -->
+<!-- LEFT: Logo + Address -->
+<div>
+  <div class="flex items-center space-x-4 mb-4">
+    
+    <!-- Logo -->
+    <img 
+      src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png" 
+      alt="LAS Official Logo" 
+      class="h-14 w-14 object-contain rounded-full"
+    >
 
-  <!-- CONTACT FORM -->
-  <div class="container mx-auto px-4 pb-20">
-
-    <h2 class="text-4xl font-extrabold text-center text-white mb-12">
-      Contact Us & Get Connected
+    <!-- Name -->
+    <h2 class="text-xl font-bold text-white">
+      Liberian Astronomical Society
     </h2>
-
-    <div class="max-w-3xl mx-auto bg-gray-900/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-indigo-500/20">
-
-      <h3 class="text-2xl font-bold text-white mb-6 text-center">
-        Send us a message
-      </h3>
-
-      <form action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="YOUR_KEY">
-
-        <input type="text" name="name" placeholder="Your Name"
-          class="w-full mb-4 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
-
-        <input type="email" name="email" placeholder="Your Email"
-          class="w-full mb-4 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
-
-        <textarea name="message" rows="4" placeholder="Your Message"
-          class="w-full mb-6 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500"></textarea>
-
-        <!-- ✅ CAPTCHA KEPT -->
-        <div class="h-captcha mb-6" data-captcha="true"></div>
-
-        <button type="submit"
-          class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition">
-          Send Message
-        </button>
-      </form>
-    </div>
-
   </div>
 
+  <!-- Contact Info -->
+  <p class="text-gray-300 text-sm leading-relaxed">
+    Monrovia, Liberia <br>
+    Email: liberianastronomicalsociety@gmail.com <br>
+    Phone: +231 777 597 234
+  </p>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-indigo-500/10 pt-16 pb-10">
-
-    <div class="container mx-auto px-6 grid md:grid-cols-3 gap-10">
-
-      <!-- LEFT -->
-      <div>
-        <div class="flex items-center space-x-4 mb-4">
-          <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png"
-               class="h-14 w-14 rounded-full shadow-lg shadow-purple-500/30">
-
-          <h2 class="text-white font-bold text-lg">
-            Liberian Astronomical Society
-          </h2>
-        </div>
-
-        <p class="text-gray-300 text-sm leading-relaxed">
-          Monrovia, Liberia <br>
-          liberianastronomicalsociety@gmail.com <br>
-          +231 777 597 234
-        </p>
-
-        <a href="#contact"
-           class="inline-block mt-4 text-purple-400 hover:text-white transition">
-          Contact Us →
-        </a>
-      </div>
-
-      <!-- CENTER -->
-      <div class="text-center">
-        <div class="flex justify-center space-x-4 mb-4">
-
-          <a href="#" class="p-2 bg-gray-800 hover:bg-indigo-600 rounded transition">in</a>
-          <a href="#" class="p-2 bg-gray-800 hover:bg-blue-500 rounded transition">f</a>
-          <a href="#" class="p-2 bg-gray-800 hover:bg-pink-500 rounded transition">ig</a>
-          <a href="#" class="p-2 bg-gray-800 hover:bg-sky-400 rounded transition">tw</a>
-
-        </div>
-
-        <button class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full shadow-lg hover:scale-105 transition">
-          Donate Now
-        </button>
-      </div>
-
-      <!-- RIGHT -->
-      <div>
-        <h3 class="text-white mb-3 font-semibold">
-          Subscribe to our newsletter
-        </h3>
-
-        <input type="email" placeholder="Email"
-          class="w-full mb-3 p-2 rounded bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
-
-        <input type="text" placeholder="Name"
-          class="w-full mb-3 p-2 rounded bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
-
-        <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 rounded hover:opacity-90">
-          Subscribe
-        </button>
-      </div>
-
-    </div>
-
-    <!-- BOTTOM -->
-    <div class="text-center text-gray-500 text-sm mt-10">
-      © 2025 Liberian Astronomical Society. All rights reserved.
-    </div>
-
-  </footer>
+  <!-- Button -->
+  <a href="#contact" 
+     class="inline-block mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold px-5 py-2 rounded-full shadow hover:opacity-90 transition">
+    Contact Us
+  </a>
+</div>
 
 <!-- Scripts -->
 <script>
