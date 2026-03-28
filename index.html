@@ -635,92 +635,116 @@ img {
         </div>
     </div>
 
-    <!-- Footer / Contact Section -->
-    <footer id="contact" class="bg-gray-950 section-padding pt-16">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-extrabold text-center text-white mb-16">Contact Us & Get Connected</h2>
-            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
-                
-                <!-- Contact Form Card -->
-                <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl border border-gray-700 transform hover:shadow-indigo-900/50 transition-shadow duration-500">
-                    <h3 class="text-2xl font-bold text-white mb-6">Send us a message</h3>
-                    <form action="https://api.web3forms.com/submit" method="POST" id="contact-form">
-                        <!-- Web3Forms Access Key (Placeholder for demonstration) -->
-                        <input type="hidden" name="access_key" value="7a5bd0b6-925e-45f9-b582-8b879aa3546a">
+<!-- CONTACT + FOOTER WRAPPER -->
+<section id="contact" class="bg-gradient-to-b from-[#0b1220] via-[#0a0f1a] to-[#05080f] pt-20">
 
-                        <div class="mb-4">
-                            <label for="name" class="block text-gray-400 mb-2 text-sm font-medium">Name</label>
-                            <input type="text" id="name" name="name" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="Your Full Name" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="email" class="block text-gray-400 mb-2 text-sm font-medium">Email</label>
-                            <input type="email" id="email" name="email" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="your.email@example.com" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="message" class="block text-gray-400 mb-2 text-sm font-medium">Message</label>
-                            <textarea id="message" name="message" rows="4" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="How can we help you?" required></textarea>
-                        </div>
+  <!-- CONTACT FORM -->
+  <div class="container mx-auto px-4 pb-20">
 
-                        <!-- hCaptcha is recommended by Web3Forms for spam protection -->
-                        <div class="h-captcha mb-6" data-captcha="true"></div>
+    <h2 class="text-4xl font-extrabold text-center text-white mb-12">
+      Contact Us & Get Connected
+    </h2>
 
-                        <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition-all duration-300 btn-primary">
-                            Send Message
-                        </button>
-                    </form>
-                </div>
+    <div class="max-w-3xl mx-auto bg-gray-900/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-indigo-500/20">
 
-                <!-- Contact Info and Social Links Card -->
-                <div class="flex flex-col justify-between bg-gray-900 p-8 rounded-2xl shadow-2xl border border-gray-700">
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-6">Get in touch</h3>
-                        <p class="text-gray-400 mb-8">For general inquiries, collaboration, or to support our mission, please reach out to us. We look forward to hearing from you!</p>
-                        <div class="space-y-4 mb-8">
-                            <div class="flex items-start space-x-3">
-                                <span class="text-indigo-400 mt-0.5 text-xl">📍</span>
-                                <span class="text-gray-300 font-medium">Monrovia, Liberia</span>
-                            </div>
-                            <div class="flex items-start space-x-3">
-                                <span class="text-indigo-400 mt-0.5 text-xl">📧</span>
-                                <a href="mailto:liberianastronomicalsociety@gmail.com" class="text-gray-300 hover:text-white transition-all duration-300 break-words">liberianastronomicalsociety@gmail.com</a>
-                            </div>
-                            <div class="flex items-start space-x-3">
-                                <span class="text-indigo-400 mt-0.5 text-xl">📞</span>
-                                <a href="tel:+231777597234" class="text-gray-300 hover:text-white transition-all duration-300">+231 777 597 234</a>
-                                <a href="tel:+231772858306" class="text-gray-300 hover:text-white transition-all duration-300">+231 772 858 306</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Social Media Links -->
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-4 border-t border-gray-700 pt-4">Follow Our Cosmic Journey</h3>
-                        <div class="flex space-x-6 text-gray-400 text-2xl">
-                            <!-- Facebook -->
-                            <a href="https://www.facebook.com/LiberianAstronomicalSociety" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="Facebook">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85 0 3.204-.012 3.584-.07 4.85-0.148 3.251-1.691-4.77-4.919-4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.251-0.148-4.77-1.691-4.919-4.919-0.058-1.265-0.07-1.644-0.07-4.85s0.012-3.584 0.07-4.85c0.149-3.225 1.69-4.772 4.919-4.919 1.266-0.057 1.645-0.069 4.85-0.069zM12-2.163c-3.259 0-3.667.014-4.947.072-4.358.204-6.78 2.627-6.981 6.981-0.058 1.281-0.072 1.689-0.072 4.947s0.014 3.667 0.072 4.947c0.204 4.354 2.627 6.78 6.981 6.981 1.281 0.058 1.689 0.072 4.947 0.072s3.667-0.014 4.947-0.072c4.354-0.204 6.78-2.627 6.981-6.981 0.058-1.281 0.072-1.689 0.072-4.947s-0.014-3.667-0.072-4.947c-0.204-4.354-2.627-6.78-6.981-6.981-1.281-0.058-1.689-0.072-4.947-0.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-0.679 0-1.232 0.552-1.232 1.231 0 0.679 0.552 1.232 1.232 1.232s1.232-0.552 1.232-1.232c0-0.679-0.552-1.231-1.232-1.231z"/></svg>
-                            </a>
-                            <!-- Twitter/X -->
-                            <a href="https://twitter.com/LiberianAstronomicalSociety" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="Twitter">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.795-1.574 2.162-2.723-.951.564-2.005.974-3.127 1.195-.898-.957-2.178-1.555-3.593-1.555-2.716 0-4.921 2.206-4.921 4.921 0 .386.044.761.127 1.122-4.091-.205-7.728-2.165-10.16-5.148-.424.729-.668 1.578-.668 2.481 0 1.708.868 3.215 2.188 4.093-.807-.026-1.565-.246-2.228-.616v.061c0 2.385 1.693 4.375 3.946 4.828-.413.111-.849.171-1.296.171-.317 0-.626-.031-.926-.089.629 1.956 2.456 3.371 4.606 3.41-1.688 1.328-3.811 2.126-6.115 2.126-.398 0-.792-.023-1.18-.069 2.173 1.392 4.76 2.209 7.547 2.209 9.058 0 14.01-7.502 14.01-14.01 0-.214-.005-.429-.014-.643.961-.697 1.794-1.564 2.458-2.559z"/></svg>
-                            </a>
-                            <!-- Instagram -->
-                            <a href="https://www.instagram.com/libastrosoc2025" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="Instagram">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85 0 3.204-.012 3.584-.07 4.85-0.148 3.251-1.691-4.77-4.919-4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.251-0.148-4.77-1.691-4.919-4.919-0.058-1.265-0.07-1.644-0.07-4.85s0.012-3.584 0.07-4.85c0.149-3.225 1.69-4.772 4.919-4.919 1.266-0.057 1.645-0.069 4.85-0.069zM12-2.163c-3.259 0-3.667.014-4.947.072-4.358.204-6.78 2.627-6.981 6.981-0.058 1.281-0.072 1.689-0.072 4.947s0.014 3.667 0.072 4.947c0.204 4.354 2.627 6.78 6.981 6.981 1.281 0.058 1.689 0.072 4.947 0.072s3.667-0.014 4.947-0.072c4.354-0.204 6.78-2.627 6.981-6.981 0.058-1.281 0.072-1.689 0.072-4.947s-0.014-3.667-0.072-4.947c-0.204-4.354-2.627-6.78-6.981-6.981-1.281-0.058-1.689-0.072-4.947-0.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-0.679 0-1.232 0.552-1.232 1.231 0 0.679 0.552 1.232 1.232 1.232s1.232-0.552 1.232-1.232c0-0.679-0.552-1.231-1.232-1.231z"/></svg>
-                            </a>
-                            <!-- LinkedIn -->
-                            <a href="https://www.linkedin.com/company/LiberianAstronomicalSociety" target="_blank" rel="noopener noreferrer" class="social-link hover:text-indigo-400 transition-all duration-300" aria-label="LinkedIn">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm6.32-6.453c-.768-.205-1.583-.312-2.32-.312-1.396 0-2.333.627-2.333 1.488v5.277h-2v-6h2v.913c.478-.517 1.357-1.42 2.857-1.42 2.213 0 3.643 1.442 3.643 4.544v3.132h-2v-2.822c0-1.859-.972-2.333-1.859-2.333z"/></svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <h3 class="text-2xl font-bold text-white mb-6 text-center">
+        Send us a message
+      </h3>
+
+      <form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="YOUR_KEY">
+
+        <input type="text" name="name" placeholder="Your Name"
+          class="w-full mb-4 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
+
+        <input type="email" name="email" placeholder="Your Email"
+          class="w-full mb-4 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
+
+        <textarea name="message" rows="4" placeholder="Your Message"
+          class="w-full mb-6 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500"></textarea>
+
+        <!-- ✅ CAPTCHA KEPT -->
+        <div class="h-captcha mb-6" data-captcha="true"></div>
+
+        <button type="submit"
+          class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition">
+          Send Message
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer class="border-t border-indigo-500/10 pt-16 pb-10">
+
+    <div class="container mx-auto px-6 grid md:grid-cols-3 gap-10">
+
+      <!-- LEFT -->
+      <div>
+        <div class="flex items-center space-x-4 mb-4">
+          <img src="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/LAS%20official%20logo.png"
+               class="h-14 w-14 rounded-full shadow-lg shadow-purple-500/30">
+
+          <h2 class="text-white font-bold text-lg">
+            Liberian Astronomical Society
+          </h2>
         </div>
-        <div class="mt-16 text-center text-gray-500 border-t border-gray-800 pt-8">
-            <p class="text-sm">&copy; 2025 Liberian Astronomical Society. All rights reserved. | Built with space and passion.</p>
+
+        <p class="text-gray-300 text-sm leading-relaxed">
+          Monrovia, Liberia <br>
+          liberianastronomicalsociety@gmail.com <br>
+          +231 777 597 234
+        </p>
+
+        <a href="#contact"
+           class="inline-block mt-4 text-purple-400 hover:text-white transition">
+          Contact Us →
+        </a>
+      </div>
+
+      <!-- CENTER -->
+      <div class="text-center">
+        <div class="flex justify-center space-x-4 mb-4">
+
+          <a href="#" class="p-2 bg-gray-800 hover:bg-indigo-600 rounded transition">in</a>
+          <a href="#" class="p-2 bg-gray-800 hover:bg-blue-500 rounded transition">f</a>
+          <a href="#" class="p-2 bg-gray-800 hover:bg-pink-500 rounded transition">ig</a>
+          <a href="#" class="p-2 bg-gray-800 hover:bg-sky-400 rounded transition">tw</a>
+
         </div>
-    </footer>
+
+        <button class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full shadow-lg hover:scale-105 transition">
+          Donate Now
+        </button>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <h3 class="text-white mb-3 font-semibold">
+          Subscribe to our newsletter
+        </h3>
+
+        <input type="email" placeholder="Email"
+          class="w-full mb-3 p-2 rounded bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
+
+        <input type="text" placeholder="Name"
+          class="w-full mb-3 p-2 rounded bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-purple-500">
+
+        <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 rounded hover:opacity-90">
+          Subscribe
+        </button>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="text-center text-gray-500 text-sm mt-10">
+      © 2025 Liberian Astronomical Society. All rights reserved.
+    </div>
+
+  </footer>
 
     <!-- Custom Message Box (Replaces alert/confirm) -->
     <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center p-4 z-[99]">
