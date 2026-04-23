@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Liberian Astronomical Society</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="icon" href="https://raw.githubusercontent.com/liberianastronomicalsociety-prog/las-web/main/favicon.ico">
+
+</head>
+
+<body class="bg-gradient-to-b from-[#0b1220] via-[#0a0f1a] to-[#05080f] text-white">
+
+<!-- HEADER -->
+<header class="text-center py-6 border-b border-indigo-500/20">
+  <h1 class="text-2xl font-bold">Liberian Astronomical Society</h1>
+</header>
+
+<!-- NAV -->
+<nav class="text-center py-4 space-x-6">
+  <a href="index.html" class="hover:text-purple-400">Home</a>
+  <a href="about.html" class="hover:text-purple-400">About</a>
+  <a href="contact.html" class="text-purple-400 font-semibold">Contact</a>
+</nav>
+
+<!-- CONTACT SECTION -->
+<section class="pt-10 pb-16">
+
+  <h2 class="text-4xl font-extrabold text-center mb-12">
+    Contact Us & Get Connected
+  </h2>
+
+  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 px-4">
+
+    <!-- FORM -->
+    <div class="bg-gray-900/80 p-8 rounded-2xl border border-indigo-500/20 shadow-lg">
+
+      <h3 class="text-2xl font-bold mb-6">Send a Message</h3>
+
+      <form action="https://api.web3forms.com/submit" method="POST">
+        <!-- 🔑 Replace with your real key -->
+        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+
+        <input type="text" name="name" placeholder="Your Name" required
+          class="w-full mb-4 p-3 rounded-lg bg-gray-800 border border-gray-700">
+
+        <input type="email" name="email" placeholder="Your Email" required
+          class="w-full mb-4 p-3 rounded-lg bg-gray-800 border border-gray-700">
+
+        <textarea name="message" rows="4" placeholder="Your Message" required
+          class="w-full mb-6 p-3 rounded-lg bg-gray-800 border border-gray-700"></textarea>
+
+        <!-- CAPTCHA -->
+        <div class="h-captcha mb-6" data-captcha="true"></div>
+
+        <button type="submit"
+          class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl font-bold">
+          Send Message
+        </button>
+      </form>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="bg-gray-900/80 p-8 rounded-2xl border border-indigo-500/20 shadow-lg">
+
+      <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+
+      <p class="mb-4">
+        <strong>Email:</strong><br>
+        liberianastronomicalsociety@gmail.com
+      </p>
+
+      <p class="mb-4">
+        <strong>Phone:</strong><br>
+        +231 777 597 234
+      </p>
+
+      <p class="mb-4">
+        <strong>Location:</strong><br>
+        Monrovia, Liberia
+      </p>
+
+      <p class="text-gray-300 text-sm">
+        We are based in Monrovia and operate nationwide through astronomy outreach,
+        education programs, and public engagement initiatives.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MAP -->
+<section class="pb-16 px-4">
+
+  <h3 class="text-2xl font-bold text-center mb-6">Our Location</h3>
+
+  <div class="max-w-5xl mx-auto">
+    <iframe
+      src="https://maps.google.com/maps?q=Monrovia%20Liberia&t=&z=13&ie=UTF8&iwloc=&output=embed"
+      class="w-full h-80 rounded-xl border border-gray-700 shadow-lg">
+    </iframe>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-indigo-500/20 pt-10 pb-6">
+
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10">
+
+    <!-- LEFT -->
+    <div>
+      <h2 class="font-bold text-lg mb-2">Liberian Astronomical Society</h2>
+      <p class="text-gray-300 text-sm">
+        Monrovia, Liberia <br>
+        liberianastronomicalsociety@gmail.com <br>
+        +231 777 597 234
+      </p>
+    </div>
+
+    <!-- CENTER -->
+    <div class="text-center">
+      <p class="mb-3">Follow us</p>
+
+      <div class="flex justify-center space-x-4">
+        <a href="#" class="bg-gray-800 px-3 py-1 rounded hover:bg-indigo-600">LinkedIn</a>
+        <a href="#" class="bg-gray-800 px-3 py-1 rounded hover:bg-blue-500">Facebook</a>
+        <a href="#" class="bg-gray-800 px-3 py-1 rounded hover:bg-pink-500">Instagram</a>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <p class="mb-2">Subscribe</p>
+
+      <input type="email" placeholder="Email"
+        class="w-full mb-2 p-2 rounded bg-gray-800 border border-gray-700">
+
+      <button class="w-full bg-purple-600 py-2 rounded">
+        Subscribe
+      </button>
+    </div>
+
+  </div>
+
+  <div class="text-center text-gray-500 text-sm mt-8">
+    © 2026 Liberian Astronomical Society. All rights reserved.
+  </div>
+
+</footer>
+
+<script src="https://web3forms.com/client/script.js" async defer></script>
+
+</body>
+</html>
