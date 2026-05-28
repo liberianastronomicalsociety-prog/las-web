@@ -412,7 +412,11 @@
                     "template_6xtq7ua",
                     {
                         name: formData.fullName,
-                        name: formData.fullName,
+                        email: formData.email,
+
+                        title: "Application Received",
+                        
+                        message: "Your membership application has been received successfully. We will review it and contact you soon."
                     }
                 );
                 
@@ -421,7 +425,11 @@
                      "template_yoibd56",
                      {
                          name: formData.fullName,
-                         email: formData.email
+                         email: "YOUR_ADMIN_EMAIL@gmail.com",
+
+                         title: "New Membership Application",
+
+                         message: `${formData.fullName} has submitted a new membership application.`
                      }
                 );
 
