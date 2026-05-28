@@ -226,6 +226,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    emailjs.init("tFsp27kkZJ7kstlVb");
+
     let userId = null;
     let userEmail = null;
 
@@ -405,12 +407,28 @@
             try {
                 await setDoc(applicationRef, formData, { merge: true });
                 
-                showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
+                await emailjs.send(
+                    "service_5f6iegp",
+                    "template_6xtq7ua",
+                    {
+                        name: formData.fullName,
+                        name: formData.fullName,
+                    }
+                );
                 
-                // FIX: Reduced the timeout to 500ms for a faster user experience
+                 await emailjs.send(
+                     "service_5f6iegp",
+                     "template_yoibd56",
+                     {
+                         name: formData.fullName,
+                         email: formData.email
+                     }
+                );
+
+                showMessage('Application submitted successfully! Redirecting you to the assessment...', 'success');
                 setTimeout(() => {
-                    window.location.href = 'assessment.html'; 
-                }, 500); // Redirects after 0.5 seconds
+                    window.location.href = 'assessment.html';
+                }, 500);
                 
             } catch (error) {
                 console.error("Error submitting document: ", error);
@@ -423,5 +441,6 @@
         });
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </body>
 </html>
