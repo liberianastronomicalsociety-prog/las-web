@@ -279,7 +279,7 @@
         async function checkAndLoadApplication(currentUserId) {
             try {
                 // Correctly form the document path according to the security rules
-                const applicationRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'members', currentUserId);
+                const applicationRef = doc(db, 'members', currentUserId);
                 const docSnap = await getDoc(applicationRef);
     
                 if (docSnap.exists() && docSnap.data().submissionTimestamp) {
@@ -369,7 +369,7 @@
             }
     
             // Correctly form the document path for the current user's application
-            const applicationRef = doc(db, 'artifacts', appId, 'users', userId, 'members', userId);
+            const applicationRef = doc(db, 'members', userId);
             const docSnap = await getDoc(applicationRef);
     
             if (docSnap.exists() && docSnap.data().submissionTimestamp) {
