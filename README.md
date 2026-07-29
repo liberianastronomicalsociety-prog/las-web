@@ -5,7 +5,7 @@
 
 ## Current LAS website
 
-- Website: https://liberianastronomicalsociety.vercel.app/
+- Website: https://www.liberianastronomicalsociety.org/
 - Active source repository: https://github.com/liberianastronomicalsociety-prog/liberianastronomicalsociety
 
 Please use the current website and active repository for all future updates and contributions.
